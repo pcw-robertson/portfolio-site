@@ -24,11 +24,14 @@ jobs:
       - name: Build
         run: npm run build
 
-      - name: Set up SSH
+      - name: Set up SSH agent
+        uses: webfactory/ssh-agent@v0.9.0
+        with:
+          ssh-private-key: ${{ secrets.BLUEHOST_SSH_PRIVATE_KEY }}
+
+      - name: Add known host
         run: |
           mkdir -p ~/.ssh
-          echo "${{ secrets.BLUEHOST_SSH_PRIVATE_KEY }}" > ~/.ssh/deploy_key
-          chmod 600 ~/.ssh/deploy_key
 
           # Pinned host key for just2042.justhost.com:2222 (verified manually,
           # not fetched fresh here, to avoid trusting whatever the CI runner
@@ -44,7 +47,7 @@ jobs:
           # rather than failing the whole deploy on a transient reset.
           for attempt in 1 2 3 4 5; do
             if rsync -avz --delete \
-              -e "ssh -i ~/.ssh/deploy_key -p ${{ secrets.BLUEHOST_PORT }}" \
+              -e "ssh -p ${{ secrets.BLUEHOST_PORT }}" \
               dist/ \
               "${{ secrets.BLUEHOST_USERNAME }}@${{ secrets.BLUEHOST_HOST }}:${{ vars.BLUEHOST_DEPLOY_PATH }}/"; then
               exit 0
