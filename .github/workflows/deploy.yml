@@ -39,7 +39,17 @@ jobs:
 
       - name: Deploy over rsync/SSH
         run: |
-          rsync -avz --delete \
-            -e "ssh -i ~/.ssh/deploy_key -p ${{ secrets.BLUEHOST_PORT }}" \
-            dist/ \
-            "${{ secrets.BLUEHOST_USERNAME }}@${{ secrets.BLUEHOST_HOST }}:${{ vars.BLUEHOST_DEPLOY_PATH }}/"
+          # Bluehost resets the occasional first/rapid SSH connection attempt
+          # (seen during manual setup too) — retry a few times with backoff
+          # rather than failing the whole deploy on a transient reset.
+          for attempt in 1 2 3 4 5; do
+            if rsync -avz --delete \
+              -e "ssh -i ~/.ssh/deploy_key -p ${{ secrets.BLUEHOST_PORT }}" \
+              dist/ \
+              "${{ secrets.BLUEHOST_USERNAME }}@${{ secrets.BLUEHOST_HOST }}:${{ vars.BLUEHOST_DEPLOY_PATH }}/"; then
+              exit 0
+            fi
+            echo "rsync attempt $attempt failed, retrying in 20s..."
+            sleep 20
+          done
+          exit 1
