@@ -1,0 +1,45 @@
+name: Deploy to Bluehost
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build
+        run: npm run build
+
+      - name: Set up SSH
+        run: |
+          mkdir -p ~/.ssh
+          echo "${{ secrets.BLUEHOST_SSH_PRIVATE_KEY }}" > ~/.ssh/deploy_key
+          chmod 600 ~/.ssh/deploy_key
+
+          # Pinned host key for just2042.justhost.com:2222 (verified manually,
+          # not fetched fresh here, to avoid trusting whatever the CI runner
+          # is told on first connect).
+          cat >> ~/.ssh/known_hosts <<'EOF'
+          [just2042.justhost.com]:2222 ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAII0c3Ht+HFH82Z2RGfmvA/RVcAGzPdFpLK5Nvcjyirou
+          EOF
+
+      - name: Deploy over rsync/SSH
+        run: |
+          rsync -avz --delete \
+            -e "ssh -i ~/.ssh/deploy_key -p ${{ secrets.BLUEHOST_PORT }}" \
+            dist/ \
+            "${{ secrets.BLUEHOST_USERNAME }}@${{ secrets.BLUEHOST_HOST }}:${{ vars.BLUEHOST_DEPLOY_PATH }}/"
