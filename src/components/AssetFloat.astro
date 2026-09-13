@@ -1,0 +1,55 @@
+---
+// Displays a single 9:16 image or video without ever cropping or stretching it.
+// At desktop widths it's capped at `maxWidth` and centered within whatever grid
+// cell it's placed in (a "floated" device-preview size). Below the desktop
+// breakpoint the cap is dropped and it fills its column directly.
+interface Props {
+  src: string;
+  type?: "image" | "video";
+  alt?: string;
+  poster?: string;
+  maxWidth?: string;
+}
+
+const {
+  src,
+  type,
+  alt = "",
+  poster,
+  maxWidth = "320px",
+} = Astro.props;
+
+const kind = type ?? (/\.(mp4|webm|mov)$/i.test(src) ? "video" : "image");
+---
+
+<div class="asset-float" style={`--asset-max-width: ${maxWidth}`}>
+	{
+		kind === "video" ? (
+			<video src={src} poster={poster} autoplay muted loop playsinline />
+		) : (
+			<img src={src} alt={alt} loading="lazy" />
+		)
+	}
+</div>
+
+<style>
+	.asset-float {
+		display: flex;
+		justify-content: center;
+	}
+
+	.asset-float img,
+	.asset-float video {
+		width: 100%;
+		aspect-ratio: 9 / 16;
+		object-fit: contain;
+		background: var(--color-line);
+	}
+
+	@media (min-width: 1280px) {
+		.asset-float img,
+		.asset-float video {
+			max-width: var(--asset-max-width);
+		}
+	}
+</style>

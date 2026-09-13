@@ -1,0 +1,110 @@
+---
+import type { CollectionEntry } from "astro:content";
+import BaseLayout from "./BaseLayout.astro";
+import ProjectHero from "../components/ProjectHero.astro";
+import ProjectWalkthrough from "../components/ProjectWalkthrough.astro";
+
+interface Props {
+  project: CollectionEntry<"projects">;
+}
+
+const { project } = Astro.props;
+const { title, context, embedUrl, coverImage, coverVideo, screenshots } =
+  project.data;
+
+// The walkthrough component only supports 2 or 3 assets side by side; other
+// counts are skipped for now rather than falling back to a different layout.
+const showWalkthrough = screenshots.length === 2 || screenshots.length === 3;
+---
+
+<BaseLayout title={`${title} — Project`} description={context}>
+	{
+		(coverVideo || coverImage) && (
+			<ProjectHero
+				src={coverVideo || coverImage!}
+				type={coverVideo ? "video" : "image"}
+				poster={coverImage}
+			/>
+		)
+	}
+
+	<article class="section wrap">
+		<header class="project-header">
+			<h1>{title}</h1>
+			<p class="muted">{context}</p>
+		</header>
+
+		{
+			embedUrl && (
+				<div class="embed">
+					<iframe
+						src={embedUrl}
+						title={`${title} walkthrough`}
+						allow="autoplay; fullscreen; picture-in-picture"
+						allowfullscreen
+					/>
+				</div>
+			)
+		}
+
+		<div class="body">
+			<slot />
+		</div>
+	</article>
+
+	{
+		showWalkthrough && (
+			<section class="section">
+				<ProjectWalkthrough assets={screenshots.map((src) => ({ src }))} />
+			</section>
+		)
+	}
+
+	<div class="wrap">
+		<p class="back"><a href="/">&larr; Back to all work</a></p>
+	</div>
+</BaseLayout>
+
+<style>
+	.project-header {
+		max-width: var(--measure);
+		margin-bottom: var(--space-4);
+	}
+
+	.embed {
+		position: relative;
+		width: 100%;
+		padding-top: 56.25%;
+		background: var(--color-line);
+		margin-bottom: var(--space-4);
+	}
+
+	.embed iframe {
+		position: absolute;
+		inset: 0;
+		width: 100%;
+		height: 100%;
+		border: 0;
+	}
+
+	.body {
+		max-width: var(--measure);
+	}
+
+	.body :global(h2) {
+		margin-top: var(--space-4);
+	}
+
+	.back {
+		margin-top: var(--space-5);
+	}
+
+	.back a {
+		text-decoration: none;
+		font-weight: 500;
+	}
+
+	.back a:hover {
+		text-decoration: underline;
+	}
+</style>

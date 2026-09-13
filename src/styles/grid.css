@@ -1,0 +1,100 @@
+/*
+Grid system.
+
+Mobile (default, <1280px): 4 columns, 16px outer margins, 16px gutters.
+Desktop (>=1280px): 12 columns, 1280px container, 100px outer margins,
+1080px content width, 20px gutters.
+
+Tablet/sub-desktop (8 columns) is not yet specified — add a breakpoint here
+between the two below when those numbers exist. Until then, anything sized
+with .col-* falls back to full width below the desktop breakpoint, which is
+a safe default to extend from.
+*/
+
+:root {
+  --grid-columns: 4;
+  --grid-margin: 16px;
+  --grid-gutter: 16px;
+  --grid-container: 100%;
+}
+
+@media (min-width: 1280px) {
+  :root {
+    --grid-columns: 12;
+    --grid-margin: 100px;
+    --grid-gutter: 20px;
+    --grid-container: 1280px;
+  }
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(var(--grid-columns), 1fr);
+  gap: var(--grid-gutter);
+  width: 100%;
+  max-width: var(--grid-container);
+  margin-inline: auto;
+  padding-inline: var(--grid-margin);
+  box-sizing: border-box;
+}
+
+/* Below desktop, every col-* span defaults to full width (stacked). */
+.col-1,
+.col-2,
+.col-3,
+.col-4,
+.col-5,
+.col-6,
+.col-7,
+.col-8,
+.col-9,
+.col-10,
+.col-11,
+.col-12 {
+  grid-column: 1 / -1;
+}
+
+@media (min-width: 1280px) {
+  .col-1 {
+    grid-column: span 1;
+  }
+  .col-2 {
+    grid-column: span 2;
+  }
+  .col-3 {
+    grid-column: span 3;
+  }
+  .col-4 {
+    grid-column: span 4;
+  }
+  .col-5 {
+    grid-column: span 5;
+  }
+  .col-6 {
+    grid-column: span 6;
+  }
+  .col-7 {
+    grid-column: span 7;
+  }
+  .col-8 {
+    grid-column: span 8;
+  }
+  .col-9 {
+    grid-column: span 9;
+  }
+  .col-10 {
+    grid-column: span 10;
+  }
+  .col-11 {
+    grid-column: span 11;
+  }
+  .col-12 {
+    grid-column: span 12;
+  }
+}
+
+/* Breaks an element out of any centered container to full viewport width. */
+.full-bleed {
+  width: 100vw;
+  margin-inline: calc(50% - 50vw);
+}

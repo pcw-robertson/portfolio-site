@@ -1,0 +1,24 @@
+---
+import AssetFloat from "./AssetFloat.astro";
+
+interface Props {
+  src: string;
+  type?: "image" | "video";
+  alt?: string;
+  poster?: string;
+  maxWidth?: string;
+}
+
+const { src, type, alt = "", poster, maxWidth = "480px" } = Astro.props;
+---
+
+<div class="full-bleed hero-bleed">
+	<AssetFloat src={src} type={type} alt={alt} poster={poster} maxWidth={maxWidth} />
+</div>
+
+<style>
+	.hero-bleed {
+		background: var(--color-bg);
+		padding-block: var(--space-4);
+	}
+</style>

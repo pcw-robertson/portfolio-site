@@ -1,0 +1,39 @@
+---
+import AssetFloat from "./AssetFloat.astro";
+
+interface WalkthroughAsset {
+  src: string;
+  type?: "image" | "video";
+  alt?: string;
+  poster?: string;
+}
+
+interface Props {
+  assets: WalkthroughAsset[];
+}
+
+const { assets } = Astro.props;
+
+if (assets.length !== 2 && assets.length !== 3) {
+  throw new Error(
+    `ProjectWalkthrough expects 2 or 3 assets, got ${assets.length}`,
+  );
+}
+
+const span = assets.length === 2 ? 6 : 4;
+---
+
+<div class="grid">
+	{
+		assets.map((asset) => (
+			<div class={`col-${span}`}>
+				<AssetFloat
+					src={asset.src}
+					type={asset.type}
+					alt={asset.alt}
+					poster={asset.poster}
+				/>
+			</div>
+		))
+	}
+</div>

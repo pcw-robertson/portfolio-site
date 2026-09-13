@@ -1,0 +1,52 @@
+---
+import { site } from "../site.config";
+---
+
+<footer id="contact" class="footer">
+	<div class="wrap footer-inner">
+		<div>
+			<p class="eyebrow">Get in touch</p>
+			<p>
+				<a href={`mailto:${site.email}`}>{site.email}</a>
+			</p>
+		</div>
+		<div class="footer-links">
+			<a href={site.linkedinUrl} target="_blank" rel="noopener">LinkedIn</a>
+			<a href={site.resumeUrl}>Resume (PDF)</a>
+		</div>
+	</div>
+</footer>
+
+<style>
+	.footer {
+		border-top: 1px solid var(--color-line);
+		margin-top: var(--space-6);
+	}
+
+	.footer-inner {
+		padding: var(--space-4) 0;
+		display: flex;
+		flex-wrap: wrap;
+		gap: var(--space-3);
+		justify-content: space-between;
+		align-items: flex-start;
+	}
+
+	.footer p {
+		margin: 0;
+	}
+
+	.footer-links {
+		display: flex;
+		gap: var(--space-3);
+	}
+
+	.footer-links a {
+		text-decoration: none;
+		font-weight: 500;
+	}
+
+	.footer-links a:hover {
+		text-decoration: underline;
+	}
+</style>

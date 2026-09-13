@@ -1,0 +1,56 @@
+---
+import { getCollection } from "astro:content";
+import BaseLayout from "../layouts/BaseLayout.astro";
+import ProjectCard from "../components/ProjectCard.astro";
+import { site } from "../site.config";
+
+const projects = (await getCollection("projects")).sort(
+  (a, b) => a.data.order - b.data.order,
+);
+---
+
+<BaseLayout title={`${site.name} — ${site.title}`}>
+	<section class="section wrap hero">
+		<p class="eyebrow">{site.title}</p>
+		<h1>{site.name}</h1>
+		<p class="positioning">{site.positioningStatement}</p>
+		<p class="muted summary">{site.summary}</p>
+	</section>
+
+	<hr class="hr" />
+
+	<section class="section">
+		<div class="wrap">
+			<h2>Selected work</h2>
+		</div>
+		<div class="grid project-grid">
+			{
+				projects.map((project) => (
+					<div class="col-3">
+						<ProjectCard project={project} />
+					</div>
+				))
+			}
+		</div>
+	</section>
+</BaseLayout>
+
+<style>
+	.hero {
+		max-width: 760px;
+	}
+
+	.positioning {
+		font-size: 1.375rem;
+		color: var(--color-ink);
+		max-width: 40ch;
+	}
+
+	.summary {
+		white-space: pre-line;
+	}
+
+	.project-grid {
+		margin-top: var(--space-3);
+	}
+</style>
