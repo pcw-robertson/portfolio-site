@@ -99,8 +99,18 @@ a safe default to extend from.
   margin-inline: calc(50% - 50vw);
 }
 
+/* Same, but only below the desktop breakpoint — for an asset that should
+   ignore the mobile margins while staying contained (e.g. in a grid column)
+   at desktop. */
+@media (max-width: 1279px) {
+  .full-bleed-mobile {
+    width: 100vw;
+    margin-inline: calc(50% - 50vw);
+  }
+}
+
 /* Vertical rhythm between stacked .grid sections in a custom-layout project
-   page (composed directly in MDX — see content.config.ts's `layout` field). */
+   page (composed directly in MDX — see content.config.ts's `template` field). */
 .grid + .grid {
   margin-top: var(--space-5);
 }
