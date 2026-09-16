@@ -3,12 +3,17 @@
 // At desktop widths it's capped at `maxWidth` and centered within whatever grid
 // cell it's placed in (a "floated" device-preview size). Below the desktop
 // breakpoint the cap is dropped and it fills its column directly.
+//
+// Video only plays while scrolled into view (see the shared script below) —
+// `eager` just controls whether the browser fetches it immediately (for an
+// above-the-fold hero) or waits until it's needed (everything else).
 interface Props {
   src: string;
   type?: "image" | "video";
   alt?: string;
   poster?: string;
   maxWidth?: string;
+  eager?: boolean;
 }
 
 const {
@@ -17,6 +22,7 @@ const {
   alt = "",
   poster,
   maxWidth = "320px",
+  eager = false,
 } = Astro.props;
 
 const kind = type ?? (/\.(mp4|webm|mov)$/i.test(src) ? "video" : "image");
@@ -25,9 +31,17 @@ const kind = type ?? (/\.(mp4|webm|mov)$/i.test(src) ? "video" : "image");
 <div class="asset-float" style={`--asset-max-width: ${maxWidth}`}>
 	{
 		kind === "video" ? (
-			<video src={src} poster={poster} autoplay muted loop playsinline />
+			<video
+				src={src}
+				poster={poster}
+				muted
+				loop
+				playsinline
+				preload={eager ? "auto" : "none"}
+				data-autoplay-in-view
+			/>
 		) : (
-			<img src={src} alt={alt} loading="lazy" />
+			<img src={src} alt={alt} loading={eager ? "eager" : "lazy"} />
 		)
 	}
 </div>
@@ -53,3 +67,32 @@ const kind = type ?? (/\.(mp4|webm|mov)$/i.test(src) ? "video" : "image");
 		}
 	}
 </style>
+
+<script>
+	// Shared across every AssetFloat instance on the page (Astro dedupes
+	// identical scripts) — plays each video only while it's in view, and
+	// pauses it otherwise, instead of every video autoplaying on page load.
+	const videos = document.querySelectorAll<HTMLVideoElement>(
+		"video[data-autoplay-in-view]",
+	);
+
+	if (videos.length > 0) {
+		const observer = new IntersectionObserver(
+			(entries) => {
+				for (const entry of entries) {
+					const video = entry.target as HTMLVideoElement;
+					if (entry.isIntersecting) {
+						video.play().catch(() => {});
+					} else {
+						video.pause();
+					}
+				}
+			},
+			{ threshold: 0.25 },
+		);
+
+		for (const video of videos) {
+			observer.observe(video);
+		}
+	}
+</script>

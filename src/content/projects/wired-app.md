@@ -2,8 +2,8 @@
 title: "Wired App"
 context: "TODO: one-line context — what the app is and why it matters"
 order: 1
-coverImage: "/images/placeholders/cover.svg"
-coverVideo: ""
+coverImage: "/videos/wired-app-run-poster.jpg"
+coverVideo: "/videos/wired-app-run.mp4"
 embedUrl: ""
 screenshots:
   - "/images/placeholders/asset-a.svg"

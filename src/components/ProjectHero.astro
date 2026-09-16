@@ -7,13 +7,28 @@ interface Props {
   alt?: string;
   poster?: string;
   maxWidth?: string;
+  eager?: boolean;
 }
 
-const { src, type, alt = "", poster, maxWidth = "480px" } = Astro.props;
+const {
+  src,
+  type,
+  alt = "",
+  poster,
+  maxWidth = "480px",
+  eager = true,
+} = Astro.props;
 ---
 
 <div class="full-bleed hero-bleed">
-	<AssetFloat src={src} type={type} alt={alt} poster={poster} maxWidth={maxWidth} />
+	<AssetFloat
+		src={src}
+		type={type}
+		alt={alt}
+		poster={poster}
+		maxWidth={maxWidth}
+		eager={eager}
+	/>
 </div>
 
 <style>
