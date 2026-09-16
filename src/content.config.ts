@@ -28,4 +28,31 @@ const projects = defineCollection({
   }),
 });
 
-export const collections = { projects };
+// Single-document collections — each holds one file, so all site-wide copy
+// is a plain markdown file like project pages are, rather than TypeScript
+// config or copy hardcoded into a page component. Editing any of these and
+// pushing rebuilds and redeploys the site automatically (see
+// .github/workflows/deploy.yml) — no separate sync step.
+const site = defineCollection({
+  loader: glob({ pattern: "index.md", base: "./src/content/site" }),
+  schema: z.object({
+    name: z.string(),
+    title: z.string(),
+    // A thesis on what you do, not a job title.
+    positioningStatement: z.string(),
+    // Scope + specialty + what's next. A few sentences, not a full bio.
+    summary: z.string(),
+    email: z.string(),
+    linkedinUrl: z.string(),
+    resumeUrl: z.string(),
+  }),
+});
+
+const about = defineCollection({
+  loader: glob({ pattern: "index.md", base: "./src/content/about" }),
+  // No frontmatter needed — the "How I lead" / "Bio" copy is just the
+  // markdown body, rendered as-is (same idea as a project's prose body).
+  schema: z.object({}),
+});
+
+export const collections = { projects, site, about };

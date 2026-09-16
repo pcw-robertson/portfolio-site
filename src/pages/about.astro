@@ -1,24 +1,16 @@
 ---
+import { getEntry, render } from "astro:content";
 import BaseLayout from "../layouts/BaseLayout.astro";
-import { site } from "../site.config";
+
+const site = (await getEntry("site", "index"))!.data;
+const aboutEntry = (await getEntry("about", "index"))!;
+const { Content } = await render(aboutEntry);
 ---
 
 <BaseLayout title={`About — ${site.name}`}>
 	<section class="section wrap about">
 		<h1>About</h1>
-
-		<h2>How I lead</h2>
-		<p>
-			TODO: your approach to managing a team of 5 across 4+ brands —
-			how you set direction, work with editorial/product/eng stakeholders,
-			and keep design quality high across parallel workstreams.
-		</p>
-
-		<h2>Bio</h2>
-		<p>
-			TODO: a short bio — background, what you've led, what you're
-			looking for next.
-		</p>
+		<Content />
 	</section>
 </BaseLayout>
 

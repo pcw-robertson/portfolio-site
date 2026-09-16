@@ -14,16 +14,27 @@ touch only one or two files.
 
 ## Where things live
 
-- `src/site.config.ts` — name, title, positioning statement, summary, email,
-  LinkedIn, resume link. Edit this first.
+Every piece of copy on the site is a plain markdown file under
+`src/content/` — edit any of them and push; the deploy workflow rebuilds
+the whole site from whatever's currently in these files, so there's no
+separate sync step.
+
+- `src/content/site/index.md` — name, title, positioning statement, summary,
+  email, LinkedIn, resume link (all in the frontmatter — no body). Edit this
+  first.
+- `src/content/about/index.md` — About/leadership page copy, as the markdown
+  body ("How I lead" / "Bio" sections).
 - `src/content/projects/*.md` — one file per project. Frontmatter holds card
   media + embed URL; the markdown body holds "The problem" / "Role" /
   "Outcome". Editing one of these is a self-contained session.
 - `src/content/projects/*.mdx` — same idea, but for a project whose page
   doesn't fit that generic template (see "Custom project layouts" below).
-- `src/pages/about.astro` — About/leadership page copy.
-- `src/pages/index.astro`, `src/pages/projects/[id].astro` — homepage and
-  project-page templates. Shouldn't need touching often.
+
+Everything else is code, not copy, and shouldn't need touching for routine
+content edits:
+
+- `src/pages/index.astro`, `src/pages/about.astro`,
+  `src/pages/projects/[id].astro` — page templates.
 - `src/components/`, `src/layouts/` — Nav, Footer, ProjectCard, and the two
   page layouts.
 - `src/styles/global.css` — typography, spacing, color tokens.
