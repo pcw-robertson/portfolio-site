@@ -76,7 +76,9 @@ const isCustom = template === "custom";
 
 <style>
 	.project-theme {
-		--color-bg: #050505;
+		/* True black — matches the captured video footage exactly (sampled as
+		   pure black), so there's no visible seam around video edges. */
+		--color-bg: #000000;
 		--color-ink: #ffffff;
 		--color-body: #bababa;
 		--color-muted: #bababa;
