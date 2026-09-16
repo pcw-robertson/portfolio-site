@@ -14,8 +14,16 @@ interface Props {
   alt?: string;
   poster?: string;
   maxWidth?: string;
+  // Caps by height instead of width at desktop — for an asset that should
+  // visually match the height of a taller/narrower neighbor rather than
+  // being capped to a fixed width (e.g. a wider-ratio clip sitting in a
+  // sequence of phone-shaped ones).
+  maxHeight?: string;
   eager?: boolean;
   aspectRatio?: string;
+  // Rounds the asset's corners to read as a device screen, for captures
+  // that don't already include their own device frame/bezel.
+  rounded?: boolean;
 }
 
 const {
@@ -24,16 +32,24 @@ const {
   alt = "",
   poster,
   maxWidth = "320px",
+  maxHeight,
   eager = false,
   aspectRatio = "9 / 16",
+  rounded = false,
 } = Astro.props;
 
 const kind = type ?? (/\.(mp4|webm|mov)$/i.test(src) ? "video" : "image");
+
+const styleParts = [
+  `--asset-max-width: ${maxWidth}`,
+  `--asset-aspect-ratio: ${aspectRatio}`,
+];
+if (maxHeight) styleParts.push(`--asset-max-height: ${maxHeight}`);
 ---
 
 <div
-	class="asset-float"
-	style={`--asset-max-width: ${maxWidth}; --asset-aspect-ratio: ${aspectRatio}`}
+	class:list={["asset-float", { "has-max-height": !!maxHeight, rounded }]}
+	style={styleParts.join("; ")}
 >
 	{
 		kind === "video" ? (
@@ -66,10 +82,23 @@ const kind = type ?? (/\.(mp4|webm|mov)$/i.test(src) ? "video" : "image");
 		background: var(--color-line);
 	}
 
+	.asset-float.rounded img,
+	.asset-float.rounded video {
+		border-radius: 30px;
+	}
+
 	@media (min-width: 1280px) {
 		.asset-float img,
 		.asset-float video {
 			max-width: var(--asset-max-width);
+		}
+
+		.asset-float.has-max-height img,
+		.asset-float.has-max-height video {
+			width: auto;
+			max-width: 100%;
+			height: var(--asset-max-height);
+			max-height: var(--asset-max-height);
 		}
 	}
 </style>
