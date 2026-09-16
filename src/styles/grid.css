@@ -98,3 +98,9 @@ a safe default to extend from.
   width: 100vw;
   margin-inline: calc(50% - 50vw);
 }
+
+/* Vertical rhythm between stacked .grid sections in a custom-layout project
+   page (composed directly in MDX — see content.config.ts's `layout` field). */
+.grid + .grid {
+  margin-top: var(--space-5);
+}

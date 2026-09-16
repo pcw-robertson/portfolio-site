@@ -9,63 +9,83 @@ interface Props {
 }
 
 const { project } = Astro.props;
-const { title, context, embedUrl, coverImage, coverVideo, screenshots } =
+const { title, context, embedUrl, coverImage, coverVideo, screenshots, template } =
   project.data;
 
 // The walkthrough component only supports 2 or 3 assets side by side; other
 // counts are skipped for now rather than falling back to a different layout.
 const showWalkthrough = screenshots.length === 2 || screenshots.length === 3;
+const isCustom = template === "custom";
 ---
 
 <BaseLayout title={`${title} — Project`} description={context}>
-	{
-		(coverVideo || coverImage) && (
-			<ProjectHero
-				src={coverVideo || coverImage!}
-				type={coverVideo ? "video" : "image"}
-				poster={coverImage}
-			/>
-		)
-	}
-
-	<article class="section wrap">
-		<header class="project-header">
-			<h1>{title}</h1>
-			<p class="muted">{context}</p>
-		</header>
-
+	<div class="project-theme full-bleed">
 		{
-			embedUrl && (
-				<div class="embed">
-					<iframe
-						src={embedUrl}
-						title={`${title} walkthrough`}
-						allow="autoplay; fullscreen; picture-in-picture"
-						allowfullscreen
-					/>
-				</div>
+			isCustom ? (
+				<article class="section">
+					<slot />
+				</article>
+			) : (
+				<>
+					{(coverVideo || coverImage) && (
+						<ProjectHero
+							src={coverVideo || coverImage!}
+							type={coverVideo ? "video" : "image"}
+							poster={coverImage}
+						/>
+					)}
+
+					<article class="section wrap">
+						<header class="project-header">
+							<h1>{title}</h1>
+							<p class="muted">{context}</p>
+						</header>
+
+						{embedUrl && (
+							<div class="embed">
+								<iframe
+									src={embedUrl}
+									title={`${title} walkthrough`}
+									allow="autoplay; fullscreen; picture-in-picture"
+									allowfullscreen
+								/>
+							</div>
+						)}
+
+						<div class="body">
+							<slot />
+						</div>
+					</article>
+
+					{showWalkthrough && (
+						<section class="section">
+							<ProjectWalkthrough
+								assets={screenshots.map((src) => ({ src }))}
+							/>
+						</section>
+					)}
+				</>
 			)
 		}
 
-		<div class="body">
-			<slot />
+		<div class="wrap">
+			<p class="back"><a href="/">&larr; Back to all work</a></p>
 		</div>
-	</article>
-
-	{
-		showWalkthrough && (
-			<section class="section">
-				<ProjectWalkthrough assets={screenshots.map((src) => ({ src }))} />
-			</section>
-		)
-	}
-
-	<div class="wrap">
-		<p class="back"><a href="/">&larr; Back to all work</a></p>
 	</div>
 </BaseLayout>
 
 <style>
+	.project-theme {
+		--color-bg: #050505;
+		--color-ink: #f5f5f2;
+		--color-body: #d6d6d3;
+		--color-muted: #8f8f8c;
+		--color-line: #2b2b29;
+		--color-accent: #f5f5f2;
+		background: var(--color-bg);
+		color: var(--color-body);
+	}
+
 	.project-header {
 		max-width: var(--measure);
 		margin-bottom: var(--space-4);
@@ -91,12 +111,14 @@ const showWalkthrough = screenshots.length === 2 || screenshots.length === 3;
 		max-width: var(--measure);
 	}
 
-	.body :global(h2) {
+	.body :global(h2),
+	.project-theme :global(.grid h2) {
 		margin-top: var(--space-4);
 	}
 
 	.back {
-		margin-top: var(--space-5);
+		padding-top: var(--space-5);
+		padding-bottom: var(--space-5);
 	}
 
 	.back a {

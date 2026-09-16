@@ -19,6 +19,8 @@ touch only one or two files.
 - `src/content/projects/*.md` — one file per project. Frontmatter holds card
   media + embed URL; the markdown body holds "The problem" / "Role" /
   "Outcome". Editing one of these is a self-contained session.
+- `src/content/projects/*.mdx` — same idea, but for a project whose page
+  doesn't fit that generic template (see "Custom project layouts" below).
 - `src/pages/about.astro` — About/leadership page copy.
 - `src/pages/index.astro`, `src/pages/projects/[id].astro` — homepage and
   project-page templates. Shouldn't need touching often.
@@ -73,6 +75,37 @@ Every video rendered through `AssetFloat` (cards, project hero, walkthrough)
 only plays while scrolled into view and pauses otherwise — not all
 autoplaying at once on page load. `ProjectHero` preloads eagerly by default
 since it's above the fold; everything else lazy-loads.
+
+## Custom project layouts
+
+Most projects use the generic template (header → optional hero video →
+prose → optional 2/3-up walkthrough). A project can opt out of that and
+compose its own page instead — see `wired-app.mdx` for a worked example —
+by:
+
+1. Naming the file `.mdx` instead of `.md`
+2. Setting `template: "custom"` in its frontmatter (not `layout` — that's a
+   reserved Astro key that auto-imports a layout component and will break
+   the build if reused)
+3. Composing the body directly with the grid system: wrap each section in
+   `<div class="grid">`, place content in `<div class="col-N">` (1–12,
+   defaults to full-width below the desktop breakpoint), and drop in
+   `<AssetFloat>` for any image/video. Import components you use at the top
+   of the file, e.g. `import AssetFloat from "../../components/AssetFloat.astro"`.
+
+`AssetFloat` defaults to a 9:16 aspect ratio (most captures are vertical
+phone screens) but takes an `aspectRatio` prop for anything else — e.g. a
+wide/tall full-page scroll capture — and an `eager` prop for the one video
+that should preload immediately (typically whatever's above the fold).
+
+Whichever template is used, `ProjectLayout` wraps the whole page (excluding
+Nav/Footer, which stay on the site-wide light theme) in a dark theme — see
+`.project-theme` in `ProjectLayout.astro` if that ever needs adjusting.
+
+Astro reserves `<style>` tags for scoped CSS in `.astro` files, but **not**
+in `.mdx` — a raw `<style>` block in an `.mdx` file will fail to build
+(MDX tries to parse its contents as JSX). Add project-specific CSS to
+`src/styles/global.css` or `grid.css` instead.
 
 ## Deploying
 
