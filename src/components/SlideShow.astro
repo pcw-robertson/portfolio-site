@@ -1,0 +1,139 @@
+---
+// Cycles through images one at a time: each slides in from the right,
+// holds for `pauseMs`, then slides out to the left as the next one slides
+// in behind it. Autoplay only (no controls), and only runs while scrolled
+// into view — same in-view gating as AssetFloat's video playback.
+interface SlideImage {
+  src: string;
+  alt?: string;
+}
+
+interface Props {
+  images: SlideImage[];
+  aspectRatio?: string;
+  maxWidth?: string;
+  pauseMs?: number;
+  transitionMs?: number;
+  radius?: string;
+}
+
+const {
+  images,
+  aspectRatio = "375 / 812",
+  maxWidth = "410px",
+  pauseMs = 2200,
+  transitionMs = 600,
+  radius = "20px",
+} = Astro.props;
+---
+
+<div
+	class="slideshow"
+	data-autoplay-slideshow
+	data-pause={pauseMs}
+	style={`--slide-aspect-ratio: ${aspectRatio}; --slide-max-width: ${maxWidth}; --slide-transition: ${transitionMs}ms; --slide-radius: ${radius}`}
+>
+	{
+		images.map((img, i) => (
+			<img
+				src={img.src}
+				alt={img.alt ?? ""}
+				loading="lazy"
+				data-active={i === 0 ? "" : undefined}
+			/>
+		))
+	}
+</div>
+
+<style>
+	.slideshow {
+		position: relative;
+		width: 100%;
+		max-width: var(--slide-max-width);
+		aspect-ratio: var(--slide-aspect-ratio);
+		margin-inline: auto;
+		overflow: hidden;
+		border-radius: var(--slide-radius);
+		background: var(--color-line);
+	}
+
+	.slideshow img {
+		position: absolute;
+		inset: 0;
+		width: 100%;
+		height: 100%;
+		object-fit: cover;
+		transform: translateX(100%);
+		transition: transform var(--slide-transition) ease;
+	}
+
+	.slideshow img.no-transition {
+		transition: none;
+	}
+
+	.slideshow img[data-active] {
+		transform: translateX(0);
+	}
+
+	.slideshow img[data-exiting] {
+		transform: translateX(-100%);
+	}
+</style>
+
+<script>
+	// Shared across every SlideShow instance on the page (Astro dedupes
+	// identical scripts).
+	const shows = document.querySelectorAll<HTMLElement>(
+		"[data-autoplay-slideshow]",
+	);
+
+	for (const show of shows) {
+		const slides = Array.from(show.querySelectorAll("img"));
+		if (slides.length < 2) continue;
+
+		const pauseMs = Number(show.dataset.pause) || 2200;
+		let current = 0;
+		let timer: ReturnType<typeof setInterval> | null = null;
+
+		function advance() {
+			const prevSlide = slides[current];
+			current = (current + 1) % slides.length;
+			const nextSlide = slides[current];
+
+			prevSlide.removeAttribute("data-active");
+			prevSlide.setAttribute("data-exiting", "");
+
+			requestAnimationFrame(() => {
+				nextSlide.setAttribute("data-active", "");
+			});
+
+			prevSlide.addEventListener(
+				"transitionend",
+				function reset(e) {
+					if (e.propertyName !== "transform") return;
+					prevSlide.removeEventListener("transitionend", reset);
+					prevSlide.classList.add("no-transition");
+					prevSlide.removeAttribute("data-exiting");
+					void prevSlide.offsetWidth;
+					prevSlide.classList.remove("no-transition");
+				},
+				{ once: true },
+			);
+		}
+
+		const observer = new IntersectionObserver(
+			(entries) => {
+				for (const entry of entries) {
+					if (entry.isIntersecting) {
+						if (!timer) timer = setInterval(advance, pauseMs);
+					} else if (timer) {
+						clearInterval(timer);
+						timer = null;
+					}
+				}
+			},
+			{ threshold: 0.25 },
+		);
+		observer.observe(show);
+	}
+</script>

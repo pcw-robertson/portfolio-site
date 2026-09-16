@@ -1,0 +1,90 @@
+---
+// A cropped grid of images — a fixed-height "window" onto a multi-row grid,
+// vertically centered so the top/bottom rows peek in partially cropped
+// rather than being sized to fit exactly. Matches a Figma collage layout
+// (masked frame taller than its container) without needing per-image
+// position/rotation data.
+interface CollageImage {
+  src: string;
+  alt?: string;
+}
+
+interface Props {
+  images: CollageImage[];
+  columns?: number;
+  mobileColumns?: number;
+  height?: string;
+  mobileHeight?: string;
+  aspectRatio?: string;
+  gap?: string;
+  radius?: string;
+}
+
+const {
+  images,
+  columns = 4,
+  mobileColumns = 2,
+  height = "620px",
+  mobileHeight = "620px",
+  aspectRatio = "375 / 812",
+  gap = "24px",
+  radius = "20px",
+} = Astro.props;
+---
+
+<div
+	class="collage"
+	style={`--collage-columns: ${columns}; --collage-columns-mobile: ${mobileColumns}; --collage-height: ${height}; --collage-height-mobile: ${mobileHeight}; --collage-aspect-ratio: ${aspectRatio}; --collage-gap: ${gap}; --collage-radius: ${radius}`}
+>
+	<div class="collage-grid">
+		{
+			images.map((img) => (
+				<div class="collage-item">
+					<img src={img.src} alt={img.alt ?? ""} loading="lazy" />
+				</div>
+			))
+		}
+	</div>
+</div>
+
+<style>
+	.collage {
+		position: relative;
+		width: 100%;
+		height: var(--collage-height-mobile);
+		overflow: hidden;
+		display: flex;
+		align-items: center;
+	}
+
+	.collage-grid {
+		display: grid;
+		grid-template-columns: repeat(var(--collage-columns-mobile), 1fr);
+		gap: var(--collage-gap);
+		width: 100%;
+	}
+
+	.collage-item {
+		aspect-ratio: var(--collage-aspect-ratio);
+		border-radius: var(--collage-radius);
+		overflow: hidden;
+		background: var(--color-line);
+	}
+
+	.collage-item img {
+		width: 100%;
+		height: 100%;
+		object-fit: cover;
+		display: block;
+	}
+
+	@media (min-width: 1280px) {
+		.collage {
+			height: var(--collage-height);
+		}
+
+		.collage-grid {
+			grid-template-columns: repeat(var(--collage-columns), 1fr);
+		}
+	}
+</style>

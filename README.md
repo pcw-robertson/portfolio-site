@@ -104,6 +104,19 @@ by:
    `<AssetFloat>` for any image/video. Import components you use at the top
    of the file, e.g. `import AssetFloat from "../../components/AssetFloat.astro"`.
 
+For a group of images instead of one asset, two more components are
+available (see `new-yorker-games.mdx` for both in use):
+
+- `<ImageCollage images={[...]} />` — a fixed-height cropped grid (like a
+  masked Figma frame taller than its container — top/bottom rows peek in
+  partially cropped). Static, no JS. Takes `columns`/`mobileColumns`,
+  `height`/`mobileHeight`, `aspectRatio`, `gap`, `radius`.
+- `<SlideShow images={[...]} />` — cycles through images one at a time:
+  each slides in from the right, holds, then slides out left as the next
+  slides in. Autoplay only, gated the same way as video (only runs while
+  scrolled into view). Takes `aspectRatio`, `maxWidth`, `pauseMs`,
+  `transitionMs`, `radius`.
+
 `AssetFloat` defaults to a 9:16 aspect ratio (most captures are vertical
 phone screens) but takes an `aspectRatio` prop for anything else — e.g. a
 wide/tall full-page scroll capture — and an `eager` prop for the one video
