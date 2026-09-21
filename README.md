@@ -111,11 +111,16 @@ available (see `new-yorker-games.mdx` for both in use):
   masked Figma frame taller than its container — top/bottom rows peek in
   partially cropped). Static, no JS. Takes `columns`/`mobileColumns`,
   `height`/`mobileHeight`, `aspectRatio`, `gap`, `radius`.
-- `<SlideShow images={[...]} />` — cycles through images one at a time:
-  each slides in from the right, holds, then slides out left as the next
-  slides in. Autoplay only, gated the same way as video (only runs while
-  scrolled into view). Takes `aspectRatio`, `maxWidth`, `pauseMs`,
-  `transitionMs`, `radius`.
+- `<SlideShow images={[...]} />` — a set of sequential screens. Where they
+  fit, they sit in a static row (48px apart). Otherwise they become an
+  autoplay carousel: full viewport width, active screen centered, neighbors
+  peeking in at the edges. That's always the case below the desktop
+  breakpoint, and at desktop whenever the static row would squeeze slides
+  under `minSlideWidth` (default 220px — so 4 across fits, a 5th tips it
+  over; narrower columns tip sooner). Autoplay only, gated the same way as
+  video (only runs while scrolled into view). Takes `aspectRatio`,
+  `mobileSlideWidth` (under 100% so neighbors show), `minSlideWidth`,
+  `pauseMs`, `transitionMs`, `radius`.
 
 `AssetFloat` defaults to a 9:16 aspect ratio (most captures are vertical
 phone screens) but takes an `aspectRatio` prop for anything else — e.g. a

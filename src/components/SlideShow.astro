@@ -1,8 +1,14 @@
 ---
-// Cycles through images one at a time: each slides in from the right,
-// holds for `pauseMs`, then slides out to the left as the next one slides
-// in behind it. Autoplay only (no controls), and only runs while scrolled
-// into view — same in-view gating as AssetFloat's video playback.
+// A set of sequential screens. Where they fit, they sit in a static row (one
+// column each). Otherwise they become an autoplay carousel: the active slide
+// is centered and its neighbors peek in at the edges.
+//
+// Carousel mode applies below the desktop breakpoint (where the track also
+// spans the full viewport width), and at desktop whenever the static row
+// would squeeze slides below `minSlideWidth` — i.e. the set overflows.
+//
+// Autoplay only (no controls), and it only runs while scrolled into view —
+// same in-view gating as AssetFloat's video playback.
 interface SlideImage {
   src: string;
   alt?: string;
@@ -11,7 +17,12 @@ interface SlideImage {
 interface Props {
   images: SlideImage[];
   aspectRatio?: string;
-  maxWidth?: string;
+  // Mobile slide width relative to the carousel — under 100% so neighbors
+  // show. The visible peek is what's left of each side after the 48px gap.
+  mobileSlideWidth?: string;
+  // Narrowest a slide may get in the static desktop row (px). Past that the
+  // set switches to the carousel, drawing slides at this width.
+  minSlideWidth?: number;
   pauseMs?: number;
   transitionMs?: number;
   radius?: string;
@@ -20,7 +31,8 @@ interface Props {
 const {
   images,
   aspectRatio = "375 / 812",
-  maxWidth = "410px",
+  mobileSlideWidth = "60%",
+  minSlideWidth = 220,
   pauseMs = 2200,
   transitionMs = 600,
   radius = "20px",
@@ -28,112 +40,185 @@ const {
 ---
 
 <div
-	class="slideshow"
-	data-autoplay-slideshow
+	class="slideshow full-bleed-mobile"
+	data-slideshow
 	data-pause={pauseMs}
-	style={`--slide-aspect-ratio: ${aspectRatio}; --slide-max-width: ${maxWidth}; --slide-transition: ${transitionMs}ms; --slide-radius: ${radius}`}
+	data-min-width={minSlideWidth}
+	style={`--slide-count: ${images.length}; --slide-aspect-ratio: ${aspectRatio}; --slide-width-mobile: ${mobileSlideWidth}; --slide-min-width: ${minSlideWidth}px; --slide-transition: ${transitionMs}ms; --slide-radius: ${radius}`}
 >
-	{
-		images.map((img, i) => (
-			<img
-				src={img.src}
-				alt={img.alt ?? ""}
-				loading="lazy"
-				data-active={i === 0 ? "" : undefined}
-			/>
-		))
-	}
+	<div class="slideshow-track">
+		{
+			images.map((img) => (
+				<div class="slide">
+					<img src={img.src} alt={img.alt ?? ""} loading="lazy" />
+				</div>
+			))
+		}
+	</div>
 </div>
 
 <style>
 	.slideshow {
-		position: relative;
-		width: 100%;
-		max-width: var(--slide-max-width);
-		aspect-ratio: var(--slide-aspect-ratio);
-		margin-inline: auto;
 		overflow: hidden;
+		min-width: 0;
+	}
+
+	.slideshow-track {
+		position: relative;
+		display: flex;
+		gap: var(--space-4);
+		transition: transform var(--slide-transition) ease;
+	}
+
+	.slide {
+		flex: 0 0 var(--slide-width-mobile);
+	}
+
+	.slide img {
+		display: block;
+		width: 100%;
+		aspect-ratio: var(--slide-aspect-ratio);
+		object-fit: cover;
 		border-radius: var(--slide-radius);
 		background: var(--color-line);
 	}
 
-	.slideshow img {
-		position: absolute;
-		inset: 0;
-		width: 100%;
-		height: 100%;
-		object-fit: cover;
-		transform: translateX(100%);
-		transition: transform var(--slide-transition) ease;
-	}
+	@media (min-width: 1280px) {
+		.slideshow:not([data-carousel]) .slideshow-track {
+			display: grid;
+			grid-template-columns: repeat(var(--slide-count), 1fr);
+			transition: none;
+		}
 
-	.slideshow img.no-transition {
-		transition: none;
-	}
+		.slideshow:not([data-carousel]) .slide {
+			flex: none;
+		}
 
-	.slideshow img[data-active] {
-		transform: translateX(0);
-	}
-
-	.slideshow img[data-exiting] {
-		transform: translateX(-100%);
+		.slideshow[data-carousel] .slide {
+			flex: 0 0 var(--slide-min-width);
+		}
 	}
 </style>
 
 <script>
-	// Shared across every SlideShow instance on the page (Astro dedupes
-	// identical scripts).
-	const shows = document.querySelectorAll<HTMLElement>(
-		"[data-autoplay-slideshow]",
-	);
+	const mobileQuery = window.matchMedia("(max-width: 1279px)");
 
-	for (const show of shows) {
-		const slides = Array.from(show.querySelectorAll("img"));
-		if (slides.length < 2) continue;
+	function initSlideshow(show: HTMLElement) {
+		const track = show.querySelector<HTMLElement>(".slideshow-track")!;
+		const originals = Array.from(track.children) as HTMLElement[];
+		const count = originals.length;
+		if (count < 2) return;
 
 		const pauseMs = Number(show.dataset.pause) || 2200;
-		let current = 0;
+		const minSlideWidth = Number(show.dataset.minWidth) || 220;
+
+		// Carousel track = [clones of all slides][real slides][clones of all
+		// slides]. Real slides sit at indexes count..2*count-1; sliding onto the
+		// first trailing clone (index 2*count, identical to the first real slide)
+		// and then snapping back to `count` makes it loop forward forever with
+		// both edges always populated.
+		let index = count;
+		let active = false;
+		let inView = false;
 		let timer: ReturnType<typeof setInterval> | null = null;
 
-		function advance() {
-			const prevSlide = slides[current];
-			current = (current + 1) % slides.length;
-			const nextSlide = slides[current];
+		const slides = () => Array.from(track.children) as HTMLElement[];
 
-			prevSlide.removeAttribute("data-active");
-			prevSlide.setAttribute("data-exiting", "");
-
-			requestAnimationFrame(() => {
-				nextSlide.setAttribute("data-active", "");
-			});
-
-			prevSlide.addEventListener(
-				"transitionend",
-				function reset(e) {
-					if (e.propertyName !== "transform") return;
-					prevSlide.removeEventListener("transitionend", reset);
-					prevSlide.classList.add("no-transition");
-					prevSlide.removeAttribute("data-exiting");
-					void prevSlide.offsetWidth;
-					prevSlide.classList.remove("no-transition");
-				},
-				{ once: true },
-			);
+		function position(animate: boolean) {
+			const slide = slides()[index];
+			const x = (show.clientWidth - slide.offsetWidth) / 2 - slide.offsetLeft;
+			if (!animate) track.style.transition = "none";
+			track.style.transform = `translateX(${x}px)`;
+			if (!animate) {
+				void track.offsetWidth;
+				track.style.transition = "";
+			}
 		}
 
-		const observer = new IntersectionObserver(
+		function advance() {
+			if (index >= count * 2) {
+				index = count;
+				position(false);
+			}
+			index += 1;
+			position(true);
+		}
+
+		function syncTimer() {
+			const shouldRun = active && inView;
+			if (shouldRun && !timer) {
+				timer = setInterval(advance, pauseMs);
+			} else if (!shouldRun && timer) {
+				clearInterval(timer);
+				timer = null;
+			}
+		}
+
+		function makeClones() {
+			return originals.map((original) => {
+				const clone = original.cloneNode(true) as HTMLElement;
+				clone.setAttribute("aria-hidden", "true");
+				clone.dataset.clone = "";
+				return clone;
+			});
+		}
+
+		function enterCarousel() {
+			show.setAttribute("data-carousel", "");
+			track.prepend(...makeClones());
+			track.append(...makeClones());
+			active = true;
+			index = count;
+			position(false);
+			syncTimer();
+		}
+
+		function exitCarousel() {
+			active = false;
+			syncTimer();
+			track.querySelectorAll("[data-clone]").forEach((el) => el.remove());
+			show.removeAttribute("data-carousel");
+			track.style.transform = "";
+			track.style.transition = "";
+		}
+
+		// Static row fits if every slide can stay at least minSlideWidth wide.
+		function wantsCarousel() {
+			if (mobileQuery.matches) return true;
+			const gap = parseFloat(getComputedStyle(track).columnGap) || 0;
+			return count * minSlideWidth + (count - 1) * gap > show.clientWidth;
+		}
+
+		function sync() {
+			const want = wantsCarousel();
+			if (want && !active) enterCarousel();
+			else if (!want && active) exitCarousel();
+			else if (active) position(false);
+		}
+
+		track.addEventListener("transitionend", (e) => {
+			if (e.target !== track || e.propertyName !== "transform") return;
+			if (index === count * 2) {
+				index = count;
+				position(false);
+			}
+		});
+
+		new ResizeObserver(sync).observe(show);
+
+		new IntersectionObserver(
 			(entries) => {
-				for (const entry of entries) {
-					if (entry.isIntersecting) {
-						if (!timer) timer = setInterval(advance, pauseMs);
-					} else if (timer) {
-						clearInterval(timer);
-						timer = null;
-					}
-				}
+				for (const entry of entries) inView = entry.isIntersecting;
+				syncTimer();
 			},
 			{ threshold: 0.25 },
-		);
-		observer.observe(show);
+		).observe(show);
+
+		mobileQuery.addEventListener("change", sync);
+		sync();
 	}
+
+	document
+		.querySelectorAll<HTMLElement>("[data-slideshow]")
+		.forEach(initSlideshow);
 </script>
