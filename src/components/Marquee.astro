@@ -79,6 +79,10 @@ const kindOf = (item: MarqueeItem) =>
 		overflow: hidden;
 	}
 
+	.marquee ~ .marquee {
+		margin-top: var(--space-4);
+	}
+
 	.marquee-track {
 		display: flex;
 		width: max-content;

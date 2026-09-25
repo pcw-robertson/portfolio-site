@@ -130,7 +130,8 @@ For a group of assets instead of one, more components are available
   `wired-app.mdx` passes 628px so the frames match the scale of the
   full-screen phones inside its intro video. Corners `radius`
   30px, 48px apart. Videos are muted/looping and only play while visible;
-  pauses when scrolled out of view. Used in `wired-app.mdx`.
+  pauses when scrolled out of view. Put several in the same column wrapper
+  to stack rows (48px apart). Used in `wired-app.mdx`.
 
 `AssetFloat` defaults to a 9:16 aspect ratio (most captures are vertical
 phone screens) but takes an `aspectRatio` prop for anything else — e.g. a
