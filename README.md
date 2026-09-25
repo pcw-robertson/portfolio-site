@@ -133,7 +133,7 @@ For a group of assets instead of one, more components are available
   pauses when scrolled out of view. If the whole set fits in the viewport (with a
   gap-sized margin each side) it sits still, centered, instead of scrolling —
   e.g. a 4-frame row at 1440px wide; narrower windows scroll. Put several in the same column wrapper
-  to stack rows (48px apart); add `reverse` to a row to scroll it
+  to stack rows (96px apart); add `reverse` to a row to scroll it
   left-to-right, so stacked rows read as deliberately contrasting rather
   than slightly out of sync. Used in `wired-app.mdx`.
 
