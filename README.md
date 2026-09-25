@@ -133,7 +133,7 @@ For a group of assets instead of one, more components are available
   pauses when scrolled out of view. If the whole set fits in the viewport (with a
   gap-sized margin each side) it sits still, centered, instead of scrolling —
   e.g. a 4-frame row at 1440px wide; narrower windows scroll. Put several in the same column wrapper
-  to stack rows (96px apart); add `reverse` to a row to scroll it
+  to stack rows (96px apart; put a `<p class="caption">` after a row for a label 24px below it); add `reverse` to a row to scroll it
   left-to-right, so stacked rows read as deliberately contrasting rather
   than slightly out of sync. Used in `wired-app.mdx`.
 
@@ -141,6 +141,10 @@ For a group of assets instead of one, more components are available
 phone screens) but takes an `aspectRatio` prop for anything else — e.g. a
 wide/tall full-page scroll capture — and an `eager` prop for the one video
 that should preload immediately (typically whatever's above the fold).
+
+Items that fall back to stacked full-width below desktop (e.g. two `col-6`s)
+sit only the 16px column gutter apart by default; add `stack-gap` to the
+`.grid` for 48px on mobile.
 
 Whichever template is used, `ProjectLayout` wraps the whole page (excluding
 Nav/Footer, which stay on the site-wide light theme) in a dark theme — see

@@ -95,6 +95,11 @@ p {
   color: var(--color-muted);
 }
 
+/* Short label under a media row (e.g. a Marquee). */
+.caption {
+  margin: 1.5rem 0 0;
+}
+
 .subtitle {
   font-size: 1.125rem;
   margin-bottom: var(--space-4);

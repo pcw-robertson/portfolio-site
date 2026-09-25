@@ -114,3 +114,11 @@ a safe default to extend from.
 .grid + .grid {
   margin-top: var(--space-5);
 }
+
+/* Items that stack below desktop (each col-N falling back to full width) sit
+   48px apart instead of the tight column gutter. Add to a .grid. */
+@media (max-width: 1279px) {
+  .grid.stack-gap {
+    row-gap: var(--space-4);
+  }
+}
