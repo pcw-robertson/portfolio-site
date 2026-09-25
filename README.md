@@ -104,8 +104,8 @@ by:
    `<AssetFloat>` for any image/video. Import components you use at the top
    of the file, e.g. `import AssetFloat from "../../components/AssetFloat.astro"`.
 
-For a group of images instead of one asset, two more components are
-available (see `new-yorker-games.mdx` for both in use):
+For a group of assets instead of one, more components are available
+(`new-yorker-games.mdx` uses the first two, `wired-app.mdx` the last):
 
 - `<ImageCollage images={[...]} />` — a fixed-height cropped grid (like a
   masked Figma frame taller than its container — top/bottom rows peek in
@@ -121,6 +121,14 @@ available (see `new-yorker-games.mdx` for both in use):
   video (only runs while scrolled into view). Takes `aspectRatio`,
   `mobileSlideWidth` (under 100% so neighbors show), `minSlideWidth`,
   `pauseMs`, `transitionMs`, `radius`.
+
+- `<Marquee items={[...]} />` — one row of device-shaped assets that scrolls
+  slowly and continuously across the full viewport width, looping
+  seamlessly (`speed` in px/s, default 40). Every item is drawn at the same
+  height as the single-device frames (888px desktop; mobile follows the
+  column width), width following its own `aspectRatio`. Corners `radius`
+  30px, 48px apart. Videos are muted/looping and only play while visible;
+  pauses when scrolled out of view. Used in `wired-app.mdx`.
 
 `AssetFloat` defaults to a 9:16 aspect ratio (most captures are vertical
 phone screens) but takes an `aspectRatio` prop for anything else — e.g. a

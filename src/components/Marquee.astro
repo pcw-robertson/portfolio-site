@@ -1,0 +1,158 @@
+---
+// A single row of device-shaped assets that scrolls slowly and continuously
+// across the full viewport width, looping seamlessly. Every item is drawn at
+// the same height (matching the other single-device frames on a page) with
+// its width following its own aspect ratio. Videos are muted and looping,
+// and only play while visible (shared with AssetFloat).
+//
+// The set is rendered twice; the track slides left by exactly one set's width
+// and restarts, which is visually identical.
+interface MarqueeItem {
+  src: string;
+  type?: "image" | "video";
+  poster?: string;
+  alt?: string;
+  aspectRatio?: string;
+}
+
+interface Props {
+  items: MarqueeItem[];
+  // Scroll speed in px per second.
+  speed?: number;
+  // Desktop height matches the single-device frames (410px wide at 720:1560).
+  // The mobile default tracks the column width the same way those frames do.
+  height?: string;
+  mobileHeight?: string;
+  radius?: string;
+}
+
+const {
+  items,
+  speed = 40,
+  height = "888px",
+  mobileHeight = "calc((100vw - 2 * var(--grid-margin)) * 1560 / 720)",
+  radius = "30px",
+} = Astro.props;
+
+const kindOf = (item: MarqueeItem) =>
+  item.type ?? (/\.(mp4|webm|mov)$/i.test(item.src) ? "video" : "image");
+---
+
+<div
+	class="marquee full-bleed"
+	data-marquee
+	data-speed={speed}
+	style={`--marquee-height: ${height}; --marquee-height-mobile: ${mobileHeight}; --marquee-radius: ${radius}`}
+>
+	<div class="marquee-track">
+		{
+			[0, 1].map((copy) => (
+				<div class="marquee-set" aria-hidden={copy === 1 ? "true" : undefined}>
+					{items.map((item) => (
+						<div
+							class="marquee-item"
+							style={`--item-ratio: ${item.aspectRatio ?? "720 / 1560"}`}
+						>
+							{kindOf(item) === "video" ? (
+								<video
+									src={item.src}
+									poster={item.poster}
+									muted
+									loop
+									playsinline
+									preload="none"
+									data-autoplay-in-view
+								/>
+							) : (
+								<img src={item.src} alt={item.alt ?? ""} loading="lazy" />
+							)}
+						</div>
+					))}
+				</div>
+			))
+		}
+	</div>
+</div>
+
+<style>
+	.marquee {
+		overflow: hidden;
+	}
+
+	.marquee-track {
+		display: flex;
+		width: max-content;
+		animation: marquee-scroll var(--marquee-duration, 60s) linear infinite;
+	}
+
+	.marquee[data-paused] .marquee-track {
+		animation-play-state: paused;
+	}
+
+	.marquee-set {
+		display: flex;
+		flex: none;
+		gap: var(--space-4);
+		padding-right: var(--space-4);
+	}
+
+	.marquee-item {
+		flex: none;
+		height: var(--marquee-height-mobile);
+		aspect-ratio: var(--item-ratio);
+		border-radius: var(--marquee-radius);
+		overflow: hidden;
+		background: var(--color-line);
+	}
+
+	.marquee-item :is(img, video) {
+		display: block;
+		width: 100%;
+		height: 100%;
+		object-fit: cover;
+	}
+
+	@media (min-width: 1280px) {
+		.marquee-item {
+			height: var(--marquee-height);
+		}
+	}
+
+	@keyframes marquee-scroll {
+		to {
+			transform: translateX(-50%);
+		}
+	}
+
+	@media (prefers-reduced-motion: reduce) {
+		.marquee-track {
+			animation: none;
+		}
+
+		.marquee {
+			overflow-x: auto;
+		}
+	}
+</style>
+
+<script>
+	import "../scripts/autoplay-in-view";
+
+	for (const marquee of document.querySelectorAll<HTMLElement>(
+		"[data-marquee]",
+	)) {
+		const track = marquee.querySelector<HTMLElement>(".marquee-track")!;
+		const speed = Number(marquee.dataset.speed) || 40;
+
+		// Duration = one set's width / speed, so the pace stays constant
+		// however many items there are or however wide they render.
+		new ResizeObserver(() => {
+			const setWidth = track.scrollWidth / 2;
+			track.style.setProperty("--marquee-duration", `${setWidth / speed}s`);
+		}).observe(track);
+
+		new IntersectionObserver(([entry]) => {
+			marquee.toggleAttribute("data-paused", !entry.isIntersecting);
+		}).observe(marquee);
+	}
+</script>

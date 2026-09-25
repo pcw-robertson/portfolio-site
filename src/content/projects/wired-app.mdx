@@ -8,6 +8,7 @@ template: "custom"
 ---
 
 import AssetFloat from "../../components/AssetFloat.astro";
+import Marquee from "../../components/Marquee.astro";
 
 <div class="grid">
   <div class="col-6">
@@ -43,33 +44,6 @@ import AssetFloat from "../../components/AssetFloat.astro";
 </div>
 
 <div class="grid">
-  <div class="col-12">
-    <AssetFloat
-      src="/videos/wired-home-screen.mp4"
-      type="video"
-      poster="/videos/wired-home-screen-poster.jpg"
-      alt="Wired app home screen"
-      maxWidth="410px"
-      aspectRatio="720 / 1560"
-      rounded
-    />
-  </div>
-</div>
-
-<div class="grid">
-  <div class="col-12 full-bleed-mobile">
-    <AssetFloat
-      src="/videos/wired-article-page.mp4"
-      type="video"
-      poster="/videos/wired-article-page-poster.jpg"
-      alt="Wired app article page"
-      maxWidth="100%"
-      aspectRatio="720 / 902"
-    />
-  </div>
-</div>
-
-<div class="grid">
   <div class="col-6">
     <h2>The Best Place to Experience Wired</h2>
     <p>
@@ -79,6 +53,21 @@ import AssetFloat from "../../components/AssetFloat.astro";
       distinct experience for it's mode of consumption, while be distinctly
       Wired.
     </p>
+  </div>
+</div>
+
+<div class="grid">
+  <div class="col-12">
+    <Marquee
+      items={[
+        { src: "/videos/wired-article-snake-loop.mp4", poster: "/videos/wired-article-snake-loop-poster.jpg", aspectRatio: "720 / 1514" },
+        { src: "/videos/wired-article-scroll.mp4", poster: "/videos/wired-article-scroll-poster.jpg", aspectRatio: "720 / 1560" },
+        { src: "/videos/wired-article-audio.mp4", poster: "/videos/wired-article-audio-poster.jpg", aspectRatio: "720 / 1560" },
+        { src: "/images/wired-app/article-header.jpg", alt: "Wired app article header", aspectRatio: "786 / 1668" },
+        { src: "/videos/wired-article-animated-loop.mp4", poster: "/videos/wired-article-animated-loop-poster.jpg", aspectRatio: "720 / 1514" },
+        { src: "/videos/wired-article-commenting.mp4", poster: "/videos/wired-article-commenting-poster.jpg", aspectRatio: "720 / 1560" },
+      ]}
+    />
   </div>
 </div>
 
