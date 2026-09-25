@@ -73,7 +73,7 @@ import Marquee from "../../components/Marquee.astro";
         { src: "/videos/wired-article-commenting.mp4", poster: "/videos/wired-article-commenting-poster.jpg", aspectRatio: "720 / 1560" },
       ]}
     />
-    <p class="caption">Article &amp; Reading</p>
+    <p class="caption"><span class="caption-title">Article &amp; Reading</span></p>
     <Marquee
       reverse
       height="628px"
@@ -86,7 +86,7 @@ import Marquee from "../../components/Marquee.astro";
         { src: "/videos/wired-home-special-editions.mp4", poster: "/videos/wired-home-special-editions-poster.jpg", aspectRatio: "720 / 1560" },
       ]}
     />
-    <p class="caption">Home &amp; Discovery</p>
+    <p class="caption"><span class="caption-title">Home &amp; Discovery</span></p>
     <Marquee
       height="628px"
       items={[
@@ -96,7 +96,7 @@ import Marquee from "../../components/Marquee.astro";
         { src: "/videos/wired-audio-playlists.mp4", poster: "/videos/wired-audio-playlists-poster.jpg", aspectRatio: "720 / 1560" },
       ]}
     />
-    <p class="caption">Listen &amp; Playlists</p>
+    <p class="caption"><span class="caption-title">Listen &amp; Playlists</span></p>
   </div>
 </div>
 
@@ -111,27 +111,20 @@ import Marquee from "../../components/Marquee.astro";
       maxHeight="628px"
       rounded
     />
+    <p class="caption"><span class="caption-title">Watch &amp; Video</span></p>
   </div>
-  <div class="col-6 full-bleed-mobile">
-    <AssetFloat
-      src="/videos/wired-daily-digest.mp4"
-      type="video"
-      poster="/videos/wired-daily-digest-poster.jpg"
-      alt="Wired app daily digest"
-      aspectRatio="720 / 902"
-      maxHeight="628px"
-    />
-  </div>
-</div>
-
-<div class="grid">
   <div class="col-6">
-    <h2>Personal, not Infinite</h2>
-    <p>
-      Immersive, tailored package of stories: finite and completable, with
-      a rewarding sense of progress for tapping through daily. A deliberate
-      habit-formation mechanic, not just a content feed.
-    </p>
+    <div class="full-bleed-mobile">
+      <AssetFloat
+        src="/videos/wired-daily-digest.mp4"
+        type="video"
+        poster="/videos/wired-daily-digest-poster.jpg"
+        alt="Wired app daily digest"
+        aspectRatio="720 / 902"
+        maxHeight="628px"
+      />
+    </div>
+    <p class="caption"><span class="caption-title">The Daily Digest</span><br />An immersive, tailored package of stories: finite and completable, with a rewarding sense of progress for tapping through daily. Personal, not infinite</p>
   </div>
 </div>
 

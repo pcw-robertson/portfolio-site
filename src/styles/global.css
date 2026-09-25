@@ -100,6 +100,11 @@ p {
   margin: 1.5rem 0 0;
 }
 
+/* The heading line of a caption — brighter than its grey description. */
+.caption-title {
+  color: var(--color-ink);
+}
+
 .subtitle {
   font-size: 1.125rem;
   margin-bottom: var(--space-4);
