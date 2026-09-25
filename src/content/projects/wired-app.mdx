@@ -56,9 +56,14 @@ import Marquee from "../../components/Marquee.astro";
   </div>
 </div>
 
+{/* height 628px = the full-screen phone in the intro video (521x1103 within its
+    720-wide frame) at the intro's 410px desktop display width, so the frames
+    here match the scale of the phones in that video. */}
+
 <div class="grid">
   <div class="col-12">
     <Marquee
+      height="628px"
       items={[
         { src: "/videos/wired-article-snake-loop.mp4", poster: "/videos/wired-article-snake-loop-poster.jpg", aspectRatio: "720 / 1514" },
         { src: "/videos/wired-article-scroll.mp4", poster: "/videos/wired-article-scroll-poster.jpg", aspectRatio: "720 / 1560" },

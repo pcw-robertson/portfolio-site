@@ -125,8 +125,10 @@ For a group of assets instead of one, more components are available
 - `<Marquee items={[...]} />` — one row of device-shaped assets that scrolls
   slowly and continuously across the full viewport width, looping
   seamlessly (`speed` in px/s, default 40). Every item is drawn at the same
-  height as the single-device frames (888px desktop; mobile follows the
-  column width), width following its own `aspectRatio`. Corners `radius`
+  `height` (default 888px desktop, matching the single-device frames;
+  mobile follows the column width), width following its own `aspectRatio`.
+  `wired-app.mdx` passes 628px so the frames match the scale of the
+  full-screen phones inside its intro video. Corners `radius`
   30px, 48px apart. Videos are muted/looping and only play while visible;
   pauses when scrolled out of view. Used in `wired-app.mdx`.
 
