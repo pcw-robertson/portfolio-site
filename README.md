@@ -131,7 +131,9 @@ For a group of assets instead of one, more components are available
   full-screen phones inside its intro video. Corners `radius`
   30px, 48px apart. Videos are muted/looping and only play while visible;
   pauses when scrolled out of view. Put several in the same column wrapper
-  to stack rows (48px apart). Used in `wired-app.mdx`.
+  to stack rows (48px apart); add `reverse` to a row to scroll it
+  left-to-right, so stacked rows read as deliberately contrasting rather
+  than slightly out of sync. Used in `wired-app.mdx`.
 
 `AssetFloat` defaults to a 9:16 aspect ratio (most captures are vertical
 phone screens) but takes an `aspectRatio` prop for anything else — e.g. a

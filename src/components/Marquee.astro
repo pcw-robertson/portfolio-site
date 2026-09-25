@@ -19,6 +19,9 @@ interface Props {
   items: MarqueeItem[];
   // Scroll speed in px per second.
   speed?: number;
+  // Scroll left-to-right instead of right-to-left (e.g. for a second stacked
+  // row, so two rows read as deliberately contrasting rather than out of sync).
+  reverse?: boolean;
   // Desktop height matches the single-device frames (410px wide at 720:1560).
   // The mobile default tracks the column width the same way those frames do.
   height?: string;
@@ -29,6 +32,7 @@ interface Props {
 const {
   items,
   speed = 40,
+  reverse = false,
   height = "888px",
   mobileHeight = "calc((100vw - 2 * var(--grid-margin)) * 1560 / 720)",
   radius = "30px",
@@ -42,6 +46,7 @@ const kindOf = (item: MarqueeItem) =>
 	class="marquee full-bleed"
 	data-marquee
 	data-speed={speed}
+	data-reverse={reverse ? "" : undefined}
 	style={`--marquee-height: ${height}; --marquee-height-mobile: ${mobileHeight}; --marquee-radius: ${radius}`}
 >
 	<div class="marquee-track">
@@ -87,6 +92,10 @@ const kindOf = (item: MarqueeItem) =>
 		display: flex;
 		width: max-content;
 		animation: marquee-scroll var(--marquee-duration, 60s) linear infinite;
+	}
+
+	.marquee[data-reverse] .marquee-track {
+		animation-direction: reverse;
 	}
 
 	.marquee[data-paused] .marquee-track {
