@@ -130,7 +130,9 @@ For a group of assets instead of one, more components are available
   `wired-app.mdx` passes 628px so the frames match the scale of the
   full-screen phones inside its intro video. Corners `radius`
   30px, 48px apart. Videos are muted/looping and only play while visible;
-  pauses when scrolled out of view. Put several in the same column wrapper
+  pauses when scrolled out of view. If the whole set fits in the viewport (with a
+  gap-sized margin each side) it sits still, centered, instead of scrolling —
+  e.g. a 4-frame row at 1440px wide; narrower windows scroll. Put several in the same column wrapper
   to stack rows (48px apart); add `reverse` to a row to scroll it
   left-to-right, so stacked rows read as deliberately contrasting rather
   than slightly out of sync. Used in `wired-app.mdx`.

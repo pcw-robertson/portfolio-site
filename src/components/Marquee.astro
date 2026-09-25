@@ -7,6 +7,10 @@
 //
 // The set is rendered twice; the track slides left by exactly one set's width
 // and restarts, which is visually identical.
+//
+// If the whole set fits within the viewport (with a side margin equal to the
+// gap), it doesn't scroll at all: it sits still, centered, with the duplicate
+// copy hidden. Wider viewports get a still row; narrower ones scroll.
 interface MarqueeItem {
   src: string;
   type?: "image" | "video";
@@ -102,6 +106,19 @@ const kindOf = (item: MarqueeItem) =>
 		animation-play-state: paused;
 	}
 
+	.marquee[data-static] .marquee-track {
+		animation: none;
+		margin-inline: auto;
+	}
+
+	.marquee[data-static] .marquee-set {
+		padding-right: 0;
+	}
+
+	.marquee[data-static] .marquee-set + .marquee-set {
+		display: none;
+	}
+
 	.marquee-set {
 		display: flex;
 		flex: none;
@@ -157,12 +174,27 @@ const kindOf = (item: MarqueeItem) =>
 		const track = marquee.querySelector<HTMLElement>(".marquee-track")!;
 		const speed = Number(marquee.dataset.speed) || 20;
 
-		// Duration = one set's width / speed, so the pace stays constant
-		// however many items there are or however wide they render.
-		new ResizeObserver(() => {
-			const setWidth = track.scrollWidth / 2;
-			track.style.setProperty("--marquee-duration", `${setWidth / speed}s`);
-		}).observe(track);
+		const firstSet = track.querySelector<HTMLElement>(".marquee-set")!;
+
+		function update() {
+			const items = firstSet.querySelectorAll<HTMLElement>(".marquee-item");
+			const contentWidth =
+				items[items.length - 1].getBoundingClientRect().right -
+				items[0].getBoundingClientRect().left;
+			const gap = parseFloat(getComputedStyle(firstSet).columnGap) || 0;
+			const fits = contentWidth + 2 * gap <= marquee.clientWidth;
+			marquee.toggleAttribute("data-static", fits);
+			if (!fits) {
+				// Duration = one set's width / speed, so the pace stays constant
+				// however many items there are or however wide they render.
+				const setWidth = track.scrollWidth / 2;
+				track.style.setProperty("--marquee-duration", `${setWidth / speed}s`);
+			}
+		}
+
+		const resizeObserver = new ResizeObserver(update);
+		resizeObserver.observe(marquee);
+		resizeObserver.observe(track);
 
 		new IntersectionObserver(([entry]) => {
 			marquee.toggleAttribute("data-paused", !entry.isIntersecting);
