@@ -31,7 +31,7 @@ interface Props {
 
 const {
   items,
-  speed = 40,
+  speed = 20,
   reverse = false,
   height = "888px",
   mobileHeight = "calc((100vw - 2 * var(--grid-margin)) * 1560 / 720)",
@@ -155,7 +155,7 @@ const kindOf = (item: MarqueeItem) =>
 		"[data-marquee]",
 	)) {
 		const track = marquee.querySelector<HTMLElement>(".marquee-track")!;
-		const speed = Number(marquee.dataset.speed) || 40;
+		const speed = Number(marquee.dataset.speed) || 20;
 
 		// Duration = one set's width / speed, so the pace stays constant
 		// however many items there are or however wide they render.
