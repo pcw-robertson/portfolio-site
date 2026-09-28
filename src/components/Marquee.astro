@@ -33,9 +33,15 @@ interface Props {
   // row, so two rows read as deliberately contrasting rather than out of sync).
   reverse?: boolean;
   // Desktop height matches the single-device frames (410px wide at 720:1560).
-  // The mobile default tracks the column width the same way those frames do.
+  // The mobile default tracks the column width the same way those frames do,
+  // scaled down slightly (see mobileScale) so a frame doesn't run edge to
+  // edge against the device's own screen.
   height?: string;
   mobileHeight?: string;
+  // Fraction of the full mobile column width a frame fills (below 1) — the
+  // remainder becomes extra breathing room beyond the grid margin, and a
+  // hint of the next item peeking in. Ignored if mobileHeight is set.
+  mobileScale?: number;
   radius?: string;
   // Never scroll at desktop widths — shrink instead (see comment above).
   shrinkToFit?: boolean;
@@ -46,7 +52,8 @@ const {
   speed = 20,
   reverse = false,
   height = "888px",
-  mobileHeight = "calc((100vw - 2 * var(--grid-margin)) * 1560 / 720)",
+  mobileScale = 0.88,
+  mobileHeight = `calc((100vw - 2 * var(--grid-margin)) * ${mobileScale} * 1560 / 720)`,
   radius = "30px",
   shrinkToFit = false,
 } = Astro.props;
