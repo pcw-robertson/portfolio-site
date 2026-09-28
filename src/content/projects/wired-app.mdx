@@ -11,7 +11,7 @@ import AssetFloat from "../../components/AssetFloat.astro";
 import Marquee from "../../components/Marquee.astro";
 
 <div class="grid">
-  <div class="col-6">
+  <div class="col-6 prose-tight">
     <h1>The Wired App</h1>
     <p class="muted subtitle">Product strategy &amp; design leadership — 0 to 1</p>
 
@@ -30,6 +30,11 @@ import Marquee from "../../components/Marquee.astro";
       thesis through design, prioritization, and launch, setting the vision
       and carrying it through to visual execution.
     </p>
+
+    <h2>Outcome</h2>
+    <p>Beta in two months</p>
+    <p>Launch in five months</p>
+    <p>Early signs: 5x the time spent in the app vs web</p>
   </div>
   <div class="col-6 full-bleed-mobile">
     <AssetFloat
@@ -41,21 +46,6 @@ import Marquee from "../../components/Marquee.astro";
       aspectRatio="720 / 1246"
       eager
     />
-  </div>
-</div>
-
-<div class="grid">
-  <div class="col-12">
-    <h2>Outcome</h2>
-  </div>
-  <div class="col-4">
-    <p>Beta in two months</p>
-  </div>
-  <div class="col-4">
-    <p>Launch in five months</p>
-  </div>
-  <div class="col-4">
-    <p>Early signs: 5x the time spent in the app vs web</p>
   </div>
 </div>
 
@@ -84,6 +74,10 @@ import Marquee from "../../components/Marquee.astro";
       ]}
     />
     <p class="caption"><span class="caption-title">Home &amp; Discovery</span><br />Presents every story at its best, leveraging on Wired's art direction and editorial packaging. Clear distinction between content types and moments that shows the breadth of Wired.</p>
+    <blockquote class="caption-quote">
+      <p>&ldquo;I never knew there was so much in Wired&rdquo;</p>
+      <cite>Beta Test User Interview</cite>
+    </blockquote>
     <Marquee
       reverse
       height="628px"

@@ -105,6 +105,26 @@ p {
   color: var(--color-ink);
 }
 
+/* A user-testing quote under a caption. */
+.caption-quote {
+  margin: var(--space-3) 0 0;
+}
+
+.caption-quote p {
+  color: var(--color-ink);
+  margin: 0 0 0.375rem;
+}
+
+.caption-quote cite {
+  font-style: normal;
+  color: var(--color-muted);
+  font-size: 1rem;
+}
+
+.caption-quote cite::before {
+  content: "– ";
+}
+
 .subtitle {
   font-size: 1.125rem;
   margin-bottom: var(--space-4);

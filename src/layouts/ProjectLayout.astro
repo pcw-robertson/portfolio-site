@@ -108,6 +108,11 @@ const isCustom = template === "custom";
 		line-height: 1.5;
 	}
 
+	.project-theme :global(.grid .caption-quote p) {
+		font-size: 24px;
+		line-height: 32px;
+	}
+
 	.project-header {
 		max-width: var(--measure);
 		margin-bottom: var(--space-4);
@@ -136,6 +141,15 @@ const isCustom = template === "custom";
 	.body :global(h2),
 	.project-theme :global(.grid h2) {
 		margin-top: var(--space-4);
+	}
+
+	/* A flowing stack of heading+paragraph pairs (e.g. Opportunity/Role/
+	   Outcome) reads as one continuous block, not separate sections — so it
+	   uses the same tight rhythm a paragraph already has to the next
+	   heading, rather than the larger gap other .grid sections use to
+	   separate clearly distinct blocks (row captions, screen groups). */
+	.project-theme :global(.grid .prose-tight h2) {
+		margin-top: var(--space-2);
 	}
 
 	.back {
