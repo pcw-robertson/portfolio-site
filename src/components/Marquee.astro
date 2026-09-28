@@ -75,35 +75,79 @@ const kindOf = (item: MarqueeItem) =>
 	data-reverse={reverse ? "" : undefined}
 	data-shrink-to-fit={shrinkToFit ? "" : undefined}
 	data-mobile-carousel={mobileCarousel ? "" : undefined}
-	style={`--marquee-height: ${height}; --marquee-height-mobile: ${mobileHeight}; --marquee-radius: ${radius}`}
+	style={`--marquee-height: ${height}; --marquee-height-mobile: ${mobileHeight}; --marquee-radius: ${radius}; --mobile-scale: ${mobileScale}`}
 >
 	<div class="marquee-track">
-		{
-			[0, 1].map((copy) => (
-				<div class="marquee-set" aria-hidden={copy === 1 ? "true" : undefined}>
-					{items.map((item) => (
-						<div
-							class="marquee-item"
-							style={`--item-ratio: ${item.aspectRatio ?? "720 / 1560"}`}
-						>
-							{kindOf(item) === "video" ? (
-								<video
-									src={item.src}
-									poster={item.poster}
-									muted
-									loop
-									playsinline
-									preload="none"
-									data-autoplay-in-view
-								/>
-							) : (
-								<img src={item.src} alt={item.alt ?? ""} loading="lazy" />
-							)}
-						</div>
-					))}
+		<div class="marquee-set">
+			{items.map((item) => (
+				<div
+					class="marquee-item"
+					style={`--item-ratio: ${item.aspectRatio ?? "720 / 1560"}`}
+				>
+					{kindOf(item) === "video" ? (
+						<video
+							src={item.src}
+							poster={item.poster}
+							muted
+							loop
+							playsinline
+							preload="none"
+							data-autoplay-in-view
+						/>
+					) : (
+						<img src={item.src} alt={item.alt ?? ""} loading="lazy" />
+					)}
 				</div>
-			))
-		}
+			))}
+			{
+				// A trailing clone of the first item, mobileCarousel only — swiping
+				// past the real last slide lands here, then an instant (unanimated)
+				// jump back to the real first slide makes it read as an endless loop.
+				mobileCarousel && items.length > 1 && (
+					<div
+						class="marquee-item"
+						data-loop-clone
+						style={`--item-ratio: ${items[0].aspectRatio ?? "720 / 1560"}`}
+					>
+						{kindOf(items[0]) === "video" ? (
+							<video
+								src={items[0].src}
+								poster={items[0].poster}
+								muted
+								loop
+								playsinline
+								preload="none"
+								data-autoplay-in-view
+							/>
+						) : (
+							<img src={items[0].src} alt={items[0].alt ?? ""} loading="lazy" />
+						)}
+					</div>
+				)
+			}
+		</div>
+		<div class="marquee-set" aria-hidden="true">
+			{items.map((item) => (
+				<div
+					class="marquee-item"
+					style={`--item-ratio: ${item.aspectRatio ?? "720 / 1560"}`}
+				>
+					{kindOf(item) === "video" ? (
+						<video
+							src={item.src}
+							poster={item.poster}
+							muted
+							loop
+							playsinline
+							preload="none"
+							data-autoplay-in-view
+						/>
+					) : (
+						<img src={item.src} alt={item.alt ?? ""} loading="lazy" />
+					)}
+				</div>
+			))}
+		</div>
 	</div>
 	{
 		mobileCarousel && (
@@ -184,6 +228,11 @@ const kindOf = (item: MarqueeItem) =>
 		.marquee-item {
 			height: var(--marquee-height);
 		}
+
+		/* The loop clone only exists for the mobile swipe carousel. */
+		.marquee-item[data-loop-clone] {
+			display: none;
+		}
 	}
 
 	@keyframes marquee-scroll {
@@ -231,7 +280,7 @@ const kindOf = (item: MarqueeItem) =>
 
 		.marquee[data-mobile-carousel] .marquee-item {
 			flex: none;
-			width: calc(100vw - 2 * var(--grid-margin));
+			width: calc((100vw - 2 * var(--grid-margin)) * var(--mobile-scale));
 			height: auto;
 			scroll-snap-align: center;
 		}
@@ -289,7 +338,11 @@ const kindOf = (item: MarqueeItem) =>
 			// none of the scroll/shrink math applies there.
 			if (mobileCarousel && mobileQuery.matches) return;
 
-			const items = firstSet.querySelectorAll<HTMLElement>(".marquee-item");
+			// The loop clone (mobileCarousel only) is never part of the desktop
+			// row's own sizing math.
+			const items = firstSet.querySelectorAll<HTMLElement>(
+				".marquee-item:not([data-loop-clone])",
+			);
 			const gap = parseFloat(getComputedStyle(firstSet).columnGap) || 0;
 			const contentWidth =
 				items[items.length - 1].getBoundingClientRect().right -
@@ -337,20 +390,26 @@ const kindOf = (item: MarqueeItem) =>
 		}).observe(marquee);
 
 		if (mobileCarousel) {
-			const realItems = Array.from(
+			// slides = every real item plus the trailing loop clone (if any);
+			// realItems excludes the clone — dots and click-to-navigate only
+			// ever address real slides.
+			const slides = Array.from(
 				firstSet.querySelectorAll<HTMLElement>(".marquee-item"),
+			);
+			const realItems = slides.filter(
+				(el) => !el.hasAttribute("data-loop-clone"),
 			);
 			const dots = Array.from(
 				marquee.querySelectorAll<HTMLButtonElement>(".marquee-dot"),
 			);
 
-			function syncActiveDot() {
-				if (!mobileQuery.matches) return;
+			// Returns the index into `slides` (which may point at the clone).
+			function closestSlideIndex() {
 				const trackCenter =
 					track.getBoundingClientRect().left + track.clientWidth / 2;
 				let closest = 0;
 				let closestDistance = Infinity;
-				realItems.forEach((item, i) => {
+				slides.forEach((item, i) => {
 					const rect = item.getBoundingClientRect();
 					const distance = Math.abs(rect.left + rect.width / 2 - trackCenter);
 					if (distance < closestDistance) {
@@ -358,12 +417,34 @@ const kindOf = (item: MarqueeItem) =>
 						closest = i;
 					}
 				});
+				return closest;
+			}
+
+			function syncActiveDot() {
+				if (!mobileQuery.matches) return;
+				const closest = closestSlideIndex() % realItems.length;
 				dots.forEach((dot, i) => dot.toggleAttribute("data-active", i === closest));
+			}
+
+			// Once a swipe settles on the trailing clone, jump straight back to
+			// the real first slide with no animation — reads as the carousel
+			// looping around rather than sliding all the way back.
+			let settleTimer: ReturnType<typeof setTimeout> | null = null;
+			function onSettle() {
+				if (!mobileQuery.matches) return;
+				if (closestSlideIndex() === realItems.length) {
+					realItems[0].scrollIntoView({ inline: "center", block: "nearest" });
+				}
+				syncActiveDot();
 			}
 
 			track.addEventListener(
 				"scroll",
-				() => requestAnimationFrame(syncActiveDot),
+				() => {
+					requestAnimationFrame(syncActiveDot);
+					if (settleTimer) clearTimeout(settleTimer);
+					settleTimer = setTimeout(onSettle, 120);
+				},
 				{ passive: true },
 			);
 			dots.forEach((dot, i) => {
