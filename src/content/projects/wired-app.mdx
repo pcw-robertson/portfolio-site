@@ -17,17 +17,18 @@ import Marquee from "../../components/Marquee.astro";
 
     <h2>The Opportunity</h2>
     <p>
-      Through 2025, Wired's pointed journalism and fearless reporting drove a
-      significant wave of new subscribers. The app was conceived as a way to
-      engage these readers more deeply before renewal, building a direct,
-      owned relationship with the audience to build lasting retention.
+      Turn a surge of new subscribers into lasting retention. Through 2025,
+      Wired's new editorial direction drove a significant wave of new
+      subscribers. An app was the chance to engage them more deeply before
+      renewal, building a direct, owned relationship with the audience and
+      making Wired a daily habit.
     </p>
 
     <h2>Role</h2>
     <p>
-      Led strategy and execution end-to-end, from initial product thesis
-      through design, prioritization, and launch, defining the core product
-      experience to make the best place to experience Wired.
+      Led strategy and execution end to end, from the initial product
+      thesis through design, prioritization, and launch, setting the vision
+      and carrying it through to visual execution.
     </p>
   </div>
   <div class="col-6 full-bleed-mobile">
@@ -44,15 +45,24 @@ import Marquee from "../../components/Marquee.astro";
 </div>
 
 <div class="grid">
+  <div class="col-12">
+    <h2>Outcome</h2>
+  </div>
+  <div class="col-4">
+    <p>Beta in two months</p>
+  </div>
+  <div class="col-4">
+    <p>Launch in five months</p>
+  </div>
+  <div class="col-4">
+    <p>Early signs: 5x the time spent in the app vs web</p>
+  </div>
+</div>
+
+<div class="grid">
   <div class="col-6">
-    <h2>The Best Place to Experience Wired</h2>
-    <p>
-      The goal was to create the place to read, listen and watch Wired.
-      Creating experiences native to the formats of text, audio and video,
-      and created a navigation that represented that. Each tab has a
-      distinct experience for it's mode of consumption, while be distinctly
-      Wired.
-    </p>
+    <h2>The best place to experience Wired</h2>
+    <p>A native experience that goes beyond web.</p>
   </div>
 </div>
 
@@ -65,19 +75,6 @@ import Marquee from "../../components/Marquee.astro";
     <Marquee
       height="628px"
       items={[
-        { src: "/videos/wired-article-snake-loop.mp4", poster: "/videos/wired-article-snake-loop-poster.jpg", aspectRatio: "720 / 1514" },
-        { src: "/videos/wired-article-scroll.mp4", poster: "/videos/wired-article-scroll-poster.jpg", aspectRatio: "720 / 1560" },
-        { src: "/videos/wired-article-audio.mp4", poster: "/videos/wired-article-audio-poster.jpg", aspectRatio: "720 / 1560" },
-        { src: "/images/wired-app/article-header.jpg", alt: "Wired app article header", aspectRatio: "786 / 1668" },
-        { src: "/videos/wired-article-animated-loop.mp4", poster: "/videos/wired-article-animated-loop-poster.jpg", aspectRatio: "720 / 1514" },
-        { src: "/videos/wired-article-commenting.mp4", poster: "/videos/wired-article-commenting-poster.jpg", aspectRatio: "720 / 1560" },
-      ]}
-    />
-    <p class="caption"><span class="caption-title">Article &amp; Reading</span></p>
-    <Marquee
-      reverse
-      height="628px"
-      items={[
         { src: "/videos/wired-home-swipe.mp4", poster: "/videos/wired-home-swipe-poster.jpg", aspectRatio: "720 / 1560" },
         { src: "/videos/wired-big-story-swiper.mp4", poster: "/videos/wired-big-story-swiper-poster.jpg", aspectRatio: "720 / 1560" },
         { src: "/images/wired-app/file.jpg", alt: "Wired app home file", aspectRatio: "1179 / 2556" },
@@ -86,7 +83,20 @@ import Marquee from "../../components/Marquee.astro";
         { src: "/videos/wired-home-special-editions.mp4", poster: "/videos/wired-home-special-editions-poster.jpg", aspectRatio: "720 / 1560" },
       ]}
     />
-    <p class="caption"><span class="caption-title">Home &amp; Discovery</span></p>
+    <p class="caption"><span class="caption-title">Home &amp; Discovery</span><br />Presents every story at its best, leveraging on Wired's art direction and editorial packaging. Clear distinction between content types and moments that shows the breadth of Wired.</p>
+    <Marquee
+      reverse
+      height="628px"
+      items={[
+        { src: "/videos/wired-article-snake-loop.mp4", poster: "/videos/wired-article-snake-loop-poster.jpg", aspectRatio: "720 / 1514" },
+        { src: "/videos/wired-article-scroll.mp4", poster: "/videos/wired-article-scroll-poster.jpg", aspectRatio: "720 / 1560" },
+        { src: "/videos/wired-article-audio.mp4", poster: "/videos/wired-article-audio-poster.jpg", aspectRatio: "720 / 1560" },
+        { src: "/images/wired-app/article-header.jpg", alt: "Wired app article header", aspectRatio: "786 / 1668" },
+        { src: "/videos/wired-article-animated-loop.mp4", poster: "/videos/wired-article-animated-loop-poster.jpg", aspectRatio: "720 / 1514" },
+        { src: "/videos/wired-article-commenting.mp4", poster: "/videos/wired-article-commenting-poster.jpg", aspectRatio: "720 / 1560" },
+      ]}
+    />
+    <p class="caption"><span class="caption-title">Article &amp; Reading</span><br />Focused, uninterrupted reading, with the tools to take each story the way that suits you and the option to join the discussion.</p>
     <Marquee
       height="628px"
       shrinkToFit
@@ -97,7 +107,7 @@ import Marquee from "../../components/Marquee.astro";
         { src: "/videos/wired-audio-playlists.mp4", poster: "/videos/wired-audio-playlists-poster.jpg", aspectRatio: "720 / 1560" },
       ]}
     />
-    <p class="caption"><span class="caption-title">Listen &amp; Playlists</span></p>
+    <p class="caption"><span class="caption-title">Listen &amp; Playlists</span><br />Content packaged for listening, with a different discovery pattern from text for a different user state. Limited, curated playlists make Wired easy to discover and binge.</p>
   </div>
 </div>
 
@@ -112,7 +122,7 @@ import Marquee from "../../components/Marquee.astro";
       maxHeight="628px"
       rounded
     />
-    <p class="caption"><span class="caption-title">Watch &amp; Video</span></p>
+    <p class="caption"><span class="caption-title">Watch &amp; Video</span><br />Vertical video that puts the people of Wired front and center, foregrounding our talent to build a closer relationship with the faces behind the journalism.</p>
   </div>
   <div class="col-6">
     <div class="full-bleed-mobile">
@@ -125,28 +135,6 @@ import Marquee from "../../components/Marquee.astro";
         maxHeight="628px"
       />
     </div>
-    <p class="caption"><span class="caption-title">The Daily Digest</span><br />An immersive, tailored package of stories: finite and completable, with a rewarding sense of progress for tapping through daily. Personal, not infinite</p>
+    <p class="caption"><span class="caption-title">The Daily Digest</span><br />An immersive, tailored package of stories: finite and completable, with a rewarding sense of progress for tapping through daily. Personal, not infinite, and designed around habit.</p>
   </div>
 </div>
-
-<div class="grid">
-  <div class="col-6">
-    <h2>Takeaways</h2>
-    <p>
-      <strong>Speed with a small team</strong> — Beta in 2 months, shipped
-      in 5. With a team of 2 designers forcing ruthless prioritisation on
-      what actually mattered to the experience.
-    </p>
-    <p>
-      <strong>Vision-led craft</strong> — we defined the guiding direction
-      and saw it through to visual execution, in keeping with Wired's
-      storied visual identity.
-    </p>
-    <p>
-      <strong>Habit by design</strong> — every core decision, from tailored
-      story packages to following mechanics, built around daily engagement,
-      not just content delivery.
-    </p>
-  </div>
-</div>
-
