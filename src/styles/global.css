@@ -100,6 +100,27 @@ p {
   margin: 1.5rem 0 0;
 }
 
+/* A tight stack of short outcome lines under a heading — no gap between
+   items, dash-marked instead of a default list bullet. */
+.outcome-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  font-size: 1rem;
+  line-height: 1.5;
+}
+
+.outcome-list li {
+  padding-left: 1rem;
+  position: relative;
+}
+
+.outcome-list li::before {
+  content: "–";
+  position: absolute;
+  left: 0;
+}
+
 /* The heading line of a caption — brighter than its grey description. */
 .caption-title {
   color: var(--color-ink);

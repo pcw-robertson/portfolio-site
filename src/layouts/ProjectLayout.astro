@@ -94,12 +94,18 @@ const isCustom = template === "custom";
 	   render identically, denser than the site's default heading sizes. The
 	   only exceptions are the case study's own title (its own bigger .grid h1
 	   rule below, or .project-header for the default template) and a
-	   .caption-quote, which is intentionally larger. */
+	   .caption-quote, which is intentionally larger.
+
+	   No margin-bottom: a heading sits directly above its paragraph the same
+	   way a .caption-title sits directly above its text (title, <br>, text in
+	   one block) — zero added gap, just the shared line-height leading, so
+	   both read with the same rhythm. */
 	.body :global(h2),
 	.project-theme :global(.grid h2) {
 		font-size: 1rem;
 		font-weight: 400;
 		line-height: 1.5;
+		margin-bottom: 0;
 	}
 
 	.body :global(p),
@@ -111,6 +117,7 @@ const isCustom = template === "custom";
 	.project-theme :global(.grid h1) {
 		font-size: 1.5rem;
 		font-weight: 400;
+		margin-bottom: 0;
 	}
 
 	.project-theme :global(.grid .caption-quote p) {
