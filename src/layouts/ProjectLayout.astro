@@ -88,24 +88,29 @@ const isCustom = template === "custom";
 		color: var(--color-body);
 	}
 
-	/* Custom-layout (MDX) content is composed directly in .grid blocks rather
-	   than the .project-header/.body prose scaffold below, so it gets its own
-	   (smaller, denser) type scale matching the case-study Figma reference
-	   instead of the site's default heading sizes. */
-	.project-theme :global(.grid h1) {
-		font-size: 1.5rem;
-		font-weight: 400;
-	}
-
+	/* One type size for all sub-heading + body copy on a project page —
+	   "The problem"/"Role"/"Outcome" prose (.body, default template) and a
+	   custom .grid layout's headings/paragraphs (Wired, New Yorker Games)
+	   render identically, denser than the site's default heading sizes. The
+	   only exceptions are the case study's own title (its own bigger .grid h1
+	   rule below, or .project-header for the default template) and a
+	   .caption-quote, which is intentionally larger. */
+	.body :global(h2),
 	.project-theme :global(.grid h2) {
 		font-size: 1rem;
 		font-weight: 400;
 		line-height: 1.5;
 	}
 
+	.body :global(p),
 	.project-theme :global(.grid p) {
 		font-size: 1rem;
 		line-height: 1.5;
+	}
+
+	.project-theme :global(.grid h1) {
+		font-size: 1.5rem;
+		font-weight: 400;
 	}
 
 	.project-theme :global(.grid .caption-quote p) {
