@@ -140,7 +140,12 @@ For a group of assets instead of one, more components are available
   e.g. a 4-frame row at 1440px wide; narrower windows scroll. Put several in the same column wrapper
   to stack rows (96px apart; put a `<p class="caption">` after a row or frame for a label 24px below it; wrap the heading line in `<span class="caption-title">` for the brighter title, with a `<br />` and grey description after it); add `reverse` to a row to scroll it
   left-to-right, so stacked rows read as deliberately contrasting rather
-  than slightly out of sync. Used in `wired-app.mdx`.
+  than slightly out of sync. Used in `wired-app.mdx`. Add `mobileCarousel`
+  to replace the auto-scrolling row with a swipeable one-at-a-time carousel
+  and dot pagination below the desktop breakpoint — for content like video
+  where a constant scroll speed fights against each clip's own length.
+  Desktop is unaffected (pair with `shrinkToFit` to keep it a still row
+  there). Used for Wired's Daily Digest row.
 
 `AssetFloat` defaults to a 9:16 aspect ratio (most captures are vertical
 phone screens) but takes an `aspectRatio` prop for anything else — e.g. a
