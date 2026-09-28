@@ -127,6 +127,11 @@ For a group of assets instead of one, more components are available
   seamlessly (`speed` in px/s, default 20). Every item is drawn at the same
   `height` (default 888px desktop, matching the single-device frames;
   mobile follows the column width), width following its own `aspectRatio`.
+  Add `shrinkToFit` to a row with few enough items that it can always fit
+  the desktop viewport without scrolling — its height then scales down
+  continuously as the window narrows (instead of switching to the scrolling
+  carousel at some in-between width) so it's inset by the real grid margin
+  at every desktop size, right down to the mobile breakpoint.
   `wired-app.mdx` passes 628px so the frames match the scale of the
   full-screen phones inside its intro video. Corners `radius`
   30px, 48px apart. Videos are muted/looping and only play while visible;

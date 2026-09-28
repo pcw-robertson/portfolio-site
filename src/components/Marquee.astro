@@ -10,7 +10,13 @@
 //
 // If the whole set fits within the viewport (with a side margin equal to the
 // gap), it doesn't scroll at all: it sits still, centered, with the duplicate
-// copy hidden. Wider viewports get a still row; narrower ones scroll.
+// copy hidden. Wider viewports get a still row; narrower ones scroll — unless
+// `shrinkToFit` is set, in which case it never scrolls at desktop widths: its
+// height continuously scales down (all items stay proportional to each
+// other) so the row always fits within the page's real grid margins, right
+// down to the mobile breakpoint, instead of jumping into a scrolling
+// carousel at some in-between width. Use this for a row with few enough
+// items that shrinking reads better than scrolling.
 interface MarqueeItem {
   src: string;
   type?: "image" | "video";
@@ -31,6 +37,8 @@ interface Props {
   height?: string;
   mobileHeight?: string;
   radius?: string;
+  // Never scroll at desktop widths — shrink instead (see comment above).
+  shrinkToFit?: boolean;
 }
 
 const {
@@ -40,6 +48,7 @@ const {
   height = "888px",
   mobileHeight = "calc((100vw - 2 * var(--grid-margin)) * 1560 / 720)",
   radius = "30px",
+  shrinkToFit = false,
 } = Astro.props;
 
 const kindOf = (item: MarqueeItem) =>
@@ -51,6 +60,7 @@ const kindOf = (item: MarqueeItem) =>
 	data-marquee
 	data-speed={speed}
 	data-reverse={reverse ? "" : undefined}
+	data-shrink-to-fit={shrinkToFit ? "" : undefined}
 	style={`--marquee-height: ${height}; --marquee-height-mobile: ${mobileHeight}; --marquee-radius: ${radius}`}
 >
 	<div class="marquee-track">
@@ -168,20 +178,55 @@ const kindOf = (item: MarqueeItem) =>
 <script>
 	import "../scripts/autoplay-in-view";
 
+	// Matches the grid system's desktop breakpoint (see grid.css).
+	const mobileQuery = window.matchMedia("(max-width: 1279px)");
+
 	for (const marquee of document.querySelectorAll<HTMLElement>(
 		"[data-marquee]",
 	)) {
 		const track = marquee.querySelector<HTMLElement>(".marquee-track")!;
 		const speed = Number(marquee.dataset.speed) || 20;
+		const shrinkToFit = marquee.hasAttribute("data-shrink-to-fit");
 
 		const firstSet = track.querySelector<HTMLElement>(".marquee-set")!;
 
+		// For shrinkToFit: sum of each item's own aspect ratio (width/height),
+		// captured once from the row's natural (un-shrunk) size — since gaps are
+		// a fixed px amount rather than proportional, this is what lets later
+		// calls solve directly for "what height makes this row exactly
+		// availableWidth wide" instead of just scaling relative to last frame.
+		let sumOfRatios: number | null = null;
+		let naturalHeightPx = 0;
+
 		function update() {
 			const items = firstSet.querySelectorAll<HTMLElement>(".marquee-item");
+			const gap = parseFloat(getComputedStyle(firstSet).columnGap) || 0;
 			const contentWidth =
 				items[items.length - 1].getBoundingClientRect().right -
 				items[0].getBoundingClientRect().left;
-			const gap = parseFloat(getComputedStyle(firstSet).columnGap) || 0;
+
+			if (shrinkToFit && !mobileQuery.matches) {
+				const currentHeight = items[0].getBoundingClientRect().height;
+				if (sumOfRatios === null) {
+					// First run, before any shrinking has been applied.
+					sumOfRatios = (contentWidth - (items.length - 1) * gap) / currentHeight;
+					naturalHeightPx = currentHeight;
+				}
+				const marginPx =
+					parseFloat(
+						getComputedStyle(document.documentElement).getPropertyValue(
+							"--grid-margin",
+						),
+					) || 0;
+				const availableWidth = marquee.clientWidth - 2 * marginPx;
+				const fitHeight =
+					(availableWidth - (items.length - 1) * gap) / sumOfRatios;
+				const targetHeight = Math.min(naturalHeightPx, Math.max(0, fitHeight));
+				marquee.style.setProperty("--marquee-height", `${targetHeight}px`);
+				marquee.setAttribute("data-static", "");
+				return;
+			}
+
 			const fits = contentWidth + 2 * gap <= marquee.clientWidth;
 			marquee.toggleAttribute("data-static", fits);
 			if (!fits) {
@@ -195,6 +240,7 @@ const kindOf = (item: MarqueeItem) =>
 		const resizeObserver = new ResizeObserver(update);
 		resizeObserver.observe(marquee);
 		resizeObserver.observe(track);
+		if (shrinkToFit) mobileQuery.addEventListener("change", update);
 
 		new IntersectionObserver(([entry]) => {
 			marquee.toggleAttribute("data-paused", !entry.isIntersecting);
