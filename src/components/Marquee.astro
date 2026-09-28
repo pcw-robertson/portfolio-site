@@ -50,6 +50,12 @@ interface Props {
   // content like video where a constant scroll speed fights against each
   // clip's own (different) length. Desktop is unaffected.
   mobileCarousel?: boolean;
+  // Auto-advance one slide at a time (mobileCarousel only) — the active dot
+  // doubles as a progress bar counting down to the next slide. Pauses
+  // whenever the row is scrolled out of view, and a swipe always takes
+  // over and restarts the timer from the slide it lands on.
+  autoplay?: boolean;
+  autoplayMs?: number;
 }
 
 const {
@@ -62,6 +68,8 @@ const {
   radius = "30px",
   shrinkToFit = false,
   mobileCarousel = false,
+  autoplay = false,
+  autoplayMs = 4000,
 } = Astro.props;
 
 const kindOf = (item: MarqueeItem) =>
@@ -75,7 +83,8 @@ const kindOf = (item: MarqueeItem) =>
 	data-reverse={reverse ? "" : undefined}
 	data-shrink-to-fit={shrinkToFit ? "" : undefined}
 	data-mobile-carousel={mobileCarousel ? "" : undefined}
-	style={`--marquee-height: ${height}; --marquee-height-mobile: ${mobileHeight}; --marquee-radius: ${radius}; --mobile-scale: ${mobileScale}`}
+	data-autoplay={autoplay ? "" : undefined}
+	style={`--marquee-height: ${height}; --marquee-height-mobile: ${mobileHeight}; --marquee-radius: ${radius}; --mobile-scale: ${mobileScale}; --autoplay-ms: ${autoplayMs}ms`}
 >
 	<div class="marquee-track">
 		<div class="marquee-set">
@@ -158,7 +167,9 @@ const kindOf = (item: MarqueeItem) =>
 						class="marquee-dot"
 						data-dot-index={i}
 						aria-label={`Go to slide ${i + 1}`}
-					/>
+					>
+						{autoplay && <span class="marquee-dot-fill" />}
+					</button>
 				))}
 			</div>
 		)
@@ -264,7 +275,7 @@ const kindOf = (item: MarqueeItem) =>
 			animation: none !important;
 			overflow-x: auto;
 			scroll-snap-type: x mandatory;
-			scroll-padding-inline: var(--grid-margin);
+			scroll-padding-inline-start: var(--grid-margin);
 			padding-inline: var(--grid-margin);
 			-webkit-overflow-scrolling: touch;
 			scrollbar-width: none;
@@ -282,7 +293,12 @@ const kindOf = (item: MarqueeItem) =>
 			flex: none;
 			width: calc((100vw - 2 * var(--grid-margin)) * var(--mobile-scale));
 			height: auto;
-			scroll-snap-align: center;
+			/* Every slide snaps to the same left-aligned spot (the grid margin,
+			   via scroll-padding-inline-start above) rather than centering —
+			   centering the trailing loop clone can land slightly differently
+			   than a real slide since there's nothing after it to center
+			   against, which read as a jump when the loop reset. */
+			scroll-snap-align: start;
 		}
 
 		.marquee[data-mobile-carousel] .marquee-dots {
@@ -298,14 +314,49 @@ const kindOf = (item: MarqueeItem) =>
 		height: 6px;
 		padding: 0;
 		border: none;
-		border-radius: 50%;
+		border-radius: 3px;
 		background: var(--color-line);
-		transition: background 0.2s, transform 0.2s;
+		position: relative;
+		overflow: hidden;
+		transition: width 0.25s ease, background 0.2s, transform 0.2s;
 	}
 
 	.marquee-dot[data-active] {
 		background: var(--color-ink);
 		transform: scale(1.3);
+	}
+
+	/* Autoplay: the active dot elongates into a pill and its fill sweeps
+	   left to right over autoplayMs — a progress bar for the next slide. */
+	.marquee[data-autoplay] .marquee-dot[data-active] {
+		width: 20px;
+		background: var(--color-line);
+		transform: none;
+	}
+
+	.marquee-dot-fill {
+		position: absolute;
+		inset: 0;
+		width: 0%;
+		background: var(--color-ink);
+		border-radius: inherit;
+	}
+
+	.marquee-dot[data-active] .marquee-dot-fill {
+		animation: marquee-dot-fill var(--autoplay-ms, 4000ms) linear forwards;
+	}
+
+	.marquee[data-paused] .marquee-dot-fill {
+		animation-play-state: paused;
+	}
+
+	@keyframes marquee-dot-fill {
+		from {
+			width: 0%;
+		}
+		to {
+			width: 100%;
+		}
 	}
 </style>
 
@@ -385,9 +436,21 @@ const kindOf = (item: MarqueeItem) =>
 		resizeObserver.observe(track);
 		if (shrinkToFit) mobileQuery.addEventListener("change", update);
 
+		const autoplay = marquee.hasAttribute("data-autoplay");
+		const autoplayMs = parseFloat(marquee.style.getPropertyValue("--autoplay-ms")) || 4000;
+		let inView = true;
+
 		new IntersectionObserver(([entry]) => {
 			marquee.toggleAttribute("data-paused", !entry.isIntersecting);
+			inView = entry.isIntersecting;
+			if (mobileCarousel && autoplay) {
+				if (inView) scheduleAutoplay();
+				else if (autoplayTimer) clearTimeout(autoplayTimer);
+			}
 		}).observe(marquee);
+
+		let autoplayTimer: ReturnType<typeof setTimeout> | null = null;
+		let scheduleAutoplay: () => void = () => {};
 
 		if (mobileCarousel) {
 			// slides = every real item plus the trailing loop clone (if any);
@@ -403,15 +466,26 @@ const kindOf = (item: MarqueeItem) =>
 				marquee.querySelectorAll<HTMLButtonElement>(".marquee-dot"),
 			);
 
+			// Every slide snaps to the same left-aligned spot (see
+			// scroll-snap-align: start) — the one closest to that spot,
+			// grid-margin in from the track's own left edge, is the active one.
+			function marginPx() {
+				return (
+					parseFloat(
+						getComputedStyle(document.documentElement).getPropertyValue(
+							"--grid-margin",
+						),
+					) || 0
+				);
+			}
+
 			// Returns the index into `slides` (which may point at the clone).
 			function closestSlideIndex() {
-				const trackCenter =
-					track.getBoundingClientRect().left + track.clientWidth / 2;
+				const targetLeft = track.getBoundingClientRect().left + marginPx();
 				let closest = 0;
 				let closestDistance = Infinity;
 				slides.forEach((item, i) => {
-					const rect = item.getBoundingClientRect();
-					const distance = Math.abs(rect.left + rect.width / 2 - trackCenter);
+					const distance = Math.abs(item.getBoundingClientRect().left - targetLeft);
 					if (distance < closestDistance) {
 						closestDistance = distance;
 						closest = i;
@@ -426,16 +500,40 @@ const kindOf = (item: MarqueeItem) =>
 				dots.forEach((dot, i) => dot.toggleAttribute("data-active", i === closest));
 			}
 
-			// Once a swipe settles on the trailing clone, jump straight back to
-			// the real first slide with no animation — reads as the carousel
-			// looping around rather than sliding all the way back.
+			function goToRealIndex(i: number) {
+				realItems[i].scrollIntoView({
+					behavior: "smooth",
+					inline: "start",
+					block: "nearest",
+				});
+			}
+
+			scheduleAutoplay = () => {
+				if (autoplayTimer) clearTimeout(autoplayTimer);
+				if (!autoplay || !mobileQuery.matches || !inView) return;
+				autoplayTimer = setTimeout(() => {
+					const current = closestSlideIndex() % realItems.length;
+					const next = current + 1;
+					// Advancing past the real last slide scrolls onto the clone;
+					// onSettle below snaps that invisibly back to real index 0.
+					(next < realItems.length ? realItems[next] : slides[realItems.length])
+						.scrollIntoView({ behavior: "smooth", inline: "start", block: "nearest" });
+				}, autoplayMs);
+			};
+
+			// Once a swipe (or an autoplay advance) settles on the trailing
+			// clone, jump straight back to the real first slide with no
+			// animation — reads as the carousel looping around rather than
+			// sliding all the way back. Also the single point where the
+			// autoplay timer restarts, whatever caused the settle.
 			let settleTimer: ReturnType<typeof setTimeout> | null = null;
 			function onSettle() {
 				if (!mobileQuery.matches) return;
 				if (closestSlideIndex() === realItems.length) {
-					realItems[0].scrollIntoView({ inline: "center", block: "nearest" });
+					realItems[0].scrollIntoView({ inline: "start", block: "nearest" });
 				}
 				syncActiveDot();
+				scheduleAutoplay();
 			}
 
 			track.addEventListener(
@@ -448,16 +546,14 @@ const kindOf = (item: MarqueeItem) =>
 				{ passive: true },
 			);
 			dots.forEach((dot, i) => {
-				dot.addEventListener("click", () => {
-					realItems[i].scrollIntoView({
-						behavior: "smooth",
-						inline: "center",
-						block: "nearest",
-					});
-				});
+				dot.addEventListener("click", () => goToRealIndex(i));
 			});
-			mobileQuery.addEventListener("change", syncActiveDot);
+			mobileQuery.addEventListener("change", () => {
+				syncActiveDot();
+				scheduleAutoplay();
+			});
 			syncActiveDot();
+			scheduleAutoplay();
 		}
 	}
 </script>

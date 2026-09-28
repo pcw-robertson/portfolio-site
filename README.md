@@ -144,8 +144,13 @@ For a group of assets instead of one, more components are available
   to replace the auto-scrolling row with a swipeable one-at-a-time carousel
   and dot pagination below the desktop breakpoint — for content like video
   where a constant scroll speed fights against each clip's own length.
+  Every slide snaps to the same left-aligned spot (the grid margin).
   Desktop is unaffected (pair with `shrinkToFit` to keep it a still row
-  there). Used for Wired's Daily Digest row.
+  there). Add `autoplay` (with `autoplayMs`, default 4000) to advance on a
+  timer — the active dot elongates into a pill and fills left to right as a
+  countdown, pausing while the row is off-screen; any swipe or dot click
+  takes over immediately and restarts the timer from wherever it lands.
+  Used for Wired's Daily Digest row.
 
 `AssetFloat` defaults to a 9:16 aspect ratio (most captures are vertical
 phone screens) but takes an `aspectRatio` prop for anything else — e.g. a
