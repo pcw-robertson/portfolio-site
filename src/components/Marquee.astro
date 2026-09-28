@@ -444,13 +444,13 @@ const kindOf = (item: MarqueeItem) =>
 			marquee.toggleAttribute("data-paused", !entry.isIntersecting);
 			inView = entry.isIntersecting;
 			if (mobileCarousel && autoplay) {
-				if (inView) scheduleAutoplay();
+				if (inView) activateCurrentSlide();
 				else if (autoplayTimer) clearTimeout(autoplayTimer);
 			}
 		}).observe(marquee);
 
 		let autoplayTimer: ReturnType<typeof setTimeout> | null = null;
-		let scheduleAutoplay: () => void = () => {};
+		let activateCurrentSlide: () => void = () => {};
 
 		if (mobileCarousel) {
 			// slides = every real item plus the trailing loop clone (if any);
@@ -494,6 +494,9 @@ const kindOf = (item: MarqueeItem) =>
 				return closest;
 			}
 
+			// Cheap, called on every scroll frame while dragging — just keeps
+			// the dot highlight tracking the finger. The authoritative update
+			// (below) only runs once a swipe actually settles.
 			function syncActiveDot() {
 				if (!mobileQuery.matches) return;
 				const closest = closestSlideIndex() % realItems.length;
@@ -508,32 +511,69 @@ const kindOf = (item: MarqueeItem) =>
 				});
 			}
 
-			scheduleAutoplay = () => {
+			// A video's own length if it's loaded, else null — lets a slide's
+			// autoplay dwell time (and its dot's fill duration) match however
+			// long its own clip actually runs instead of a single guessed
+			// value shared by every slide.
+			function videoDurationMs(index: number) {
+				const video = realItems[index].querySelector("video");
+				if (video && isFinite(video.duration) && video.duration > 0) {
+					return video.duration * 1000;
+				}
+				return null;
+			}
+
+			let activeIndex = -1;
+
+			// The single point where a slide becomes "current": sets the dot
+			// highlight, primes that dot's fill duration to match the slide's
+			// own video length (correcting later if metadata wasn't loaded
+			// yet), and (re)starts the autoplay timer for exactly that long.
+			activateCurrentSlide = () => {
+				if (!mobileQuery.matches) return;
+				const index = closestSlideIndex() % realItems.length;
+				activeIndex = index;
+				const knownMs = videoDurationMs(index);
+				const ms = knownMs ?? autoplayMs;
+				dots.forEach((dot, i) => {
+					if (i === index) dot.style.setProperty("--autoplay-ms", `${ms}ms`);
+					dot.toggleAttribute("data-active", i === index);
+				});
+
 				if (autoplayTimer) clearTimeout(autoplayTimer);
-				if (!autoplay || !mobileQuery.matches || !inView) return;
+				if (!autoplay || !inView) return;
 				autoplayTimer = setTimeout(() => {
-					const current = closestSlideIndex() % realItems.length;
-					const next = current + 1;
+					const next = index + 1;
 					// Advancing past the real last slide scrolls onto the clone;
 					// onSettle below snaps that invisibly back to real index 0.
 					(next < realItems.length ? realItems[next] : slides[realItems.length])
 						.scrollIntoView({ behavior: "smooth", inline: "start", block: "nearest" });
-				}, autoplayMs);
+				}, ms);
+
+				if (knownMs === null) {
+					const video = realItems[index].querySelector("video");
+					video?.addEventListener(
+						"loadedmetadata",
+						() => {
+							// Only correct if still sitting on this same slide.
+							if (mobileQuery.matches && activeIndex === index) activateCurrentSlide();
+						},
+						{ once: true },
+					);
+				}
 			};
 
 			// Once a swipe (or an autoplay advance) settles on the trailing
 			// clone, jump straight back to the real first slide with no
 			// animation — reads as the carousel looping around rather than
-			// sliding all the way back. Also the single point where the
-			// autoplay timer restarts, whatever caused the settle.
+			// sliding all the way back.
 			let settleTimer: ReturnType<typeof setTimeout> | null = null;
 			function onSettle() {
 				if (!mobileQuery.matches) return;
 				if (closestSlideIndex() === realItems.length) {
 					realItems[0].scrollIntoView({ inline: "start", block: "nearest" });
 				}
-				syncActiveDot();
-				scheduleAutoplay();
+				activateCurrentSlide();
 			}
 
 			track.addEventListener(
@@ -548,12 +588,8 @@ const kindOf = (item: MarqueeItem) =>
 			dots.forEach((dot, i) => {
 				dot.addEventListener("click", () => goToRealIndex(i));
 			});
-			mobileQuery.addEventListener("change", () => {
-				syncActiveDot();
-				scheduleAutoplay();
-			});
-			syncActiveDot();
-			scheduleAutoplay();
+			mobileQuery.addEventListener("change", activateCurrentSlide);
+			activateCurrentSlide();
 		}
 	}
 </script>
