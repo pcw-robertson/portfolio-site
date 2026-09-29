@@ -95,9 +95,19 @@ p {
   color: var(--color-muted);
 }
 
-/* Short label under a media row (e.g. a Marquee). */
+/* Short label under a media row (e.g. a Marquee). Narrowed at desktop to
+   the same width as a col-6 (matches the intro section's paragraphs) for a
+   better line length — a col-12 row would otherwise let it run out to the
+   full 68ch measure. Below desktop every column is full-width anyway, same
+   as the intro section, so no override is needed there. */
 .caption {
   margin: 1.5rem 0 0;
+}
+
+@media (min-width: 1280px) {
+  .caption {
+    max-width: calc((100% - var(--grid-gutter)) / 2);
+  }
 }
 
 /* A tight stack of short outcome lines under a heading — no gap between
