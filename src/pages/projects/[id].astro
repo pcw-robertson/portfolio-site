@@ -2,33 +2,18 @@
 import { getCollection, render } from "astro:content";
 import ProjectLayout from "../../layouts/ProjectLayout.astro";
 
-// Prototype: scroll-past-the-bottom navigates into the next case study,
-// ordered the same way the homepage grid is. Scoped to one project for now
-// (see PROTOTYPE_SCROLL_NAV_SLUG below) while we test how it feels before
-// wiring it up everywhere.
-const PROTOTYPE_SCROLL_NAV_SLUG = "wired-app";
-
 export async function getStaticPaths() {
   const projects = await getCollection("projects");
-  const sorted = [...projects].sort((a, b) => a.data.order - b.data.order);
-  return projects.map((project) => {
-    const index = sorted.findIndex((p) => p.id === project.id);
-    const next = sorted[(index + 1) % sorted.length];
-    return {
-      params: { id: project.id },
-      props: { project, next },
-    };
-  });
+  return projects.map((project) => ({
+    params: { id: project.id },
+    props: { project },
+  }));
 }
 
-const { project, next } = Astro.props;
+const { project } = Astro.props;
 const { Content } = await render(project);
-const nextProject =
-  project.id === PROTOTYPE_SCROLL_NAV_SLUG
-    ? { title: next.data.title, href: `/projects/${next.id}` }
-    : null;
 ---
 
-<ProjectLayout project={project} nextProject={nextProject}>
+<ProjectLayout project={project}>
 	<Content />
 </ProjectLayout>
