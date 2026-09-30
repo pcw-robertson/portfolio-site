@@ -114,8 +114,12 @@ p {
   margin-top: 0;
 }
 
+/* Only narrow a caption when it's riding alongside a full-width row (a
+   col-12 Marquee) — a caption that's already in its own col-6 (paired
+   with an asset, like Results) is half-width already and shouldn't be
+   narrowed again. */
 @media (min-width: 1280px) {
-  .caption {
+  .col-12 > .caption {
     max-width: calc((100% - var(--grid-gutter)) / 2);
   }
 }
@@ -141,18 +145,20 @@ p {
   left: 0;
 }
 
-/* Variant for a "Label – description" outcome line — no bullet marker,
-   the bold label itself carries the emphasis instead of a leading dash. */
-.outcome-list--labeled li {
+/* Variant with no bullet marker and a half-line-height gap between items
+   instead, for a denser block of "Label – description" lines that still
+   needs to scan easily. */
+.outcome-list--spaced li {
   padding-left: 0;
+  margin-bottom: 0.75em;
 }
 
-.outcome-list--labeled li::before {
+.outcome-list--spaced li:last-child {
+  margin-bottom: 0;
+}
+
+.outcome-list--spaced li::before {
   content: none;
-}
-
-.outcome-list--labeled li strong {
-  color: var(--color-ink);
 }
 
 /* The heading line of a caption — brighter than its grey description. */

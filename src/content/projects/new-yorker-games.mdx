@@ -15,6 +15,7 @@ import { getCaseStudy, getAnnotation } from "../../lib/case-studies";
 
 export const nyg = getCaseStudy("new-yorker-games");
 export const annotation = (title) => getAnnotation(nyg, title);
+export const paragraphs = (text) => text.split("\n\n");
 
 <div class="grid">
   <div class="col-6">
@@ -26,11 +27,8 @@ export const annotation = (title) => getAnnotation(nyg, title);
     <h2>Role</h2>
     <p>{nyg.role}</p>
     <h2>Outcome</h2>
-    <ul class="outcome-list outcome-list--labeled">
-      {nyg.outcome.map((item) => {
-        const [label, ...rest] = item.split(" – ");
-        return rest.length ? <li><strong>{label}</strong> – {rest.join(" – ")}</li> : <li>{item}</li>;
-      })}
+    <ul class="outcome-list outcome-list--spaced">
+      {nyg.outcome.map((item) => <li>{item}</li>)}
     </ul>
   </div>
   <div class="col-6">
@@ -72,7 +70,9 @@ export const annotation = (title) => getAnnotation(nyg, title);
 
 <div class="grid">
   <div class="col-6">
-    <p class="caption">{annotation("Shuffalo detail").body}</p>
+    <p class="caption">
+      {paragraphs(annotation("Shuffalo detail").body).map((para, i) => <>{i > 0 && <><br /><br /></>}{para}</>)}
+    </p>
   </div>
   <div class="col-6">
     <AssetFloat
@@ -122,7 +122,14 @@ export const annotation = (title) => getAnnotation(nyg, title);
         { src: "/videos/pg-cat-row1-5.mp4", poster: "/videos/pg-cat-row1-5-poster.jpg", aspectRatio: "1180 / 2556" },
       ]}
     />
-    <p class="caption">{annotation("Catalogues detail").body}</p>
+  </div>
+</div>
+
+<div class="grid">
+  <div class="col-6">
+    <p class="caption">
+      {paragraphs(annotation("Catalogues detail").body).map((para, i) => <>{i > 0 && <><br /><br /></>}{para}</>)}
+    </p>
   </div>
 </div>
 
