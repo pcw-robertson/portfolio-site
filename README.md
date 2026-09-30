@@ -128,12 +128,19 @@ For a group of assets instead of one, more components are available
   `height` (default 888px desktop, matching the single-device frames;
   mobile follows the column width), width following its own `aspectRatio`.
   Add `shrinkToFit` to a row with few enough items that it can always fit
-  the desktop viewport without scrolling — its height then scales down
-  continuously as the window narrows (instead of switching to the scrolling
-  carousel at some in-between width) so it's inset by the real grid margin
-  at every desktop size, right down to the mobile breakpoint.
-  `wired-app.mdx` passes 628px so the frames match the scale of the
-  full-screen phones inside its intro video. Corners `radius`
+  the desktop viewport without scrolling — its height shrinks just enough
+  to fit the grid's own (capped) content width instead of switching to a
+  scrolling carousel, so it sits still, aligned with the same margins as
+  everything else on the page. That height stays constant at every desktop
+  width, since the grid's content width itself is capped and doesn't grow
+  past 1280px — it only changes at the mobile breakpoint.
+  If any `shrinkToFit` rows are present, every `<Marquee>` on the page
+  (shrinkToFit or not) shares that same computed height, so a six-item
+  row that still has to scroll renders its frames at the exact same size
+  as a four-item row sitting still next to it, rather than staying at a
+  larger fixed height of its own. `wired-app.mdx` passes 628px so the
+  frames match the scale of the full-screen phones inside its intro video
+  (before any shrinking). Corners `radius`
   30px, 48px apart. Videos are muted/looping and only play while visible;
   pauses when scrolled out of view. If the whole set fits in the viewport (with a
   gap-sized margin each side) it sits still, centered, instead of scrolling —

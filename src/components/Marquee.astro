@@ -204,6 +204,18 @@ const kindOf = (item: MarqueeItem) =>
 		margin-inline: auto;
 	}
 
+	/* A still row reads as a normal part of the page, so it should align
+	   with the same grid margins as everything else — undo the full-bleed
+	   breakout (which otherwise measures against the raw viewport instead
+	   of the grid's own, capped, centered content width) so it sits back
+	   inside its actual .col-12 parent. */
+	@media (min-width: 1280px) {
+		.marquee[data-static] {
+			width: 100%;
+			margin-inline: 0;
+		}
+	}
+
 	.marquee[data-static] .marquee-set {
 		padding-right: 0;
 	}
@@ -366,9 +378,85 @@ const kindOf = (item: MarqueeItem) =>
 	// Matches the grid system's desktop breakpoint (see grid.css).
 	const mobileQuery = window.matchMedia("(max-width: 1279px)");
 
-	for (const marquee of document.querySelectorAll<HTMLElement>(
-		"[data-marquee]",
-	)) {
+	const allMarquees = Array.from(
+		document.querySelectorAll<HTMLElement>("[data-marquee]"),
+	);
+	// Every row's own per-frame decision (fits vs. scrolls, at whatever
+	// height is currently in force) — run after the shared height below is
+	// (re)applied, since that's what the decision depends on.
+	const rowUpdaters: Array<() => void> = [];
+
+	// shrinkToFit rows on this page all shrink together, to exactly the
+	// same height — the row with the least room to spare sets it for every
+	// row, so a page never shows two different frame sizes at once (a
+	// six-item scrolling row would otherwise sit at a fixed natural height
+	// forever while a four-item row next to it kept shrinking).
+	interface ShrinkRow {
+		marquee: HTMLElement;
+		firstSet: HTMLElement;
+		// Sum of each item's own aspect ratio (width/height), captured once
+		// from the row's natural (un-shrunk) size — since gaps are a fixed px
+		// amount rather than proportional, this is what lets later calls
+		// solve directly for "what height makes this row exactly
+		// availableWidth wide" instead of just scaling relative to last frame.
+		sumOfRatios: number | null;
+		naturalHeightPx: number;
+	}
+	const shrinkRows: ShrinkRow[] = [];
+
+	function measureShrinkRow(row: ShrinkRow) {
+		if (row.sumOfRatios !== null) return;
+		const items = row.firstSet.querySelectorAll<HTMLElement>(
+			".marquee-item:not([data-loop-clone])",
+		);
+		const gap = parseFloat(getComputedStyle(row.firstSet).columnGap) || 0;
+		const contentWidth =
+			items[items.length - 1].getBoundingClientRect().right -
+			items[0].getBoundingClientRect().left;
+		const currentHeight = items[0].getBoundingClientRect().height;
+		if (currentHeight > 0) {
+			row.sumOfRatios = (contentWidth - (items.length - 1) * gap) / currentHeight;
+			row.naturalHeightPx = currentHeight;
+		}
+	}
+
+	// A row's real available width is its actual grid column's width (e.g.
+	// a .col-12's, always exactly the grid's own capped content width) —
+	// not the full-bleed marquee's own clientWidth, which tracks the raw
+	// viewport and keeps growing past the grid's max-width, and would both
+	// mis-size a still row and misalign it against the rest of the page.
+	function availableRowWidth(marquee: HTMLElement) {
+		return marquee.parentElement!.clientWidth;
+	}
+
+	function recomputeSharedHeight() {
+		if (mobileQuery.matches || shrinkRows.length === 0) return;
+		for (const row of shrinkRows) measureShrinkRow(row);
+		const heights = shrinkRows
+			.filter((row) => row.sumOfRatios !== null)
+			.map((row) => {
+				const items = row.firstSet.querySelectorAll<HTMLElement>(
+					".marquee-item:not([data-loop-clone])",
+				);
+				const gap = parseFloat(getComputedStyle(row.firstSet).columnGap) || 0;
+				const fitHeight =
+					(availableRowWidth(row.marquee) - (items.length - 1) * gap) /
+					row.sumOfRatios!;
+				return Math.min(row.naturalHeightPx, Math.max(0, fitHeight));
+			});
+		if (heights.length === 0) return;
+		const shared = Math.min(...heights);
+		for (const marquee of allMarquees) {
+			marquee.style.setProperty("--marquee-height", `${shared}px`);
+		}
+	}
+
+	function refreshAllRows() {
+		recomputeSharedHeight();
+		for (const run of rowUpdaters) run();
+	}
+
+	for (const marquee of allMarquees) {
 		const track = marquee.querySelector<HTMLElement>(".marquee-track")!;
 		const speed = Number(marquee.dataset.speed) || 20;
 		const shrinkToFit = marquee.hasAttribute("data-shrink-to-fit");
@@ -376,52 +464,34 @@ const kindOf = (item: MarqueeItem) =>
 
 		const firstSet = track.querySelector<HTMLElement>(".marquee-set")!;
 
-		// For shrinkToFit: sum of each item's own aspect ratio (width/height),
-		// captured once from the row's natural (un-shrunk) size — since gaps are
-		// a fixed px amount rather than proportional, this is what lets later
-		// calls solve directly for "what height makes this row exactly
-		// availableWidth wide" instead of just scaling relative to last frame.
-		let sumOfRatios: number | null = null;
-		let naturalHeightPx = 0;
+		let shrinkRow: ShrinkRow | null = null;
+		if (shrinkToFit) {
+			shrinkRow = { marquee, firstSet, sumOfRatios: null, naturalHeightPx: 0 };
+			shrinkRows.push(shrinkRow);
+		}
 
 		function update() {
 			// The swipe carousel is pure scroll + snap below the breakpoint —
 			// none of the scroll/shrink math applies there.
 			if (mobileCarousel && mobileQuery.matches) return;
 
+			// A shrinkToFit row's height is set by the shared computation above
+			// — by construction that always leaves it fitting.
+			if (shrinkToFit) {
+				marquee.setAttribute("data-static", "");
+				return;
+			}
+
 			// The loop clone (mobileCarousel only) is never part of the desktop
 			// row's own sizing math.
 			const items = firstSet.querySelectorAll<HTMLElement>(
 				".marquee-item:not([data-loop-clone])",
 			);
-			const gap = parseFloat(getComputedStyle(firstSet).columnGap) || 0;
 			const contentWidth =
 				items[items.length - 1].getBoundingClientRect().right -
 				items[0].getBoundingClientRect().left;
 
-			if (shrinkToFit && !mobileQuery.matches) {
-				const currentHeight = items[0].getBoundingClientRect().height;
-				if (sumOfRatios === null) {
-					// First run, before any shrinking has been applied.
-					sumOfRatios = (contentWidth - (items.length - 1) * gap) / currentHeight;
-					naturalHeightPx = currentHeight;
-				}
-				const marginPx =
-					parseFloat(
-						getComputedStyle(document.documentElement).getPropertyValue(
-							"--grid-margin",
-						),
-					) || 0;
-				const availableWidth = marquee.clientWidth - 2 * marginPx;
-				const fitHeight =
-					(availableWidth - (items.length - 1) * gap) / sumOfRatios;
-				const targetHeight = Math.min(naturalHeightPx, Math.max(0, fitHeight));
-				marquee.style.setProperty("--marquee-height", `${targetHeight}px`);
-				marquee.setAttribute("data-static", "");
-				return;
-			}
-
-			const fits = contentWidth + 2 * gap <= marquee.clientWidth;
+			const fits = contentWidth <= availableRowWidth(marquee);
 			marquee.toggleAttribute("data-static", fits);
 			if (!fits) {
 				// Duration = one set's width / speed, so the pace stays constant
@@ -430,11 +500,11 @@ const kindOf = (item: MarqueeItem) =>
 				track.style.setProperty("--marquee-duration", `${setWidth / speed}s`);
 			}
 		}
+		rowUpdaters.push(update);
 
-		const resizeObserver = new ResizeObserver(update);
+		const resizeObserver = new ResizeObserver(refreshAllRows);
 		resizeObserver.observe(marquee);
 		resizeObserver.observe(track);
-		if (shrinkToFit) mobileQuery.addEventListener("change", update);
 
 		const autoplay = marquee.hasAttribute("data-autoplay");
 		const autoplayMs = parseFloat(marquee.style.getPropertyValue("--autoplay-ms")) || 4000;
@@ -592,4 +662,7 @@ const kindOf = (item: MarqueeItem) =>
 			activateCurrentSlide();
 		}
 	}
+
+	refreshAllRows();
+	mobileQuery.addEventListener("change", refreshAllRows);
 </script>
