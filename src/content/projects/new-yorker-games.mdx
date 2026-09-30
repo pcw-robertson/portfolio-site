@@ -47,13 +47,6 @@ export const paragraphs = (text) => text.split("\n\n");
 </div>
 
 <div class="grid">
-  <div class="col-6">
-    <h2>Introducing Shuffalo</h2>
-    <p>{annotation("Shuffalo intro").body}</p>
-  </div>
-</div>
-
-<div class="grid follows-heading">
   <div class="col-12">
     <Marquee
       items={[
@@ -76,7 +69,8 @@ export const paragraphs = (text) => text.split("\n\n");
 <div class="grid">
   <div class="col-6">
     <p class="caption">
-      {paragraphs(annotation("Shuffalo detail").body).map((para, i) => <>{i > 0 && <><br /><br /></>}{para}</>)}
+      <span class="caption-title">Introducing Shuffalo</span><br />
+      {paragraphs(annotation("Shuffalo intro").body).map((para, i) => <>{i > 0 && <><br /><br /></>}{para}</>)}
     </p>
   </div>
   <div class="col-6">
@@ -111,13 +105,6 @@ export const paragraphs = (text) => text.split("\n\n");
 </div>
 
 <div class="grid">
-  <div class="col-6">
-    <h2>Introducing Catalogues</h2>
-    <p>{annotation("Catalogues intro").body}</p>
-  </div>
-</div>
-
-<div class="grid follows-heading">
   <div class="col-12">
     <Marquee
       items={[
@@ -133,7 +120,8 @@ export const paragraphs = (text) => text.split("\n\n");
 <div class="grid">
   <div class="col-6">
     <p class="caption">
-      {paragraphs(annotation("Catalogues detail").body).map((para, i) => <>{i > 0 && <><br /><br /></>}{para}</>)}
+      <span class="caption-title">Introducing Catalogues</span><br />
+      {paragraphs(annotation("Catalogues intro").body).map((para, i) => <>{i > 0 && <><br /><br /></>}{para}</>)}
     </p>
   </div>
   <div class="col-6">

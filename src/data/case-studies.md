@@ -71,18 +71,12 @@ Led the design of both games, directing the team and partnering with The New Yor
 **Shuffalo intro**
 A progressive anagram game
 
-**Shuffalo detail**
-Shuffalo is the New Yorker's first word game, that starts easy and gets progressively more difficult, and was the first truly daily offering. It required a significant diversion from its original concept. The key design challenge was creating focus around the play and interactive area, to create instant playability and clarity, which was vital given the challenging nature of the puzzle. This was a big leap from the initial concept and required real interrogation of what the core of the game was, and how to centre the whole experience around the act of playing.
-
-Shuffalo has a completion rate of 79%, a high number for a game that is genuinely challenging, and takes an average of about two minutes per user to finish.
+Shuffalo is the New Yorker's first word game, that starts easy and gets increasingly difficult, and was the first seven-day-a-week offering.
 
 **Catalogues intro**
 Find the Order and the Common theme
 
-**Catalogues detail**
-Catalogues was designed to be an easier, entry point game into our ecosystem. The theme and gameplay are less progressive and round based, and a more immediate and single frame experience. With both Shuffalo and Catalogues, the design opportunities were creating moments of joy and delight through the experience, with feedback and interactions, while never getting in the way. Partnering with Christoph Neiman to create the mascots is a joy, and they give the games real personality and presence – a call to the cartoons and humour heritage of The New Yorker.
-
-Catalogues has an 87% complete rate and takes users an average of around 45 seconds to complete, successfully hitting its slot as a quicker, faster, easier game in the portfolio.
+Catalogues is a logic puzzle and was designed to be the easiest, most immediate game in our ecosystem. It is also a truly daily game, and is an entry point into the games ecosystem. For both games we partnered with the wonderful Christoph Neiman to create the mascots, which give the games real personality and presence – a call to the cartoons and humour heritage of The New Yorker.
 
 **Open items:**
 - [ ] The draft I was given had a placeholder marked "XXXX" right after Shuffalo's intro tagline — unclear what belongs there (a stat? a quote?). Confirm before publishing.
