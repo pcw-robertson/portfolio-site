@@ -105,14 +105,16 @@ export const annotation = (title) => getAnnotation(wired, title);
 
 <div class="grid">
   <div class="col-12">
-    <AssetFloat
-      src="/videos/wired-watch-2.mp4"
-      type="video"
-      poster="/videos/wired-watch-2-poster.jpg"
-      alt="Wired app watch tab"
-      aspectRatio="600 / 1300"
-      maxHeight="628px"
-      rounded
+    <Marquee
+      height="628px"
+      shrinkToFit
+      mobileCarousel
+      autoplay
+      items={[
+        { src: "/videos/wired-watch-inline-1.mp4", poster: "/videos/wired-watch-inline-1-poster.jpg", aspectRatio: "720 / 1560" },
+        { src: "/videos/wired-watch-2.mp4", poster: "/videos/wired-watch-2-poster.jpg", aspectRatio: "600 / 1300" },
+        { src: "/videos/wired-watch-inline-2.mp4", poster: "/videos/wired-watch-inline-2-poster.jpg", aspectRatio: "720 / 1560" },
+      ]}
     />
     <p class="caption"><span class="caption-title">Watch &amp; Video</span><br />{annotation("Watch & Video").body}</p>
   </div>
