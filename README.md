@@ -29,6 +29,18 @@ separate sync step.
   "Outcome". Editing one of these is a self-contained session.
 - `src/content/projects/*.mdx` — same idea, but for a project whose page
   doesn't fit that generic template (see "Custom project layouts" below).
+- `src/data/case-studies.md` — the single source of truth for a custom
+  (`.mdx`) project's Opportunity/Role/Outcome/Annotations copy, one `##`
+  section per project. `src/lib/case-studies.ts` reads and parses it at
+  build time (`getCaseStudy(slug)`, `getAnnotation(caseStudy, title)`); a
+  project's `.mdx` file imports from there instead of hardcoding this text,
+  so editing this one file is the only way that copy changes — the `.mdx`
+  file still owns structure (grid layout, which Marquee rows exist, which
+  asset goes where). Currently wired up for `wired-app.mdx` only; the other
+  projects still hardcode their copy in their own file. A missing or
+  renamed `###`/`**Title**` heading throws a clear build error rather than
+  silently rendering blank — keep the file's existing heading structure
+  when editing copy.
 
 Everything else is code, not copy, and shouldn't need touching for routine
 content edits:

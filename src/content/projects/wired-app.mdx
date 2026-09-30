@@ -9,6 +9,10 @@ template: "custom"
 
 import AssetFloat from "../../components/AssetFloat.astro";
 import Marquee from "../../components/Marquee.astro";
+import { getCaseStudy, getAnnotation } from "../../lib/case-studies";
+
+export const wired = getCaseStudy("wired-app");
+export const annotation = (title) => getAnnotation(wired, title);
 
 <div class="grid">
   <div class="col-6">
@@ -16,14 +20,12 @@ import Marquee from "../../components/Marquee.astro";
     <p class="muted subtitle">Product strategy &amp; design leadership — 0 to 1</p>
 
     <h2>The Opportunity</h2>
-    <p>Turn a surge of new subscribers into lasting retention. Through 2025, Wired's new editorial direction drove a significant wave of new subscribers. An app was the chance to engage them more deeply before renewal, building a direct, owned relationship with the audience and making Wired a daily habit.</p>
+    <p>{wired.opportunity}</p>
     <h2>Role</h2>
-    <p>Led strategy and execution end to end, from the initial product thesis through design, prioritization, and launch, setting the vision and carrying it through to visual execution.</p>
+    <p>{wired.role}</p>
     <h2>Outcome</h2>
     <ul class="outcome-list">
-      <li>Beta in two months</li>
-      <li>Launch in five months</li>
-      <li>Early signs: 5x the time spent in the app vs web</li>
+      {wired.outcome.map((item) => <li>{item}</li>)}
     </ul>
   </div>
   <div class="col-6 full-bleed-mobile">
@@ -42,7 +44,7 @@ import Marquee from "../../components/Marquee.astro";
 <div class="grid">
   <div class="col-6">
     <h2>The best place to experience Wired</h2>
-    <p>A native experience that goes beyond web.</p>
+    <p>{annotation("The best place to experience Wired").body}</p>
   </div>
 </div>
 
@@ -65,10 +67,10 @@ import Marquee from "../../components/Marquee.astro";
         { src: "/videos/wired-home-special-editions.mp4", poster: "/videos/wired-home-special-editions-poster.jpg", aspectRatio: "720 / 1560" },
       ]}
     />
-    <p class="caption"><span class="caption-title">Home &amp; Discovery</span><br />Presents every story at its best, leveraging on Wired's art direction and editorial packaging. Clear distinction between content types and moments that shows the breadth of Wired.</p>
+    <p class="caption"><span class="caption-title">Home &amp; Discovery</span><br />{annotation("Home & Discovery").body}</p>
     <blockquote class="caption-quote">
-      <p>&ldquo;I never knew there was so much in Wired&rdquo;</p>
-      <cite>Beta Test User Interview</cite>
+      <p>&ldquo;{annotation("Home & Discovery").quote.text}&rdquo;</p>
+      <cite>{annotation("Home & Discovery").quote.citation}</cite>
     </blockquote>
     <Marquee
       reverse
@@ -84,7 +86,7 @@ import Marquee from "../../components/Marquee.astro";
         { src: "/videos/wired-article-commenting.mp4", poster: "/videos/wired-article-commenting-poster.jpg", aspectRatio: "720 / 1560" },
       ]}
     />
-    <p class="caption"><span class="caption-title">Article &amp; Reading</span><br />Focused, uninterrupted reading, with the tools to take each story the way that suits you and the option to join the discussion.</p>
+    <p class="caption"><span class="caption-title">Article &amp; Reading</span><br />{annotation("Article & Reading").body}</p>
     <Marquee
       height="628px"
       shrinkToFit
@@ -97,7 +99,7 @@ import Marquee from "../../components/Marquee.astro";
         { src: "/videos/wired-audio-playlists.mp4", poster: "/videos/wired-audio-playlists-poster.jpg", aspectRatio: "720 / 1560" },
       ]}
     />
-    <p class="caption"><span class="caption-title">Listen &amp; Playlists</span><br />Packaged for listening, with a distinct discovery pattern for a different user state. Limited, curated playlists that connect and theme our best listens.</p>
+    <p class="caption"><span class="caption-title">Listen &amp; Playlists</span><br />{annotation("Listen & Playlists").body}</p>
   </div>
 </div>
 
@@ -112,7 +114,7 @@ import Marquee from "../../components/Marquee.astro";
       maxHeight="628px"
       rounded
     />
-    <p class="caption"><span class="caption-title">Watch &amp; Video</span><br />Vertical video that puts the people of Wired front and center, foregrounding our talent to build a closer relationship with the faces behind the journalism.</p>
+    <p class="caption"><span class="caption-title">Watch &amp; Video</span><br />{annotation("Watch & Video").body}</p>
   </div>
 </div>
 
@@ -130,6 +132,6 @@ import Marquee from "../../components/Marquee.astro";
         { src: "/videos/wired-daily-digest-end-state.mp4", poster: "/videos/wired-daily-digest-end-state-poster.jpg", aspectRatio: "720 / 1560" },
       ]}
     />
-    <p class="caption"><span class="caption-title">The Daily Digest</span><br />An immersive, tailored package of stories: finite and completable, with a rewarding sense of progress for tapping through daily. Personal, not infinite, and designed around habit.</p>
+    <p class="caption"><span class="caption-title">The Daily Digest</span><br />{annotation("The Daily Digest").body}</p>
   </div>
 </div>
