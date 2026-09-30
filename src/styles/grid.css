@@ -123,6 +123,14 @@ a safe default to extend from.
   margin-top: var(--space-5);
 }
 
+/* A row that's introduced by a heading in the .grid directly above it (e.g.
+   "Shuffalo" before its screen rows) sits at the same tight distance as a
+   caption below a row, instead of the full inter-section gap — the heading
+   reads as paired with the row, not as a separate section. */
+.grid + .grid.follows-heading {
+  margin-top: 1.5rem;
+}
+
 /* Items that stack below desktop (each col-N falling back to full width) sit
    48px apart instead of the tight column gutter. Add to a .grid. */
 @media (max-width: 1279px) {
