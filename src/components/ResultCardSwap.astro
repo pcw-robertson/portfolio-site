@@ -48,29 +48,41 @@ const {
 } = Astro.props;
 ---
 
-<div
-	class:list={["result-card-swap", { rounded }]}
-	data-result-card-swap
-	data-interval={intervalMs}
-	style={`--rcs-aspect-ratio: ${baseAspectRatio}; --rcs-max-height: ${maxHeight}; --rcs-card-top: ${cardTop}; --rcs-card-left: ${cardLeft}; --rcs-card-width: ${cardWidth}; --rcs-card-height: ${cardHeight}`}
->
-	<img class="result-card-swap-base" src={base} alt={baseAlt} loading="lazy" />
-	<div class="result-card-swap-window">
-		{
-			cards.map((card, i) => (
-				<img
-					class="result-card-swap-card"
-					data-active={i === 0 ? "" : undefined}
-					src={card.src}
-					alt={card.alt ?? ""}
-					loading="lazy"
-				/>
-			))
-		}
+<div class="result-card-swap-wrap">
+	<div
+		class:list={["result-card-swap", { rounded }]}
+		data-result-card-swap
+		data-interval={intervalMs}
+		style={`--rcs-aspect-ratio: ${baseAspectRatio}; --rcs-max-height: ${maxHeight}; --rcs-card-top: ${cardTop}; --rcs-card-left: ${cardLeft}; --rcs-card-width: ${cardWidth}; --rcs-card-height: ${cardHeight}`}
+	>
+		<img class="result-card-swap-base" src={base} alt={baseAlt} loading="lazy" />
+		<div class="result-card-swap-window">
+			{
+				cards.map((card, i) => (
+					<img
+						class="result-card-swap-card"
+						data-active={i === 0 ? "" : undefined}
+						src={card.src}
+						alt={card.alt ?? ""}
+						loading="lazy"
+					/>
+				))
+			}
+		</div>
 	</div>
 </div>
 
 <style>
+	/* Fills and centers within whatever grid cell this is placed in, same as
+	   AssetFloat — .result-card-swap itself shrinks to its own rendered size
+	   at desktop (see below), so without this wrapper it sits flush against
+	   the column's start edge instead of centered like every other asset. */
+	.result-card-swap-wrap {
+		display: flex;
+		justify-content: center;
+		width: 100%;
+	}
+
 	.result-card-swap {
 		position: relative;
 		display: flex;
