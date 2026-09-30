@@ -131,12 +131,6 @@ export const paragraphs = (text) => text.split("\n\n");
       {paragraphs(annotation("Catalogues detail").body).map((para, i) => <>{i > 0 && <><br /><br /></>}{para}</>)}
     </p>
   </div>
-</div>
-
-<div class="grid">
-  <div class="col-6">
-    <p class="caption"><span class="caption-title">Results</span><br />TODO: caption for the Catalogues results reveal.</p>
-  </div>
   <div class="col-6">
     <ResultCardSwap
       base="/images/new-yorker-games/pg-cat-results-base.png"
