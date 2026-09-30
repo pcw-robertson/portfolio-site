@@ -6,9 +6,13 @@ import ProjectWalkthrough from "../components/ProjectWalkthrough.astro";
 
 interface Props {
   project: CollectionEntry<"projects">;
+  // Prototype: when set, overscrolling past the bottom of the page
+  // navigates into this next case study. See [id].astro for how it's
+  // computed and which project currently has this switched on.
+  nextProject?: { title: string; href: string } | null;
 }
 
-const { project } = Astro.props;
+const { project, nextProject = null } = Astro.props;
 const { title, context, embedUrl, coverImage, coverVideo, screenshots, template } =
   project.data;
 
@@ -72,6 +76,96 @@ const isCustom = template === "custom";
 			<p class="back"><a href="/">&larr; Back to all work</a></p>
 		</div>
 	</div>
+
+	{nextProject && (
+		<div class="scroll-next" data-scroll-next data-next-href={nextProject.href}>
+			<p>Keep scrolling for <strong>{nextProject.title}</strong> &rarr;</p>
+		</div>
+	)}
+
+	{nextProject && (
+	<script>
+		const hint = document.querySelector<HTMLElement>("[data-scroll-next]");
+		if (hint) {
+			const href = hint.dataset.nextHref!;
+			const THRESHOLD = 220;
+			let overscroll = 0;
+			let navigating = false;
+
+			const atBottom = () =>
+				window.innerHeight + window.scrollY >=
+				document.documentElement.scrollHeight - 2;
+
+			const reset = () => {
+				overscroll = 0;
+				hint.style.setProperty("--progress", "0");
+				hint.classList.remove("is-active");
+			};
+
+			window.addEventListener(
+				"wheel",
+				(e) => {
+					if (navigating) return;
+					if (atBottom() && e.deltaY > 0) {
+						overscroll += e.deltaY;
+						const progress = Math.min(overscroll / THRESHOLD, 1);
+						hint.style.setProperty("--progress", String(progress));
+						hint.classList.add("is-active");
+						if (overscroll >= THRESHOLD) {
+							navigating = true;
+							// The View Transitions API can reject with an
+							// InvalidStateError if a transition is already
+							// settling when this fires — harmless (the
+							// navigation itself still completes), but left
+							// uncaught it's noisy in the console.
+							import("astro:transitions/client")
+								.then(({ navigate }) => navigate(href))
+								.catch(() => {});
+						}
+					} else if (!atBottom()) {
+						reset();
+					}
+				},
+				{ passive: true },
+			);
+
+			// Below the desktop breakpoint there's no wheel event for touch
+			// scrolling — approximate the same "keep pulling past the bottom"
+			// gesture from touch delta instead.
+			let touchStartY = 0;
+			window.addEventListener(
+				"touchstart",
+				(e) => {
+					touchStartY = e.touches[0].clientY;
+				},
+				{ passive: true },
+			);
+			window.addEventListener(
+				"touchmove",
+				(e) => {
+					if (navigating) return;
+					const dy = touchStartY - e.touches[0].clientY;
+					touchStartY = e.touches[0].clientY;
+					if (atBottom() && dy > 0) {
+						overscroll += dy * 3;
+						const progress = Math.min(overscroll / THRESHOLD, 1);
+						hint.style.setProperty("--progress", String(progress));
+						hint.classList.add("is-active");
+						if (overscroll >= THRESHOLD) {
+							navigating = true;
+							import("astro:transitions/client")
+								.then(({ navigate }) => navigate(href))
+								.catch(() => {});
+						}
+					} else if (!atBottom()) {
+						reset();
+					}
+				},
+				{ passive: true },
+			);
+		}
+	</script>
+	)}
 </BaseLayout>
 
 <style>
@@ -162,5 +256,39 @@ const isCustom = template === "custom";
 
 	.back a:hover {
 		text-decoration: underline;
+	}
+
+	/* Prototype: fades in as the user keeps scrolling past the bottom of
+	   the page, filling in to telegraph how close the next-project
+	   navigation is before it fires. */
+	.scroll-next {
+		position: fixed;
+		left: 0;
+		right: 0;
+		bottom: 0;
+		padding: 24px 0 32px;
+		text-align: center;
+		background: linear-gradient(to top, rgba(0, 0, 0, 0.92), transparent);
+		opacity: 0;
+		transform: translateY(8px);
+		transition: opacity 0.2s ease, transform 0.2s ease;
+		pointer-events: none;
+		z-index: 20;
+	}
+
+	.scroll-next.is-active {
+		opacity: calc(0.5 + var(--progress, 0) * 0.5);
+		transform: translateY(0);
+	}
+
+	.scroll-next p {
+		margin: 0;
+		font-size: 0.9rem;
+		color: var(--color-body);
+	}
+
+	.scroll-next strong {
+		color: var(--color-ink);
+		font-weight: 500;
 	}
 </style>
