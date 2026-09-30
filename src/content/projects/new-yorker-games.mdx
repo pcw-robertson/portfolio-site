@@ -8,7 +8,6 @@ template: "custom"
 ---
 
 import AssetFloat from "../../components/AssetFloat.astro";
-import ImageCollage from "../../components/ImageCollage.astro";
 import Marquee from "../../components/Marquee.astro";
 import ResultCardSwap from "../../components/ResultCardSwap.astro";
 import { getCaseStudy, getAnnotation } from "../../lib/case-studies";
@@ -63,44 +62,10 @@ export const paragraphs = (text) => text.split("\n\n");
         { src: "/videos/pg-shuffalo-row2-4.mp4", poster: "/videos/pg-shuffalo-row2-4-poster.jpg", aspectRatio: "1180 / 2556" },
       ]}
     />
-  </div>
-</div>
-
-<div class="grid">
-  <div class="col-6">
     <p class="caption">
       <span class="caption-title">Introducing Shuffalo</span><br />
       {paragraphs(annotation("Shuffalo intro").body).map((para, i) => <>{i > 0 && <><br /><br /></>}{para}</>)}
     </p>
-  </div>
-  <div class="col-6">
-    <AssetFloat
-      src="/images/new-yorker-games/starting-point.jpg"
-      type="image"
-      alt="Shuffalo starting point"
-      maxHeight="var(--frame-height)"
-      aspectRatio="375 / 812"
-      rounded
-    />
-  </div>
-</div>
-
-<div class="grid">
-  <div class="col-12">
-    <ImageCollage
-      images={[
-        { src: "/images/new-yorker-games/collage-1.jpg", alt: "Shuffalo development screen 1" },
-        { src: "/images/new-yorker-games/collage-2.jpg", alt: "Shuffalo development screen 2" },
-        { src: "/images/new-yorker-games/collage-3.jpg", alt: "Shuffalo development screen 3" },
-        { src: "/images/new-yorker-games/collage-4.jpg", alt: "Shuffalo development screen 4" },
-        { src: "/images/new-yorker-games/collage-5.jpg", alt: "Shuffalo development screen 5" },
-        { src: "/images/new-yorker-games/collage-6.jpg", alt: "Shuffalo development screen 6" },
-        { src: "/images/new-yorker-games/collage-7.jpg", alt: "Shuffalo development screen 7" },
-        { src: "/images/new-yorker-games/collage-8.jpg", alt: "Shuffalo development screen 8" },
-      ]}
-      height="790px"
-      mobileHeight="900px"
-    />
   </div>
 </div>
 
