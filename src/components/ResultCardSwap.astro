@@ -1,0 +1,166 @@
+---
+// A fixed screen (the phone/browser frame, held static) with a small region
+// on it — a result card — that cycles through a sequence of states, each
+// one sliding in to replace the last. Built for a "you solved it!" style
+// result card where only the headline/illustration changes and everything
+// else on screen (nav, browser chrome, whatever's below the card) stays
+// put, so it reads as one screen reacting rather than a slideshow of full
+// screens.
+//
+// `cards` are pre-cropped to exactly the card's own region and are
+// positioned back on top of `base` at that same spot via the `cardTop` /
+// `cardLeft` / `cardWidth` / `cardHeight` percentages (of the base image's
+// own dimensions) — get these from the actual pixel crop rectangle you used
+// (crop-rect / base-dimensions * 100), not by eye, so every card lines up
+// exactly regardless of render size. Only plays its cycle while scrolled
+// into view (same gating as video elsewhere on the site).
+interface CardItem {
+  src: string;
+  alt?: string;
+}
+
+interface Props {
+  base: string;
+  baseAlt?: string;
+  baseAspectRatio?: string;
+  cards: CardItem[];
+  cardTop: string;
+  cardLeft: string;
+  cardWidth: string;
+  cardHeight: string;
+  intervalMs?: number;
+  maxHeight?: string;
+  rounded?: boolean;
+}
+
+const {
+  base,
+  baseAlt = "",
+  baseAspectRatio = "375 / 812",
+  cards,
+  cardTop,
+  cardLeft,
+  cardWidth,
+  cardHeight,
+  intervalMs = 2800,
+  maxHeight = "var(--frame-height)",
+  rounded = false,
+} = Astro.props;
+---
+
+<div
+	class:list={["result-card-swap", { rounded }]}
+	data-result-card-swap
+	data-interval={intervalMs}
+	style={`--rcs-aspect-ratio: ${baseAspectRatio}; --rcs-max-height: ${maxHeight}; --rcs-card-top: ${cardTop}; --rcs-card-left: ${cardLeft}; --rcs-card-width: ${cardWidth}; --rcs-card-height: ${cardHeight}`}
+>
+	<img class="result-card-swap-base" src={base} alt={baseAlt} loading="lazy" />
+	{
+		cards.map((card, i) => (
+			<img
+				class="result-card-swap-card"
+				data-active={i === 0 ? "" : undefined}
+				src={card.src}
+				alt={card.alt ?? ""}
+				loading="lazy"
+			/>
+		))
+	}
+</div>
+
+<style>
+	.result-card-swap {
+		position: relative;
+		display: flex;
+		justify-content: center;
+		width: 100%;
+		aspect-ratio: var(--rcs-aspect-ratio);
+	}
+
+	.result-card-swap-base {
+		display: block;
+		width: 100%;
+		height: 100%;
+		object-fit: contain;
+	}
+
+	.result-card-swap.rounded .result-card-swap-base {
+		border-radius: 30px;
+	}
+
+	.result-card-swap-card {
+		position: absolute;
+		top: var(--rcs-card-top);
+		left: var(--rcs-card-left);
+		width: var(--rcs-card-width);
+		height: var(--rcs-card-height);
+		object-fit: fill;
+		opacity: 0;
+		transform: translateY(16%);
+		transition: opacity 0.5s ease, transform 0.5s ease;
+		pointer-events: none;
+	}
+
+	.result-card-swap-card[data-active] {
+		opacity: 1;
+		transform: translateY(0);
+	}
+
+	@media (min-width: 1280px) {
+		.result-card-swap {
+			width: auto;
+			max-height: var(--rcs-max-height);
+		}
+
+		.result-card-swap-base {
+			width: auto;
+			height: 100%;
+			max-height: var(--rcs-max-height);
+		}
+	}
+
+	@media (prefers-reduced-motion: reduce) {
+		.result-card-swap-card {
+			transition: opacity 0.5s ease;
+			transform: none;
+		}
+	}
+</style>
+
+<script>
+	for (const el of document.querySelectorAll<HTMLElement>(
+		"[data-result-card-swap]",
+	)) {
+		const cards = Array.from(
+			el.querySelectorAll<HTMLElement>(".result-card-swap-card"),
+		);
+		if (cards.length < 2) continue;
+
+		const intervalMs = Number(el.dataset.interval) || 2800;
+		let index = cards.findIndex((c) => c.hasAttribute("data-active"));
+		if (index < 0) index = 0;
+		let timer: ReturnType<typeof setInterval> | null = null;
+		let inView = true;
+
+		function advance() {
+			cards[index].removeAttribute("data-active");
+			index = (index + 1) % cards.length;
+			cards[index].setAttribute("data-active", "");
+		}
+
+		function sync() {
+			const shouldRun = inView;
+			if (shouldRun && !timer) {
+				timer = setInterval(advance, intervalMs);
+			} else if (!shouldRun && timer) {
+				clearInterval(timer);
+				timer = null;
+			}
+		}
+
+		new IntersectionObserver(([entry]) => {
+			inView = entry.isIntersecting;
+			sync();
+		}).observe(el);
+	}
+</script>

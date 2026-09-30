@@ -174,6 +174,19 @@ wider frame rather than edge-to-edge (`wired-app.mdx`'s intro walkthrough
 video) — that keeps its own `maxWidth`, sized to taste, since it isn't
 trying to match the phone-frame family at all.
 
+- `<ResultCardSwap base={...} cards={[...]} cardTop={...} cardLeft={...} cardWidth={...} cardHeight={...} />`
+  — a fixed screen with one small region on it (a result card) that cycles
+  through a sequence of states, each sliding in over the last, while
+  everything else on screen stays put. `base` is the full screenshot used
+  as the static backdrop; `cards` are that same region pre-cropped from each
+  state's own screenshot — get `cardTop`/`cardLeft`/`cardWidth`/`cardHeight`
+  (percentages) from the actual crop rectangle divided by the base image's
+  own pixel dimensions, not by eye, so every card lands in exactly the same
+  spot regardless of render size. `intervalMs` (default 2800) sets the hold
+  per state; only cycles while scrolled into view. Sized like a solo
+  `AssetFloat` screen capture (`maxHeight`, default `var(--frame-height)`).
+  Used for New Yorker Games' Catalogues results card.
+
 Items that fall back to stacked full-width below desktop (e.g. two `col-6`s)
 sit only the 16px column gutter apart by default; add `stack-gap` to the
 `.grid` for 48px on mobile.

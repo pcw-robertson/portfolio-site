@@ -9,8 +9,8 @@ template: "custom"
 
 import AssetFloat from "../../components/AssetFloat.astro";
 import ImageCollage from "../../components/ImageCollage.astro";
-import SlideShow from "../../components/SlideShow.astro";
 import Marquee from "../../components/Marquee.astro";
+import ResultCardSwap from "../../components/ResultCardSwap.astro";
 
 <div class="grid">
   <div class="col-6">
@@ -111,14 +111,20 @@ import Marquee from "../../components/Marquee.astro";
 
 <div class="grid">
   <div class="col-12">
-    <SlideShow
-      images={[
-        { src: "/images/new-yorker-games/results-1.jpg", alt: "Catalogues result screen 1" },
-        { src: "/images/new-yorker-games/results-2.jpg", alt: "Catalogues result screen 2" },
-        { src: "/images/new-yorker-games/results-3.jpg", alt: "Catalogues result screen 3" },
-        { src: "/images/new-yorker-games/results-4.jpg", alt: "Catalogues result screen 4" },
+    <ResultCardSwap
+      base="/images/new-yorker-games/pg-cat-results-base.png"
+      baseAlt="Catalogues results screen"
+      baseAspectRatio="750 / 1624"
+      cardTop="12.685%"
+      cardLeft="5.067%"
+      cardWidth="89.867%"
+      cardHeight="15.764%"
+      cards={[
+        { src: "/images/new-yorker-games/pg-cat-results-card-1.png", alt: "Result: Impeccable" },
+        { src: "/images/new-yorker-games/pg-cat-results-card-2.png", alt: "Result: In Good Order" },
+        { src: "/images/new-yorker-games/pg-cat-results-card-3.png", alt: "Result: By a Whisker" },
+        { src: "/images/new-yorker-games/pg-cat-results-card-4.png", alt: "Result: A Little Astray" },
       ]}
-      aspectRatio="375 / 812"
     />
   </div>
 </div>
