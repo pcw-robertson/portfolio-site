@@ -1,11 +1,11 @@
 ---
 // A fixed screen (the phone/browser frame, held static) with a small region
 // on it — a result card — that cycles through a sequence of states, each
-// one sliding in to replace the last. Built for a "you solved it!" style
-// result card where only the headline/illustration changes and everything
-// else on screen (nav, browser chrome, whatever's below the card) stays
-// put, so it reads as one screen reacting rather than a slideshow of full
-// screens.
+// one swiping in from the right as the last exits to the left. Built for a
+// "you solved it!" style result card where only the headline/illustration
+// changes and everything else on screen (nav, browser chrome, whatever's
+// below the card) stays put, so it reads as one screen reacting rather than
+// a slideshow of full screens.
 //
 // `cards` are pre-cropped to exactly the card's own region and are
 // positioned back on top of `base` at that same spot via the `cardTop` /
@@ -55,17 +55,19 @@ const {
 	style={`--rcs-aspect-ratio: ${baseAspectRatio}; --rcs-max-height: ${maxHeight}; --rcs-card-top: ${cardTop}; --rcs-card-left: ${cardLeft}; --rcs-card-width: ${cardWidth}; --rcs-card-height: ${cardHeight}`}
 >
 	<img class="result-card-swap-base" src={base} alt={baseAlt} loading="lazy" />
-	{
-		cards.map((card, i) => (
-			<img
-				class="result-card-swap-card"
-				data-active={i === 0 ? "" : undefined}
-				src={card.src}
-				alt={card.alt ?? ""}
-				loading="lazy"
-			/>
-		))
-	}
+	<div class="result-card-swap-window">
+		{
+			cards.map((card, i) => (
+				<img
+					class="result-card-swap-card"
+					data-active={i === 0 ? "" : undefined}
+					src={card.src}
+					alt={card.alt ?? ""}
+					loading="lazy"
+				/>
+			))
+		}
+	</div>
 </div>
 
 <style>
@@ -88,22 +90,32 @@ const {
 		border-radius: 30px;
 	}
 
-	.result-card-swap-card {
+	.result-card-swap-window {
 		position: absolute;
 		top: var(--rcs-card-top);
 		left: var(--rcs-card-left);
 		width: var(--rcs-card-width);
 		height: var(--rcs-card-height);
+		overflow: hidden;
+	}
+
+	.result-card-swap-card {
+		position: absolute;
+		top: 0;
+		left: 100%;
+		width: 100%;
+		height: 100%;
 		object-fit: fill;
-		opacity: 0;
-		transform: translateY(16%);
-		transition: opacity 0.5s ease, transform 0.5s ease;
+		transition: left 0.6s ease;
 		pointer-events: none;
 	}
 
 	.result-card-swap-card[data-active] {
-		opacity: 1;
-		transform: translateY(0);
+		left: 0%;
+	}
+
+	.result-card-swap-card[data-exited] {
+		left: -100%;
 	}
 
 	@media (min-width: 1280px) {
@@ -121,8 +133,7 @@ const {
 
 	@media (prefers-reduced-motion: reduce) {
 		.result-card-swap-card {
-			transition: opacity 0.5s ease;
-			transform: none;
+			transition: none;
 		}
 	}
 </style>
@@ -142,8 +153,29 @@ const {
 		let timer: ReturnType<typeof setInterval> | null = null;
 		let inView = true;
 
+		// Reset a card that just finished sliding off to the left straight
+		// back to its waiting spot on the right, with no visible transition —
+		// it's fully hidden behind the clipping window at that point, so the
+		// snap itself is invisible, and the card is ready to slide in from
+		// the right again next time it's due.
+		function resetToWaiting(card: HTMLElement) {
+			card.style.transition = "none";
+			card.removeAttribute("data-exited");
+			void card.offsetWidth;
+			card.style.transition = "";
+		}
+
+		for (const card of cards) {
+			card.addEventListener("transitionend", (e) => {
+				if (e.propertyName === "left" && card.hasAttribute("data-exited")) {
+					resetToWaiting(card);
+				}
+			});
+		}
+
 		function advance() {
 			cards[index].removeAttribute("data-active");
+			cards[index].setAttribute("data-exited", "");
 			index = (index + 1) % cards.length;
 			cards[index].setAttribute("data-active", "");
 		}
