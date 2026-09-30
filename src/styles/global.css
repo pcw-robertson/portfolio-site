@@ -161,6 +161,13 @@ p {
   content: none;
 }
 
+/* The "Impact"/"Adoption"/etc. lead-in on an outcome line — brighter than
+   its grey description, same idea as .caption-title, but not bold. */
+.outcome-label {
+  color: var(--color-ink);
+  font-weight: inherit;
+}
+
 /* The heading line of a caption — brighter than its grey description. */
 .caption-title {
   color: var(--color-ink);

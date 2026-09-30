@@ -64,7 +64,7 @@ Led the design of both games, directing the team and partnering with The New Yor
 ### Outcome
 - Impact – 20 million plays since the games launched, over 500,000 engaged hours
 - Adoption – 12% of users have played Shuffalo, 14% Catalogues
-- Habit – Shuffalo players came back on average 3 more days per month, Catalogues players came back on average 2 more days per month. This equates to over 100,000 incremental active days every month driven by the new games
+- Habit – approximately 100,000 additional active days per month driven by the new games
 - Recognition – Webby award for Shuffalo in the Games Category
 
 ### Annotations / project details

@@ -27,7 +27,10 @@ export const paragraphs = (text) => text.split("\n\n");
     <p>{nyg.role}</p>
     <h2>Outcome</h2>
     <ul class="outcome-list outcome-list--spaced">
-      {nyg.outcome.map((item) => <li>{item}</li>)}
+      {nyg.outcome.map((item) => {
+        const [label, ...rest] = item.split(" – ");
+        return rest.length ? <li><span class="outcome-label">{label}</span> – {rest.join(" – ")}</li> : <li>{item}</li>;
+      })}
     </ul>
   </div>
   <div class="col-6">
