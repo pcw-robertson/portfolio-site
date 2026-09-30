@@ -80,7 +80,7 @@ Shuffalo has a completion rate of 79%, a high number for a game that is genuinel
 Find the Order and the Common theme
 
 **Catalogues detail**
-Catalogues was designed to be an easier, more entry point game into our ecosystem. The theme and gameplay are less progressive and round based, and a more immediate and single frame experience. With both Shuffalo and Catalogues, the design opportunities were creating moments of joy and delight through the experience, with feedback and interactions, while never getting in the way. Partnering with Christoph Neiman to create the mascots is a joy, and they give the games real personality and presence.
+Catalogues was designed to be an easier, entry point game into our ecosystem. The theme and gameplay are less progressive and round based, and a more immediate and single frame experience. With both Shuffalo and Catalogues, the design opportunities were creating moments of joy and delight through the experience, with feedback and interactions, while never getting in the way. Partnering with Christoph Neiman to create the mascots is a joy, and they give the games real personality and presence – a call to the cartoons and humour heritage of The New Yorker.
 
 Catalogues has an 87% complete rate and takes users an average of around 45 seconds to complete, successfully hitting its slot as a quicker, faster, easier game in the portfolio.
 
