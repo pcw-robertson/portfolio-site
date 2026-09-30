@@ -104,6 +104,16 @@ p {
   margin: 1.5rem 0 0;
 }
 
+/* When a caption sits beside its asset instead of stacked below it (its
+   own col-6, paired with the asset in the next one) it's the first thing
+   in its column, with no row above it to space away from — so the same
+   top margin that keeps a stacked caption apart from its row just reads
+   as the caption floating below the asset it's paired with instead of
+   sitting level with it. */
+.caption:first-child {
+  margin-top: 0;
+}
+
 @media (min-width: 1280px) {
   .caption {
     max-width: calc((100% - var(--grid-gutter)) / 2);
