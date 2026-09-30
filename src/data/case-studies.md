@@ -62,26 +62,27 @@ Give subscribers more reasons to return to The New Yorker every day, by expandin
 Led the design of both games, directing the team and partnering with The New Yorker's games team to bring them to launch. Starting from broad concepts, we turned them into experiences that feel distinctly New Yorker.
 
 ### Outcome
-- Impact — 20 million plays since the games launched, over 500,000 engaged hours
-- Adoption — 12% of users have played Shuffalo, 14% have played Catalogues
-- Habit — Shuffalo players return an average of 3 more days per month, Catalogues players 2 more days per month — over 100,000 incremental active days per month driven by the new games
-- Recognition — Webby Award for Shuffalo in the Games category
+- Impact – 20 million plays since the games launched, over 500,000 engaged hours
+- Adoption – 12% of users have played Shuffalo, 14% Catalogues
+- Habit – Shuffalo players came back on average 3 more days per month, Catalogues players came back on average 2 more days per month. Equates to over 100,000 incremental active days per month driven by the new games
+- Recognition – Webby award for Shufflao in the Games Category
 
 ### Annotations / project details
 **Shuffalo intro**
-A progressive anagram game.
+A progressive anagram game
 
-**Shuffalo challenge**
-Shuffalo is The New Yorker's first word game — starting easy and getting progressively more difficult, and the first truly daily game. It required a significant diversion from its original form; the key design challenge was creating focus around the play and interactive area, to give it instant playability and clarity given how genuinely challenging the game is. This was a big leap from the initial concept, requiring real interrogation of what the core of the game was and how to centre the whole experience around the act of playing.
+**Shuffalo detail**
+Shufflao is the New Yorkers first word game, that starts easy and gets progressively more difficult, and was the first truly daily game. It required a significant diversion from its original form, the key design challenge was creating focus around the play and interactive area. To create instant playability and clarity. Which was vital given the challenging nation of the game. This was a big leap from the initial concept and required real interrogation of what the core of the game was, and how to centre the whole experience around the act of playing.
 
-**Shuffalo stats**
-Shuffalo has a completion rate of 79% — a high number for a game that's genuinely challenging — and takes an average of about two minutes per user to finish.
+Shuffalo has a completion rate of 79%, a high number for a game that is genuinely challenging, and takes an average of about two minutes per user to finish.
 
 **Catalogues intro**
-Find the order and the common theme. Catalogues was designed to be an easier, more entry-level way into the games ecosystem — less progressive and round-based than Shuffalo, and a more immediate, single-frame experience. Across both games, the real design opportunity was creating moments of joy and delight — feedback and interactions that never get in the way. Partnering with Christoph Neiman on the mascots gave both games real personality and presence.
+Find the Order and the Common theme
 
-**Catalogues stats**
-Catalogues has an 87% completion rate and takes users an average of around 45 seconds to complete — successfully hitting its slot as the quicker, easier game in the portfolio.
+**Catalogues detail**
+Was designed to be an easier, more entry point game into our ecosystem. The theme and gameplay are less progressive and round based, and a more immediate and single frame experience. With both shuffalo and Catalogues, the design opportunities were creating moments of joy and delight through the experience, with feedback and interactions, while never getting in the way. Partnering with Christoph Neiman to create the mascots is a joy, and they give the games real personality and presence.
+
+Catalogues has a 87% complete rate and takes users an average of around 45seconds to complete. Successfully hitting its slot as a quicker faster easier game in the portfolio
 
 **Open items:**
 - [ ] The draft I was given had a placeholder marked "XXXX" right after Shuffalo's intro tagline — unclear what belongs there (a stat? a quote?). Confirm before publishing.

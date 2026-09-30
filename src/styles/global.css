@@ -141,6 +141,20 @@ p {
   left: 0;
 }
 
+/* Variant for a "Label – description" outcome line — no bullet marker,
+   the bold label itself carries the emphasis instead of a leading dash. */
+.outcome-list--labeled li {
+  padding-left: 0;
+}
+
+.outcome-list--labeled li::before {
+  content: none;
+}
+
+.outcome-list--labeled li strong {
+  color: var(--color-ink);
+}
+
 /* The heading line of a caption — brighter than its grey description. */
 .caption-title {
   color: var(--color-ink);
