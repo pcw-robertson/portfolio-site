@@ -36,8 +36,9 @@ separate sync step.
   project's `.mdx` file imports from there instead of hardcoding this text,
   so editing this one file is the only way that copy changes — the `.mdx`
   file still owns structure (grid layout, which Marquee rows exist, which
-  asset goes where). Currently wired up for `wired-app.mdx` only; the other
-  projects still hardcode their copy in their own file. A missing or
+  asset goes where). Currently wired up for `wired-app.mdx` and
+  `new-yorker-games.mdx`; Bon Appétit and Pitchfork still hardcode their
+  copy in their own file. A missing or
   renamed `###`/`**Title**` heading throws a clear build error rather than
   silently rendering blank — keep the file's existing heading structure
   when editing copy.

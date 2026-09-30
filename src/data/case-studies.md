@@ -1,7 +1,7 @@
 # Portfolio case studies — working drafts
 
 Structure per project: Opportunity → Role → Annotations/project details → Takeaways.
-Wired now leads with "The outcome" up front in place of Takeaways — consider doing the same for the other three.
+Wired and New Yorker Games now lead with "Outcome" up front in place of Takeaways — consider doing the same for Bon Appétit and Pitchfork.
 Edit freely — this is a working doc, not final copy.
 
 ---
@@ -59,24 +59,36 @@ An immersive, tailored package of stories: finite and completable, with a reward
 Give subscribers more reasons to return to The New Yorker every day, by expanding the games portfolio beyond crosswords and trivia into daily puzzle-based play, and building habits that live outside the news cycle.
 
 ### Role
-Led the design of both games, directing the team and partnering with The New Yorker's games team to bring them to launch. Starting from broad, licensed concepts, we turned them into experiences that feel distinctly New Yorker.
+Led the design of both games, directing the team and partnering with The New Yorker's games team to bring them to launch. Starting from broad concepts, we turned them into experiences that feel distinctly New Yorker.
+
+### Outcome
+- Impact — 20 million plays since the games launched, over 500,000 engaged hours
+- Adoption — 12% of users have played Shuffalo, 14% have played Catalogues
+- Habit — Shuffalo players return an average of 3 more days per month, Catalogues players 2 more days per month — over 100,000 incremental active days per month driven by the new games
+- Recognition — Webby Award for Shuffalo in the Games category
 
 ### Annotations / project details
-**Adapting the concepts**
-Shuffalo required a significant diversion from its original form; Catalogues less so. In both cases, the work involved reworking gameplay mechanics and moments throughout, to create delight, usability, and playability that matched The New Yorker's tone and craft standards.
+**Shuffalo intro**
+A progressive anagram game.
 
-*[Note: there's follow-on work in flight on discoverability and games architecture — still in definition, leave out of the page until further along.]*
+**Shuffalo challenge**
+Shuffalo is The New Yorker's first word game — starting easy and getting progressively more difficult, and the first truly daily game. It required a significant diversion from its original form; the key design challenge was creating focus around the play and interactive area, to give it instant playability and clarity given how genuinely challenging the game is. This was a big leap from the initial concept, requiring real interrogation of what the core of the game was and how to centre the whole experience around the act of playing.
 
-### Takeaways
-- **It worked, and at scale** — driving strong returning-user rates, meaningfully higher time-on-site, and consistently ranking among the most-trafficked features across the whole New Yorker product *[swap in real figures once pulled — DAU/returning %, avg minutes, traffic rank]*
-- *[optional 2nd/3rd: a reflective beat — what the data revealed that you didn't expect, or what it proved about the appetite for puzzle games beyond crosswords]*
+**Shuffalo stats**
+Shuffalo has a completion rate of 79% — a high number for a game that's genuinely challenging — and takes an average of about two minutes per user to finish.
+
+**Catalogues intro**
+Find the order and the common theme. Catalogues was designed to be an easier, more entry-level way into the games ecosystem — less progressive and round-based than Shuffalo, and a more immediate, single-frame experience. Across both games, the real design opportunity was creating moments of joy and delight — feedback and interactions that never get in the way. Partnering with Christoph Neiman on the mascots gave both games real personality and presence.
+
+**Catalogues stats**
+Catalogues has an 87% completion rate and takes users an average of around 45 seconds to complete — successfully hitting its slot as the quicker, easier game in the portfolio.
 
 **Open items:**
-- [ ] Pull real data: returning-user rate, time-on-site/minutes, traffic ranking vs. other features
+- [ ] The draft I was given had a placeholder marked "XXXX" right after Shuffalo's intro tagline — unclear what belongs there (a stat? a quote?). Confirm before publishing.
+- [ ] Confirm spelling of "Christoph Neiman" — the well-known New Yorker cover illustrator spells it "Niemann"; check which is correct here.
+- [ ] The Catalogues results-reveal caption (next to the ResultCardSwap on the page) is still unwritten.
 - [ ] Adoption: did these games grow the overall games player base (net-new players), or mostly draw from existing games players?
-- [ ] Decide: call out data specifically, or keep directional (mass-send consideration)
-- [ ] Decide: distinguish Shuffalo vs. Catalogues individually, or treat as a pair throughout
-- [ ] Possible 2nd/3rd takeaway once data is in
+- [ ] There's follow-on work in flight on discoverability and games architecture — still in definition, leave off the page until further along.
 
 ---
 

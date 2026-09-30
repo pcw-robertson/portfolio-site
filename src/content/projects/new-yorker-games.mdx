@@ -11,6 +11,10 @@ import AssetFloat from "../../components/AssetFloat.astro";
 import ImageCollage from "../../components/ImageCollage.astro";
 import Marquee from "../../components/Marquee.astro";
 import ResultCardSwap from "../../components/ResultCardSwap.astro";
+import { getCaseStudy, getAnnotation } from "../../lib/case-studies";
+
+export const nyg = getCaseStudy("new-yorker-games");
+export const annotation = (title) => getAnnotation(nyg, title);
 
 <div class="grid">
   <div class="col-6">
@@ -18,9 +22,13 @@ import ResultCardSwap from "../../components/ResultCardSwap.astro";
     <p class="muted subtitle">TODO: one-line context — Shuffalo &amp; Catalogues</p>
 
     <h2>The Opportunity</h2>
-    <p>TODO: frame the problem/opportunity in business terms — habit formation, daily engagement, direct audience relationship.</p>
+    <p>{nyg.opportunity}</p>
     <h2>Role</h2>
-    <p>TODO: what you led — scope, team, stakeholders across brands.</p>
+    <p>{nyg.role}</p>
+    <h2>Outcome</h2>
+    <ul class="outcome-list">
+      {nyg.outcome.map((item) => <li>{item}</li>)}
+    </ul>
   </div>
   <div class="col-6">
     <AssetFloat
@@ -34,8 +42,8 @@ import ResultCardSwap from "../../components/ResultCardSwap.astro";
 
 <div class="grid">
   <div class="col-6">
-    <h2>Shuffalo</h2>
-    <p>TODO: caption introducing the Shuffalo section.</p>
+    <h2>Introducing Shuffalo</h2>
+    <p>{annotation("Shuffalo intro").body}</p>
   </div>
 </div>
 
@@ -56,13 +64,14 @@ import ResultCardSwap from "../../components/ResultCardSwap.astro";
         { src: "/videos/pg-shuffalo-row2-4.mp4", poster: "/videos/pg-shuffalo-row2-4-poster.jpg", aspectRatio: "1180 / 2556" },
       ]}
     />
+    <p class="caption"><span class="caption-title">Completion</span><br />{annotation("Shuffalo stats").body}</p>
   </div>
 </div>
 
 <div class="grid">
   <div class="col-6">
     <h2>Challenge</h2>
-    <p>TODO: frame the Shuffalo puzzle-building challenge and what made it hard to design.</p>
+    <p>{annotation("Shuffalo challenge").body}</p>
   </div>
   <div class="col-6">
     <AssetFloat
@@ -97,8 +106,8 @@ import ResultCardSwap from "../../components/ResultCardSwap.astro";
 
 <div class="grid">
   <div class="col-6">
-    <h2>Catalogues</h2>
-    <p>TODO: frame the Catalogues concept and what it's meant to do for engagement.</p>
+    <h2>Introducing Catalogues</h2>
+    <p>{annotation("Catalogues intro").body}</p>
   </div>
 </div>
 
@@ -112,6 +121,7 @@ import ResultCardSwap from "../../components/ResultCardSwap.astro";
         { src: "/videos/pg-cat-row1-5.mp4", poster: "/videos/pg-cat-row1-5-poster.jpg", aspectRatio: "1180 / 2556" },
       ]}
     />
+    <p class="caption"><span class="caption-title">Completion</span><br />{annotation("Catalogues stats").body}</p>
   </div>
 </div>
 
