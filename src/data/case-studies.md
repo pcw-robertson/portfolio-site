@@ -76,7 +76,7 @@ Shuffalo is the New Yorker's first word game, that starts easy and gets increasi
 **Catalogues intro**
 Find the Order and the Common theme
 
-Catalogues is a logic puzzle and was designed to be the easiest, most immediate game in our ecosystem. It is also a truly daily game, and is an entry point into our games. For both games we partnered with the wonderful Christoph Neiman to create the mascots, which give the games real personality and presence – a call to the cartoons and humour heritage of The New Yorker.
+Catalogues is a daily logic puzzle. It is designed to be the simplest and most immediate game in our portfolio. For both games we partnered with the wonderful Christoph Neiman to create the mascots, which give the games real personality and presence – a call to the cartoons and humour heritage of The New Yorker.
 
 **Open items:**
 - [ ] The draft I was given had a placeholder marked "XXXX" right after Shuffalo's intro tagline — unclear what belongs there (a stat? a quote?). Confirm before publishing.
