@@ -64,15 +64,15 @@ Led the design of both games, directing the team and partnering with The New Yor
 ### Outcome
 - Impact – 20 million plays since the games launched, over 500,000 engaged hours
 - Adoption – 12% of users have played Shuffalo, 14% Catalogues
-- Habit – Shuffalo players came back on average 3 more days per month, Catalogues players came back on average 2 more days per month. Equates to over 100,000 incremental active days per month driven by the new games
-- Recognition – Webby award for Shufflao in the Games Category
+- Habit – Shuffalo players came back on average 3 more days per month, Catalogues players came back on average 2 more days per month. This equates to over 100,000 incremental active days every month driven by the new games
+- Recognition – Webby award for Shuffalo in the Games Category
 
 ### Annotations / project details
 **Shuffalo intro**
 A progressive anagram game
 
 **Shuffalo detail**
-Shufflao is the New Yorkers first word game, that starts easy and gets progressively more difficult, and was the first truly daily game. It required a significant diversion from its original form, the key design challenge was creating focus around the play and interactive area. To create instant playability and clarity. Which was vital given the challenging nation of the game. This was a big leap from the initial concept and required real interrogation of what the core of the game was, and how to centre the whole experience around the act of playing.
+Shuffalo is the New Yorker's first word game, that starts easy and gets progressively more difficult, and was the first truly daily game. It required a significant diversion from its original form; the key design challenge was creating focus around the play and interactive area, to create instant playability and clarity, which was vital given the challenging nature of the game. This was a big leap from the initial concept and required real interrogation of what the core of the game was, and how to centre the whole experience around the act of playing.
 
 Shuffalo has a completion rate of 79%, a high number for a game that is genuinely challenging, and takes an average of about two minutes per user to finish.
 
@@ -80,9 +80,9 @@ Shuffalo has a completion rate of 79%, a high number for a game that is genuinel
 Find the Order and the Common theme
 
 **Catalogues detail**
-Was designed to be an easier, more entry point game into our ecosystem. The theme and gameplay are less progressive and round based, and a more immediate and single frame experience. With both shuffalo and Catalogues, the design opportunities were creating moments of joy and delight through the experience, with feedback and interactions, while never getting in the way. Partnering with Christoph Neiman to create the mascots is a joy, and they give the games real personality and presence.
+Catalogues was designed to be an easier, more entry point game into our ecosystem. The theme and gameplay are less progressive and round based, and a more immediate and single frame experience. With both Shuffalo and Catalogues, the design opportunities were creating moments of joy and delight through the experience, with feedback and interactions, while never getting in the way. Partnering with Christoph Neiman to create the mascots is a joy, and they give the games real personality and presence.
 
-Catalogues has a 87% complete rate and takes users an average of around 45seconds to complete. Successfully hitting its slot as a quicker faster easier game in the portfolio
+Catalogues has an 87% complete rate and takes users an average of around 45 seconds to complete, successfully hitting its slot as a quicker, faster, easier game in the portfolio.
 
 **Open items:**
 - [ ] The draft I was given had a placeholder marked "XXXX" right after Shuffalo's intro tagline — unclear what belongs there (a stat? a quote?). Confirm before publishing.
