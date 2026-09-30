@@ -24,6 +24,14 @@ a safe default to extend from.
     --grid-margin: 100px;
     --grid-gutter: 20px;
     --grid-container: 1280px;
+    /* The height that makes exactly 4 standard phone-ratio (9:19.5) frames
+       plus 3 gaps fill the content width above — the shared frame size for
+       every case study's screen gallery, so a page never has to pick its
+       own. Evaluates to 507px today. */
+    --frame-height: calc(
+      (var(--grid-container) - 2 * var(--grid-margin) - 3 * var(--space-4)) *
+        1560 / 720 / 4
+    );
   }
 }
 

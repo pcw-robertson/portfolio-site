@@ -8,15 +8,26 @@
 // The set is rendered twice; the track slides left by exactly one set's width
 // and restarts, which is visually identical.
 //
-// If the whole set fits within the viewport (with a side margin equal to the
-// gap), it doesn't scroll at all: it sits still, centered, with the duplicate
-// copy hidden. Wider viewports get a still row; narrower ones scroll — unless
-// `shrinkToFit` is set, in which case it never scrolls at desktop widths: its
-// height continuously scales down (all items stay proportional to each
-// other) so the row always fits within the page's real grid margins, right
-// down to the mobile breakpoint, instead of jumping into a scrolling
-// carousel at some in-between width. Use this for a row with few enough
-// items that shrinking reads better than scrolling.
+// Site-wide defaults, so a new case study's gallery matches every other one
+// without having to specify any of this per row: `height` defaults to
+// `--frame-height` (grid.css) — the shared frame size for a standard
+// phone-ratio screen capture, on every page. `shrinkToFit` defaults to on
+// for 4 or fewer items, sitting still at that height (see below); more than
+// that scrolls. `mobileCarousel` and `autoplay` both default on.
+// Every default can still be overridden per row for a deliberate exception
+// (a row of wider-than-phone items, a row of stills with nothing to time).
+//
+// If the whole set fits within the available width (with a side margin
+// equal to the gap), it doesn't scroll at all: it sits still, centered,
+// with the duplicate copy hidden. Wider viewports get a still row; narrower
+// ones scroll — unless `shrinkToFit` is set (or defaulted on), in which
+// case it never scrolls at desktop widths: its height scales down (all
+// items stay proportional to each other) so the row always fits within the
+// page's real grid margins, right down to the mobile breakpoint, instead of
+// jumping into a scrolling carousel at some in-between width. Since the
+// grid's own content width is capped and doesn't grow past 1280px, this
+// height is a single constant across the whole desktop range, not something
+// that keeps shrinking as the window narrows.
 interface MarqueeItem {
   src: string;
   type?: "image" | "video";
@@ -32,7 +43,7 @@ interface Props {
   // Scroll left-to-right instead of right-to-left (e.g. for a second stacked
   // row, so two rows read as deliberately contrasting rather than out of sync).
   reverse?: boolean;
-  // Desktop height matches the single-device frames (410px wide at 720:1560).
+  // Desktop height — defaults to the shared site-wide frame size (see above).
   // The mobile default tracks the column width the same way those frames do,
   // scaled down slightly (see mobileScale) so a frame doesn't run edge to
   // edge against the device's own screen.
@@ -44,16 +55,19 @@ interface Props {
   mobileScale?: number;
   radius?: string;
   // Never scroll at desktop widths — shrink instead (see comment above).
+  // Defaults to on for 4 items or fewer, off for more — override for a
+  // deliberate exception (e.g. wider-than-phone items that won't actually
+  // fit 4 across).
   shrinkToFit?: boolean;
   // Below the desktop breakpoint, replace the auto-scrolling row with a
   // swipeable one-at-a-time carousel and dot pagination instead — for
   // content like video where a constant scroll speed fights against each
-  // clip's own (different) length. Desktop is unaffected.
+  // clip's own (different) length. Desktop is unaffected. Defaults on.
   mobileCarousel?: boolean;
   // Auto-advance one slide at a time (mobileCarousel only) — the active dot
   // doubles as a progress bar counting down to the next slide. Pauses
   // whenever the row is scrolled out of view, and a swipe always takes
-  // over and restarts the timer from the slide it lands on.
+  // over and restarts the timer from the slide it lands on. Defaults on.
   autoplay?: boolean;
   autoplayMs?: number;
 }
@@ -62,15 +76,17 @@ const {
   items,
   speed = 20,
   reverse = false,
-  height = "888px",
+  height = "var(--frame-height)",
   mobileScale = 0.88,
   mobileHeight = `calc((100vw - 2 * var(--grid-margin)) * ${mobileScale} * 1560 / 720)`,
   radius = "30px",
-  shrinkToFit = false,
-  mobileCarousel = false,
-  autoplay = false,
+  shrinkToFit: shrinkToFitProp,
+  mobileCarousel = true,
+  autoplay = true,
   autoplayMs = 4000,
 } = Astro.props;
+
+const shrinkToFit = shrinkToFitProp ?? items.length <= 4;
 
 const kindOf = (item: MarqueeItem) =>
   item.type ?? (/\.(mp4|webm|mov)$/i.test(item.src) ? "video" : "image");

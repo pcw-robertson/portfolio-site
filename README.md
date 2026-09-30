@@ -122,50 +122,57 @@ For a group of assets instead of one, more components are available
   `mobileSlideWidth` (under 100% so neighbors show), `minSlideWidth`,
   `pauseMs`, `transitionMs`, `radius`.
 
-- `<Marquee items={[...]} />` — one row of device-shaped assets that scrolls
-  slowly and continuously across the full viewport width, looping
-  seamlessly (`speed` in px/s, default 20). Every item is drawn at the same
-  `height` (default 888px desktop, matching the single-device frames;
-  mobile follows the column width), width following its own `aspectRatio`.
-  Add `shrinkToFit` to a row with few enough items that it can always fit
-  the desktop viewport without scrolling — its height shrinks just enough
-  to fit the grid's own (capped) content width instead of switching to a
-  scrolling carousel, so it sits still, aligned with the same margins as
-  everything else on the page. That height stays constant at every desktop
-  width, since the grid's content width itself is capped and doesn't grow
-  past 1280px — it only changes at the mobile breakpoint.
-  If any `shrinkToFit` rows are present, every `<Marquee>` on the page
-  (shrinkToFit or not) shares that same computed height, so a six-item
-  row that still has to scroll renders its frames at the exact same size
-  as a four-item row sitting still next to it, rather than staying at a
-  larger fixed height of its own. `wired-app.mdx` passes 628px so the
-  frames match the scale of the full-screen phones inside its intro video
-  (before any shrinking). Corners `radius`
-  30px, 48px apart. Videos are muted/looping and only play while visible;
-  pauses when scrolled out of view. If the whole set fits in the viewport (with a
-  gap-sized margin each side) it sits still, centered, instead of scrolling —
-  e.g. a 4-frame row at 1440px wide; narrower windows scroll. Put several in the same column wrapper
-  to stack rows (96px apart; put a `<p class="caption">` after a row or frame for a label 24px below it; wrap the heading line in `<span class="caption-title">` for the brighter title, with a `<br />` and grey description after it); add `reverse` to a row to scroll it
-  left-to-right, so stacked rows read as deliberately contrasting rather
-  than slightly out of sync. Used in `wired-app.mdx`. Add `mobileCarousel`
-  to replace the auto-scrolling row with a swipeable one-at-a-time carousel
-  and dot pagination below the desktop breakpoint — for content like video
-  where a constant scroll speed fights against each clip's own length.
-  Every slide snaps to the same left-aligned spot (the grid margin).
-  Desktop is unaffected (pair with `shrinkToFit` to keep it a still row
-  there). Add `autoplay` to advance on a timer — the active dot elongates
-  into a pill and fills left to right as a countdown, pausing while the row
-  is off-screen; any swipe or dot click takes over immediately and restarts
-  the timer from wherever it lands. Each slide's dwell time matches its own
-  video's real length automatically (falling back to `autoplayMs`, default
-  4000, for an image or before a video's metadata has loaded) — the point
-  being that autoplay never rushes past a slide before its own clip has
-  actually played. Used for Wired's Daily Digest row.
+- `<Marquee items={[...]} />` — one row of device-shaped assets. Every
+  screen gallery across the site follows the same rules automatically, with
+  no props required beyond `items`:
+  - **Frame size.** Every item is drawn at the same height, `--frame-height`
+    (defined in `grid.css`) — the height that makes exactly 4 standard
+    phone-ratio (9:19.5) frames plus their gaps fill the grid's own
+    (capped) content width. It's a single constant shared by every case
+    study, so a row on one page is always the same size as a row on
+    another, and it stays constant across the whole desktop range (the
+    grid's content width doesn't grow past 1280px, so there's nothing to
+    keep shrinking as the window narrows past that). Override with a
+    `height` prop only for a deliberate exception.
+  - **Scroll vs. still.** 4 items or fewer sit still, centered, aligned with
+    the same margins as everything else on the page (this is `shrinkToFit`,
+    on by default for ≤4 items — pass `shrinkToFit={false}` to force a
+    small row to scroll anyway). More than 4 scrolls slowly and
+    continuously (`speed` in px/s, default 20), looping seamlessly. If a
+    page mixes both kinds of row, every `<Marquee>` on it shares the same
+    frame height regardless — a six-item row that has to scroll still
+    renders at the same size as a four-item row sitting still next to it.
+  - **Mobile.** Below the desktop breakpoint, every row is a swipeable
+    one-at-a-time carousel with dot pagination by default
+    (`mobileCarousel`) that also autoplays (`autoplay`) — the active dot
+    elongates into a pill and fills left to right as a countdown, timed to
+    that slide's own video length automatically (falling back to
+    `autoplayMs`, default 4000, for an image or before a video's metadata
+    has loaded — the point being that autoplay never rushes past a slide
+    before its own clip has actually played). Any swipe or dot click takes
+    over immediately and restarts the timer from wherever it lands; the
+    row loops seamlessly past the last slide back to the first. Pauses
+    entirely while scrolled out of view. Pass `mobileCarousel={false}`
+    and/or `autoplay={false}` to opt a row out.
+  - Corners `radius` 30px by default. Put several `<Marquee>`s in the same
+    column wrapper to stack rows (96px apart; put a `<p class="caption">`
+    after a row for a label 24px below it — wrap the heading line in
+    `<span class="caption-title">` for the brighter title, with a `<br />`
+    and grey description after it); add `reverse` to a row to scroll it
+    left-to-right, so stacked rows read as deliberately contrasting rather
+    than slightly out of sync. Used throughout `wired-app.mdx`.
 
 `AssetFloat` defaults to a 9:16 aspect ratio (most captures are vertical
 phone screens) but takes an `aspectRatio` prop for anything else — e.g. a
 wide/tall full-page scroll capture — and an `eager` prop for the one video
-that should preload immediately (typically whatever's above the fold).
+that should preload immediately (typically whatever's above the fold). For a
+single edge-to-edge phone screen capture (not part of a `<Marquee>` row),
+pass `maxHeight="var(--frame-height)"` so it matches the same shared frame
+size — see the real screen captures in `new-yorker-games.mdx`. The one
+deliberate exception is a hero/context shot that shows a device inside a
+wider frame rather than edge-to-edge (`wired-app.mdx`'s intro walkthrough
+video) — that keeps its own `maxWidth`, sized to taste, since it isn't
+trying to match the phone-frame family at all.
 
 Items that fall back to stacked full-width below desktop (e.g. two `col-6`s)
 sit only the 16px column gutter apart by default; add `stack-gap` to the
