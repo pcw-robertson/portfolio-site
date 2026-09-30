@@ -1,0 +1,91 @@
+---
+title: "Pitchfork Subscription"
+context: "TODO: one-line context — the subscription product and its goal"
+order: 4
+coverImage: "/videos/pitchfork-discovery-homepage-swiper-poster.jpg"
+coverVideo: "/videos/pitchfork-discovery-homepage-swiper.mp4"
+template: "custom"
+---
+
+import AssetFloat from "../../components/AssetFloat.astro";
+import Marquee from "../../components/Marquee.astro";
+
+<div class="grid">
+  <div class="col-6">
+    <h1>Pitchfork Subscription</h1>
+    <p class="muted subtitle">TODO: one-line context — the subscription product and its goal</p>
+
+    <h2>The Opportunity</h2>
+    <p>TODO: frame the problem/opportunity in business terms — subscription growth, conversion, retention.</p>
+    <h2>Role</h2>
+    <p>TODO: what you led — scope, team, stakeholders across brands.</p>
+  </div>
+  <div class="col-6">
+    <AssetFloat
+      src="/images/placeholders/cover.svg"
+      type="image"
+      alt="Placeholder — app walkthrough asset not yet created"
+      maxWidth="410px"
+    />
+  </div>
+</div>
+
+<div class="grid">
+  <div class="col-12">
+    <Marquee
+      items={[
+        { src: "/images/pitchfork-subscription/pitchfork-article-1.jpg", alt: "Pitchfork article hero 1", aspectRatio: "720 / 1560" },
+        { src: "/images/pitchfork-subscription/pitchfork-article-2.jpg", alt: "Pitchfork article hero 2", aspectRatio: "720 / 1560" },
+        { src: "/images/pitchfork-subscription/pitchfork-article-3.jpg", alt: "Pitchfork article hero 3", aspectRatio: "720 / 1560" },
+        { src: "/images/pitchfork-subscription/pitchfork-article-4.jpg", alt: "Pitchfork article hero 4", aspectRatio: "720 / 1560" },
+        { src: "/images/pitchfork-subscription/pitchfork-article-5.jpg", alt: "Pitchfork article hero 5", aspectRatio: "720 / 1560" },
+        { src: "/images/pitchfork-subscription/pitchfork-article-6.jpg", alt: "Pitchfork article hero 6", aspectRatio: "720 / 1560" },
+      ]}
+    />
+    <p class="caption"><span class="caption-title">Article heroes</span><br />TODO: caption for the article hero treatment.</p>
+  </div>
+</div>
+
+<div class="grid">
+  <div class="col-6">
+    <p class="caption"><span class="caption-title">Posting a comment</span><br />TODO: caption for the commenting flow.</p>
+  </div>
+  <div class="col-6">
+    <AssetFloat
+      src="/videos/pitchfork-comment-flow.mp4"
+      type="video"
+      poster="/videos/pitchfork-comment-flow-poster.jpg"
+      alt="Posting a comment on Pitchfork"
+      aspectRatio="720 / 1560"
+      maxHeight="var(--frame-height)"
+      rounded
+    />
+  </div>
+</div>
+
+<div class="grid">
+  <div class="col-12">
+    <Marquee
+      items={[
+        { src: "/videos/pitchfork-discovery-scroll.mp4", poster: "/videos/pitchfork-discovery-scroll-poster.jpg", aspectRatio: "720 / 1560" },
+        { src: "/videos/pitchfork-discovery-comment-browse.mp4", poster: "/videos/pitchfork-discovery-comment-browse-poster.jpg", aspectRatio: "720 / 1560" },
+        { src: "/images/pitchfork-subscription/pitchfork-discovery-detail.jpg", alt: "Pitchfork discovery detail screen", aspectRatio: "720 / 1560" },
+        { src: "/videos/pitchfork-discovery-homepage-swiper.mp4", poster: "/videos/pitchfork-discovery-homepage-swiper-poster.jpg", aspectRatio: "720 / 1560" },
+      ]}
+    />
+    <p class="caption"><span class="caption-title">Discovery &amp; ecosystem</span><br />TODO: caption for discovery and ecosystem.</p>
+  </div>
+</div>
+
+<div class="grid">
+  <div class="col-12">
+    <Marquee
+      items={[
+        { src: "/videos/pitchfork-account-save-flow.mp4", poster: "/videos/pitchfork-account-save-flow-poster.jpg", aspectRatio: "720 / 1560" },
+        { src: "/videos/pitchfork-account-browse.mp4", poster: "/videos/pitchfork-account-browse-poster.jpg", aspectRatio: "720 / 1560" },
+        { src: "/videos/pitchfork-account-lists-profile.mp4", poster: "/videos/pitchfork-account-lists-profile-poster.jpg", aspectRatio: "720 / 1560" },
+      ]}
+    />
+    <p class="caption"><span class="caption-title">Account</span><br />TODO: caption for the account experience.</p>
+  </div>
+</div>
