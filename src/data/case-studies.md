@@ -72,7 +72,7 @@ Led the design of both games, directing the team and partnering with The New Yor
 A progressive anagram game
 
 **Shuffalo detail**
-Shuffalo is the New Yorker's first word game, that starts easy and gets progressively more difficult, and was the first truly daily game. It required a significant diversion from its original form; the key design challenge was creating focus around the play and interactive area, to create instant playability and clarity, which was vital given the challenging nature of the game. This was a big leap from the initial concept and required real interrogation of what the core of the game was, and how to centre the whole experience around the act of playing.
+Shuffalo is the New Yorker's first word game, that starts easy and gets progressively more difficult, and was the first truly daily offering. It required a significant diversion from its original concept. The key design challenge was creating focus around the play and interactive area, to create instant playability and clarity, which was vital given the challenging nature of the puzzle. This was a big leap from the initial concept and required real interrogation of what the core of the game was, and how to centre the whole experience around the act of playing.
 
 Shuffalo has a completion rate of 79%, a high number for a game that is genuinely challenging, and takes an average of about two minutes per user to finish.
 
