@@ -7,12 +7,16 @@
 // has no <picture>-style responsive-source element).
 //
 // The reveal itself is pure CSS position:sticky, not a fade or a JS-driven
-// animation: the video sits pinned, vertically centered, inside a wrapper
-// much taller than the viewport. The section above scrolls away to uncover
-// it, it holds centered while you keep scrolling through the tall wrapper
-// (so you can't just scroll straight past it), then once the wrapper's
-// scroll range is used up it releases and the next section scrolls up to
-// cover it, same as it was uncovered. No IntersectionObserver, no opacity
+// animation: a 100vh sticky box (video centered inside it via flexbox) sits
+// in a wrapper taller than the viewport. Sticking with `top: 0` means it
+// only catches once its own top edge would otherwise scroll past the
+// viewport's top — i.e. only after the section above has fully cleared,
+// not before (a center-via-transform version of this snapped to screen
+// center prematurely, overlapping the row above while it was still
+// scrolling away). It then holds for the rest of the wrapper's extra
+// height (wrapper height = 100vh + however much "hold" scroll distance you
+// want) before releasing and letting the next section scroll up to cover
+// it, same as it was uncovered. No IntersectionObserver, no opacity
 // transition — the physical scroll motion is the whole effect.
 //
 // Video playback still only runs while in view, via the site's shared
@@ -30,53 +34,63 @@ const { src, poster, mobileSrc, mobilePoster, alt = "" } = Astro.props;
 
 <div class="reveal-wrapper">
 	<div class="full-bleed-reveal">
-		<video
-			class="reveal-video reveal-video--desktop"
-			src={src}
-			poster={poster}
-			muted
-			loop
-			playsinline
-			preload="none"
-			aria-label={alt}
-			data-autoplay-in-view
-		/>
-		<video
-			class="reveal-video reveal-video--mobile"
-			src={mobileSrc}
-			poster={mobilePoster}
-			muted
-			loop
-			playsinline
-			preload="none"
-			aria-label={alt}
-			data-autoplay-in-view
-		/>
+		<div class="reveal-media">
+			<video
+				class="reveal-video reveal-video--desktop"
+				src={src}
+				poster={poster}
+				muted
+				loop
+				playsinline
+				preload="none"
+				aria-label={alt}
+				data-autoplay-in-view
+			/>
+			<video
+				class="reveal-video reveal-video--mobile"
+				src={mobileSrc}
+				poster={mobilePoster}
+				muted
+				loop
+				playsinline
+				preload="none"
+				aria-label={alt}
+				data-autoplay-in-view
+			/>
+		</div>
 	</div>
 </div>
 
 <style>
-	/* Taller than the viewport on purpose — this is the scroll distance the
-	   video stays pinned for. Tune this to change how long it "holds". */
+	/* 100vh for the sticky box itself, plus however much extra "hold" scroll
+	   distance you want on top — total wrapper height, not the hold alone.
+	   e.g. 170vh here = 100vh sticky box + a 70vh hold. */
 	.reveal-wrapper {
 		position: relative;
-		height: 220vh;
+		height: 170vh;
 		margin-block: var(--space-5);
 	}
 
 	.full-bleed-reveal {
 		position: sticky;
-		top: 50%;
-		transform: translateY(-50%);
+		top: 0;
+		height: 100vh;
 		width: 100vw;
 		margin-inline: calc(50% - 50vw);
-		aspect-ratio: 16 / 9;
+		display: flex;
+		align-items: center;
+		justify-content: center;
 		overflow: hidden;
 		background: var(--color-bg);
 	}
 
+	.reveal-media {
+		width: 100%;
+		aspect-ratio: 16 / 9;
+	}
+
 	@media (max-width: 1279px) {
-		.full-bleed-reveal {
+		.reveal-media {
 			aspect-ratio: 9 / 16;
 		}
 	}
