@@ -5,28 +5,42 @@
 // instead (two separate <video> elements, since <video> has no
 // <picture>-style responsive-source element).
 //
-// The mechanic: the video's bottom edge is pinned to the bottom of the
-// viewport from the moment this section is reached, and never moves. The
-// content passed as children (e.g. the row that should "give way" to the
-// video) sits on top of it in normal document flow, with an opaque
-// background, so it fully covers the video at first. As that content
-// scrolls up and off screen it uncovers more of the already-pinned video
-// from the top down. Once it's fully uncovered, the video keeps holding
-// for a bit (`holdVh`) before releasing so the next section can scroll up
-// and cover it again.
+// The mechanic has three phases, driven by scroll position relative to
+// the cover content (the children passed in — e.g. the row that should
+// "give way" to the video), not the wrapper's own box:
+//   1. Entering — the video rests immediately below the cover in normal
+//      document flow (not overlapping it), so as the cover scrolls up and
+//      off screen, the video's top edge rises in exact lockstep with the
+//      cover's bottom edge, revealing it from the top down.
+//   2. Pinned — the instant the cover's bottom edge reaches the top of
+//      the viewport, the video is exactly filling the screen; at that
+//      precise moment it switches to position:fixed and holds fullscreen
+//      for `holdVh` of additional scroll.
+//   3. Exiting — releases back to a resting position immediately
+//      adjacent to the wrapper's own bottom edge, so the next section in
+//      the page (normal content after this component) scrolls up and
+//      covers it in the same lockstep way the cover revealed it.
+//
+// Both handoffs (entering->pinned and pinned->exiting) are calculated to
+// land exactly where the resting position is already pixel-identical to
+// the fixed position, so there's no jump or flicker either way.
 //
 // Why this needs JS rather than pure CSS: position:sticky only ever
 // constrains an element's OWN scroll trajectory (stops it passing a
 // threshold) — it can't make an element sit already-in-place, revealed by
-// something ELSE scrolling away on top of it (a masking/occlusion reveal,
-// not a trajectory constraint). Tried three sticky-only approaches first
-// (negative margin on the video, negative margin on the cover, CSS Grid
-// overlap) — none engaged at all; verified each with direct position
-// sampling across a scroll range before ruling it out. The reliable
-// technique for this specific effect is toggling between position:fixed
-// (pinned to the viewport while the wrapper is in its active range) and
-// position:absolute (released, resting at the wrapper's own bottom) —
-// calculated so the switch is pixel-exact and invisible.
+// something ELSE scrolling away on top of it. Tried three sticky-only
+// approaches first (negative margin on the video, negative margin on the
+// cover, CSS Grid overlap) — none engaged at all; verified each with
+// direct position sampling across a scroll range before ruling it out.
+//
+// An earlier version of this component derived the pin/release points
+// from the wrapper's own bounding box rather than the cover's — the
+// wrapper's box includes all the extra space budgeted for the pin/hold
+// math, so its top edge sits well before the cover even starts, and the
+// video would pop fullscreen while the previous section was still on
+// screen. Anchoring to the cover's own rect instead makes that
+// structurally impossible: the pin can't engage before the cover has
+// actually cleared the viewport.
 //
 // Video playback still only runs while in view, via the site's shared
 // autoplay-in-view script (data-autoplay-in-view).
@@ -49,7 +63,7 @@ const {
 } = Astro.props;
 ---
 
-<div class="reveal-wrapper" style={`--hold: ${holdVh}vh`} data-reveal-wrapper>
+<div class="reveal-wrapper" style={`--hold: ${holdVh}vh`} data-reveal-wrapper data-hold-vh={holdVh}>
 	<div class="reveal-cover">
 		<slot />
 	</div>
@@ -85,17 +99,12 @@ const {
 	.reveal-wrapper {
 		position: relative;
 		margin-block: var(--space-5);
-		/* The fixed->absolute handoff is only pixel-seamless at exactly
-		   (wrapper's own bottom - 100vh) — that's where the video's resting
-		   (absolute, bottom:0) position lines up with what fixed was already
-		   showing. Budgeting just the hold distance here would make that
-		   seamless point land *before* the cover has fully scrolled away,
-		   releasing the video early and leaving a growing gap at the screen
-		   bottom as the newly-absolute video falls behind the fixed
-		   viewport. The extra 100vh pushes that seamless point out to
-		   exactly (cover's own bottom + hold), so the video stays pinned
-		   until the cover has fully cleared, holds for `hold` more, then
-		   releases clean. */
+		/* Cover's own natural height, plus the hold distance, plus a full
+		   extra viewport height. That last viewport-height is what gives the
+		   "exiting" resting position room to sit flush with the wrapper's own
+		   bottom edge (see the exiting case in the script below) — without
+		   it, releasing the pin after a non-zero hold would leave the video
+		   short of fullscreen by exactly the hold amount, a visible jump. */
 		padding-bottom: calc(var(--hold) + 100vh);
 	}
 
@@ -116,12 +125,13 @@ const {
 		   This centering approach resolves to the same on-screen horizontal
 		   center either way, since the wrapper itself is centered in the
 		   viewport, so the width stays a consistent 100vw across both
-		   states. */
+		   states. `top` is set directly by the script below — it differs
+		   for the entering/pinned/exiting phases (see the doc comment
+		   above), so there's no static CSS default for it. */
 		position: absolute;
 		left: 50%;
 		transform: translateX(-50%);
 		width: 100vw;
-		bottom: 0;
 		z-index: 1;
 		height: 100vh;
 		display: flex;
@@ -132,7 +142,7 @@ const {
 	}
 
 	/* While JS has decided this should be pinned to the viewport instead
-	   of resting at the wrapper's own bottom. */
+	   of resting at its current (script-computed) absolute position. */
 	.pinned-video.is-fixed {
 		position: fixed;
 	}
@@ -176,23 +186,45 @@ const {
 	if (wrappers.length > 0) {
 		const pairs = Array.from(wrappers, (wrapper) => ({
 			wrapper,
+			cover: wrapper.querySelector<HTMLElement>(".reveal-cover")!,
 			video: wrapper.querySelector<HTMLElement>("[data-pinned-video]")!,
+			holdVh: Number(wrapper.dataset.holdVh) || 0,
 		}));
 
 		function update() {
 			const vh = window.innerHeight;
-			for (const { wrapper, video } of pairs) {
-				const rect = wrapper.getBoundingClientRect();
-				// Pin to the viewport for as long as the wrapper's own bottom
-				// edge hasn't yet risen to the viewport's bottom — i.e. there's
-				// still wrapper height below the current view for the video to
-				// "hide into". Once the wrapper's bottom reaches the viewport
-				// bottom, resting at the wrapper's own bottom (absolute) IS the
-				// same pixel position fixed was showing, so the handoff is
-				// seamless, and from there it scrolls away normally with the
-				// rest of the page.
-				const shouldPin = rect.top < vh && rect.bottom > vh;
-				video.classList.toggle("is-fixed", shouldPin);
+			const scrollY = window.scrollY;
+
+			for (const { cover, video, holdVh } of pairs) {
+				// Document-coordinate y where the cover's content ends — the
+				// one stable anchor everything else is measured against.
+				const coverBottomDoc = cover.getBoundingClientRect().bottom + scrollY;
+				const coverHeight = cover.getBoundingClientRect().height;
+				const holdPx = (holdVh / 100) * vh;
+
+				// Entering: resting immediately below the cover (wrapper-
+				// relative top = coverHeight, since the cover is the
+				// wrapper's first child with no gap before it) — this is
+				// exactly fullscreen at scrollY === coverBottomDoc.
+				// Pinned: fixed, filling the viewport, for holdPx more.
+				// Exiting: resting flush with the wrapper's own bottom edge
+				// (wrapper-relative top = coverHeight + holdPx + 0, since the
+				// wrapper's total height already budgets coverHeight + hold +
+				// 100vh) — exactly fullscreen at the release instant, then
+				// scrolls away normally, adjacent to whatever comes next.
+				const engageAt = coverBottomDoc;
+				const releaseAt = engageAt + holdPx;
+
+				const isPinned = scrollY >= engageAt && scrollY < releaseAt;
+				video.classList.toggle("is-fixed", isPinned);
+
+				if (isPinned) {
+					video.style.top = "0";
+				} else if (scrollY < engageAt) {
+					video.style.top = `${coverHeight}px`;
+				} else {
+					video.style.top = `${coverHeight + holdPx}px`;
+				}
 			}
 		}
 
