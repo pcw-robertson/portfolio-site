@@ -1,0 +1,114 @@
+---
+// A full-viewport-width video break in an otherwise contained case study —
+// a dramatic pacing beat between normal grid sections. Desktop gets a 16:9
+// cut edge to edge; below the desktop breakpoint there's no equivalent
+// "full-bleed landscape" moment, so it swaps to a vertical cut instead
+// (two separate <video> elements, shown/hidden by breakpoint, since <video>
+// has no <picture>-style responsive-source element).
+//
+// Reveals once via a scale/fade-in as it scrolls into view (not a
+// continuous scroll-linked parallax) — see the IntersectionObserver below.
+// Video playback itself still only runs while in view, via the site's
+// shared autoplay-in-view script (data-autoplay-in-view).
+interface Props {
+  src: string;
+  poster?: string;
+  mobileSrc: string;
+  mobilePoster?: string;
+  alt?: string;
+}
+
+const { src, poster, mobileSrc, mobilePoster, alt = "" } = Astro.props;
+---
+
+<div class="full-bleed-reveal" data-reveal>
+	<video
+		class="reveal-video reveal-video--desktop"
+		src={src}
+		poster={poster}
+		muted
+		loop
+		playsinline
+		preload="none"
+		aria-label={alt}
+		data-autoplay-in-view
+	/>
+	<video
+		class="reveal-video reveal-video--mobile"
+		src={mobileSrc}
+		poster={mobilePoster}
+		muted
+		loop
+		playsinline
+		preload="none"
+		aria-label={alt}
+		data-autoplay-in-view
+	/>
+</div>
+
+<style>
+	.full-bleed-reveal {
+		width: 100vw;
+		margin-inline: calc(50% - 50vw);
+		aspect-ratio: 16 / 9;
+		overflow: hidden;
+		background: var(--color-bg);
+		opacity: 0;
+		transform: scale(0.94);
+		transition: opacity 1s ease, transform 1s ease;
+	}
+
+	.full-bleed-reveal.is-visible {
+		opacity: 1;
+		transform: scale(1);
+	}
+
+	@media (max-width: 1279px) {
+		.full-bleed-reveal {
+			aspect-ratio: 9 / 16;
+		}
+	}
+
+	.reveal-video {
+		display: none;
+		width: 100%;
+		height: 100%;
+		object-fit: cover;
+	}
+
+	.reveal-video--desktop {
+		display: block;
+	}
+
+	@media (max-width: 1279px) {
+		.reveal-video--desktop {
+			display: none;
+		}
+
+		.reveal-video--mobile {
+			display: block;
+		}
+	}
+</style>
+
+<script>
+	const sections = document.querySelectorAll<HTMLElement>("[data-reveal]");
+
+	if (sections.length > 0) {
+		const observer = new IntersectionObserver(
+			(entries) => {
+				for (const entry of entries) {
+					if (entry.isIntersecting) {
+						entry.target.classList.add("is-visible");
+						observer.unobserve(entry.target);
+					}
+				}
+			},
+			{ threshold: 0.3 },
+		);
+
+		for (const section of sections) {
+			observer.observe(section);
+		}
+	}
+</script>
