@@ -589,12 +589,22 @@ const kindOf = (item: MarqueeItem) =>
 				dots.forEach((dot, i) => dot.toggleAttribute("data-active", i === closest));
 			}
 
+			// Scrolls the track's own scrollLeft directly rather than calling
+			// item.scrollIntoView() — scrollIntoView walks every scrollable
+			// ancestor including the window itself, and will drag the whole
+			// page's vertical scroll back to wherever this row last was if
+			// the row isn't currently "fully visible" (e.g. scrolled off
+			// screen, which is expected and fine on pages like this one that
+			// reveal/cover this row as part of a larger scroll effect).
+			// Setting scrollLeft on the track can never touch window scroll.
+			function scrollTrackToItem(item: HTMLElement, behavior: ScrollBehavior) {
+				const targetLeft = track.getBoundingClientRect().left + marginPx();
+				const delta = item.getBoundingClientRect().left - targetLeft;
+				track.scrollTo({ left: track.scrollLeft + delta, behavior });
+			}
+
 			function goToRealIndex(i: number) {
-				realItems[i].scrollIntoView({
-					behavior: "smooth",
-					inline: "start",
-					block: "nearest",
-				});
+				scrollTrackToItem(realItems[i], "smooth");
 			}
 
 			// A video's own length if it's loaded, else null — lets a slide's
@@ -632,8 +642,10 @@ const kindOf = (item: MarqueeItem) =>
 					const next = index + 1;
 					// Advancing past the real last slide scrolls onto the clone;
 					// onSettle below snaps that invisibly back to real index 0.
-					(next < realItems.length ? realItems[next] : slides[realItems.length])
-						.scrollIntoView({ behavior: "smooth", inline: "start", block: "nearest" });
+					scrollTrackToItem(
+						next < realItems.length ? realItems[next] : slides[realItems.length],
+						"smooth",
+					);
 				}, ms);
 
 				if (knownMs === null) {
@@ -657,7 +669,7 @@ const kindOf = (item: MarqueeItem) =>
 			function onSettle() {
 				if (!mobileQuery.matches) return;
 				if (closestSlideIndex() === realItems.length) {
-					realItems[0].scrollIntoView({ inline: "start", block: "nearest" });
+					scrollTrackToItem(realItems[0], "auto");
 				}
 				activateCurrentSlide();
 			}
