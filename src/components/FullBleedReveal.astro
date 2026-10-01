@@ -50,12 +50,13 @@ const { src, poster, mobileSrc, mobilePoster, alt = "" } = Astro.props;
 	.full-bleed-reveal {
 		width: 100vw;
 		margin-inline: calc(50% - 50vw);
+		margin-block: var(--space-5);
 		aspect-ratio: 16 / 9;
 		overflow: hidden;
 		background: var(--color-bg);
 		opacity: 0;
 		transform: scale(0.94);
-		transition: opacity 1s ease, transform 1s ease;
+		transition: opacity 1.4s ease, transform 1.4s ease;
 	}
 
 	.full-bleed-reveal.is-visible {
@@ -104,7 +105,12 @@ const { src, poster, mobileSrc, mobilePoster, alt = "" } = Astro.props;
 					}
 				}
 			},
-			{ threshold: 0.3 },
+			// Fires while the section is still ~35% of a viewport-height below
+			// the fold, not once it's already on screen — otherwise, for a
+			// section this tall, the fade finishes while only a sliver at the
+			// very bottom edge is visible and it just looks like it was
+			// always there by the time you've scrolled it fully into view.
+			{ threshold: 0, rootMargin: "0px 0px 35% 0px" },
 		);
 
 		for (const section of sections) {
