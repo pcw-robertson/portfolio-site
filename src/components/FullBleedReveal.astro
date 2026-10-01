@@ -6,8 +6,9 @@
 // (two separate <video> elements, shown/hidden by breakpoint, since <video>
 // has no <picture>-style responsive-source element).
 //
-// Reveals once via a scale/fade-in as it scrolls into view (not a
-// continuous scroll-linked parallax) — see the IntersectionObserver below.
+// Reveals once via a brisk, linear fade-in (through the page's own black
+// background, not a soft eased zoom) as it scrolls into view — not a
+// continuous scroll-linked parallax. See the IntersectionObserver below.
 // Video playback itself still only runs while in view, via the site's
 // shared autoplay-in-view script (data-autoplay-in-view).
 interface Props {
@@ -55,13 +56,11 @@ const { src, poster, mobileSrc, mobilePoster, alt = "" } = Astro.props;
 		overflow: hidden;
 		background: var(--color-bg);
 		opacity: 0;
-		transform: scale(0.94);
-		transition: opacity 1.4s ease, transform 1.4s ease;
+		transition: opacity 0.7s linear;
 	}
 
 	.full-bleed-reveal.is-visible {
 		opacity: 1;
-		transform: scale(1);
 	}
 
 	@media (max-width: 1279px) {
