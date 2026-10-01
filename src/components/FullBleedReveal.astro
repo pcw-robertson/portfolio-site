@@ -6,11 +6,17 @@
 // (two separate <video> elements, shown/hidden by breakpoint, since <video>
 // has no <picture>-style responsive-source element).
 //
-// Reveals once via a brisk, linear fade-in (through the page's own black
-// background, not a soft eased zoom) as it scrolls into view — not a
-// continuous scroll-linked parallax. See the IntersectionObserver below.
-// Video playback itself still only runs while in view, via the site's
-// shared autoplay-in-view script (data-autoplay-in-view).
+// The reveal itself is pure CSS position:sticky, not a fade or a JS-driven
+// animation: the video sits pinned, vertically centered, inside a wrapper
+// much taller than the viewport. The section above scrolls away to uncover
+// it, it holds centered while you keep scrolling through the tall wrapper
+// (so you can't just scroll straight past it), then once the wrapper's
+// scroll range is used up it releases and the next section scrolls up to
+// cover it, same as it was uncovered. No IntersectionObserver, no opacity
+// transition — the physical scroll motion is the whole effect.
+//
+// Video playback still only runs while in view, via the site's shared
+// autoplay-in-view script (data-autoplay-in-view).
 interface Props {
   src: string;
   poster?: string;
@@ -22,45 +28,51 @@ interface Props {
 const { src, poster, mobileSrc, mobilePoster, alt = "" } = Astro.props;
 ---
 
-<div class="full-bleed-reveal" data-reveal>
-	<video
-		class="reveal-video reveal-video--desktop"
-		src={src}
-		poster={poster}
-		muted
-		loop
-		playsinline
-		preload="none"
-		aria-label={alt}
-		data-autoplay-in-view
-	/>
-	<video
-		class="reveal-video reveal-video--mobile"
-		src={mobileSrc}
-		poster={mobilePoster}
-		muted
-		loop
-		playsinline
-		preload="none"
-		aria-label={alt}
-		data-autoplay-in-view
-	/>
+<div class="reveal-wrapper">
+	<div class="full-bleed-reveal">
+		<video
+			class="reveal-video reveal-video--desktop"
+			src={src}
+			poster={poster}
+			muted
+			loop
+			playsinline
+			preload="none"
+			aria-label={alt}
+			data-autoplay-in-view
+		/>
+		<video
+			class="reveal-video reveal-video--mobile"
+			src={mobileSrc}
+			poster={mobilePoster}
+			muted
+			loop
+			playsinline
+			preload="none"
+			aria-label={alt}
+			data-autoplay-in-view
+		/>
+	</div>
 </div>
 
 <style>
+	/* Taller than the viewport on purpose — this is the scroll distance the
+	   video stays pinned for. Tune this to change how long it "holds". */
+	.reveal-wrapper {
+		position: relative;
+		height: 220vh;
+		margin-block: var(--space-5);
+	}
+
 	.full-bleed-reveal {
+		position: sticky;
+		top: 50%;
+		transform: translateY(-50%);
 		width: 100vw;
 		margin-inline: calc(50% - 50vw);
-		margin-block: var(--space-5);
 		aspect-ratio: 16 / 9;
 		overflow: hidden;
 		background: var(--color-bg);
-		opacity: 0;
-		transition: opacity 0.7s linear;
-	}
-
-	.full-bleed-reveal.is-visible {
-		opacity: 1;
 	}
 
 	@media (max-width: 1279px) {
@@ -90,30 +102,3 @@ const { src, poster, mobileSrc, mobilePoster, alt = "" } = Astro.props;
 		}
 	}
 </style>
-
-<script>
-	const sections = document.querySelectorAll<HTMLElement>("[data-reveal]");
-
-	if (sections.length > 0) {
-		const observer = new IntersectionObserver(
-			(entries) => {
-				for (const entry of entries) {
-					if (entry.isIntersecting) {
-						entry.target.classList.add("is-visible");
-						observer.unobserve(entry.target);
-					}
-				}
-			},
-			// Fires while the section is still ~35% of a viewport-height below
-			// the fold, not once it's already on screen — otherwise, for a
-			// section this tall, the fade finishes while only a sliver at the
-			// very bottom edge is visible and it just looks like it was
-			// always there by the time you've scrolled it fully into view.
-			{ threshold: 0, rootMargin: "0px 0px 35% 0px" },
-		);
-
-		for (const section of sections) {
-			observer.observe(section);
-		}
-	}
-</script>
