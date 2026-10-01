@@ -31,29 +31,29 @@ import FullBleedReveal from "../../components/FullBleedReveal.astro";
   </div>
 </div>
 
-<div class="grid">
-  <div class="col-12">
-    <Marquee
-      items={[
-        { src: "/images/pitchfork-subscription/pitchfork-article-1.jpg", alt: "Pitchfork article hero 1", aspectRatio: "720 / 1560" },
-        { src: "/images/pitchfork-subscription/pitchfork-article-2.jpg", alt: "Pitchfork article hero 2", aspectRatio: "720 / 1560" },
-        { src: "/images/pitchfork-subscription/pitchfork-article-3.jpg", alt: "Pitchfork article hero 3", aspectRatio: "720 / 1560" },
-        { src: "/images/pitchfork-subscription/pitchfork-article-4.jpg", alt: "Pitchfork article hero 4", aspectRatio: "720 / 1560" },
-        { src: "/images/pitchfork-subscription/pitchfork-article-5.jpg", alt: "Pitchfork article hero 5", aspectRatio: "720 / 1560" },
-        { src: "/images/pitchfork-subscription/pitchfork-article-6.jpg", alt: "Pitchfork article hero 6", aspectRatio: "720 / 1560" },
-      ]}
-    />
-    <p class="caption"><span class="caption-title">Article heroes</span><br />TODO: caption for the article hero treatment.</p>
-  </div>
-</div>
-
 <FullBleedReveal
   src="/videos/pitchfork-parallax-placeholder-16x9.mp4"
   poster="/videos/pitchfork-parallax-placeholder-16x9-poster.jpg"
   mobileSrc="/videos/pitchfork-parallax-placeholder-9x16.mp4"
   mobilePoster="/videos/pitchfork-parallax-placeholder-9x16-poster.jpg"
   alt="Placeholder — full-bleed video pacing test"
-/>
+>
+  <div class="grid">
+    <div class="col-12">
+      <Marquee
+        items={[
+          { src: "/images/pitchfork-subscription/pitchfork-article-1.jpg", alt: "Pitchfork article hero 1", aspectRatio: "720 / 1560" },
+          { src: "/images/pitchfork-subscription/pitchfork-article-2.jpg", alt: "Pitchfork article hero 2", aspectRatio: "720 / 1560" },
+          { src: "/images/pitchfork-subscription/pitchfork-article-3.jpg", alt: "Pitchfork article hero 3", aspectRatio: "720 / 1560" },
+          { src: "/images/pitchfork-subscription/pitchfork-article-4.jpg", alt: "Pitchfork article hero 4", aspectRatio: "720 / 1560" },
+          { src: "/images/pitchfork-subscription/pitchfork-article-5.jpg", alt: "Pitchfork article hero 5", aspectRatio: "720 / 1560" },
+          { src: "/images/pitchfork-subscription/pitchfork-article-6.jpg", alt: "Pitchfork article hero 6", aspectRatio: "720 / 1560" },
+        ]}
+      />
+      <p class="caption"><span class="caption-title">Article heroes</span><br />TODO: caption for the article hero treatment.</p>
+    </div>
+  </div>
+</FullBleedReveal>
 
 <div class="grid">
   <div class="col-6">
