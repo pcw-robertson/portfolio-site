@@ -227,6 +227,17 @@ trying to match the phone-frame family at all.
   `AssetFloat` screen capture (`maxHeight`, default `var(--frame-height)`).
   Used for New Yorker Games' Catalogues results card.
 
+The top row of every custom-layout case study is a fixed-height "hero stage"
+so they all open with the same footprint whatever the media shape: put
+`hero-stage` on the `.grid` and `hero-media` on the column holding the
+media (see `grid.css`). At desktop the row is `--hero-height` (710px,
+roughly one screen — set by Wired's tall walkthrough) and the media sits
+vertically centered in it, so a square or a mascot panel gets the same
+footprint as a phone video and the first row of screens never peeks in
+beneath it. Size the media to its column (`maxWidth="100%"` for a square);
+below desktop the row just stacks. Used in `wired-app.mdx`,
+`new-yorker-games.mdx` and `pitchfork-subscription.mdx`.
+
 Items that fall back to stacked full-width below desktop (e.g. two `col-6`s)
 sit only the 16px column gutter apart by default; add `stack-gap` to the
 `.grid` for 48px on mobile.

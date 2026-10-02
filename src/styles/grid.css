@@ -32,6 +32,11 @@ a safe default to extend from.
       (var(--grid-container) - 2 * var(--grid-margin) - 3 * var(--space-4)) *
         1560 / 720 / 4
     );
+    /* Height of a case study's top "hero" row (see .hero-stage below):
+       roughly one screen, so the first row of media never peeks in under
+       it. Set by Wired's walkthrough — 410px wide at 720:1246 = 710px —
+       which was already the tallest, so it's the reference. */
+    --hero-height: 710px;
   }
 }
 
@@ -136,5 +141,23 @@ a safe default to extend from.
 @media (max-width: 1279px) {
   .grid.stack-gap {
     row-gap: var(--space-4);
+  }
+}
+
+/* The top row of a custom-layout case study: a fixed-height "stage" at
+   desktop instead of whatever height its media happens to be, so every
+   case study opens with the same footprint regardless of media shape (tall
+   phone video, square, mascot). Put `hero-stage` on the .grid and
+   `hero-media` on the column holding the media, which then sits vertically
+   centered in the stage. Below desktop the row just stacks as normal. */
+@media (min-width: 1280px) {
+  .grid.hero-stage {
+    min-height: var(--hero-height);
+  }
+
+  .hero-media {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
   }
 }
