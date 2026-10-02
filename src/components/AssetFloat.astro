@@ -19,6 +19,12 @@ interface Props {
   // being capped to a fixed width (e.g. a wider-ratio clip sitting in a
   // sequence of phone-shaped ones).
   maxHeight?: string;
+  // Below the desktop breakpoint, a solo asset sized to the shared frame
+  // (maxHeight="var(--frame-height)") is drawn at this fraction of its
+  // column and left-aligned, matching a <Marquee> slide's own mobileScale
+  // so a single frame and a carousel frame on the same page are the same
+  // size. Ignored for any other maxHeight (e.g. a deliberate exception).
+  mobileScale?: number;
   eager?: boolean;
   aspectRatio?: string;
   // Rounds the asset's corners to read as a device screen, for captures
@@ -33,22 +39,25 @@ const {
   poster,
   maxWidth = "320px",
   maxHeight,
+  mobileScale = 0.88,
   eager = false,
   aspectRatio = "9 / 16",
   rounded = false,
 } = Astro.props;
 
 const kind = type ?? (/\.(mp4|webm|mov)$/i.test(src) ? "video" : "image");
+const frameSized = maxHeight === "var(--frame-height)";
 
 const styleParts = [
   `--asset-max-width: ${maxWidth}`,
   `--asset-aspect-ratio: ${aspectRatio}`,
+  `--asset-mobile-scale: ${mobileScale}`,
 ];
 if (maxHeight) styleParts.push(`--asset-max-height: ${maxHeight}`);
 ---
 
 <div
-	class:list={["asset-float", { "has-max-height": !!maxHeight, rounded }]}
+	class:list={["asset-float", { "has-max-height": !!maxHeight, "frame-sized": frameSized, rounded }]}
 	style={styleParts.join("; ")}
 >
 	{
@@ -85,6 +94,17 @@ if (maxHeight) styleParts.push(`--asset-max-height: ${maxHeight}`);
 	.asset-float.rounded img,
 	.asset-float.rounded video {
 		border-radius: 30px;
+	}
+
+	@media (max-width: 1279px) {
+		.asset-float.frame-sized {
+			justify-content: flex-start;
+		}
+
+		.asset-float.frame-sized img,
+		.asset-float.frame-sized video {
+			width: calc(100% * var(--asset-mobile-scale));
+		}
 	}
 
 	@media (min-width: 1280px) {
