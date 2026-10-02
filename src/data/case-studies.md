@@ -107,22 +107,25 @@ Led design and strategy for Bon Appétit's repositioning across web and app, ali
 *Subscriber experience*
 
 ### Opportunity
-Pitchfork had one of the highest rates of direct and returning visitors across all our sites, pointing to a loyal audience with real appetite to subscribe. This led to the decision to launch a paywall, but also raised a bigger question: how to make the subscription additive to the experience, not just a gate on existing content. Our approach: bring the audience into the conversation. Give users the ability to rate, review, save, and organize music on the most trusted authority in music, turning subscription into something that deepens their relationship with Pitchfork, not just access.
+Pitchfork had one of the highest rates of direct and returning visitors across all our sites, pointing to a loyal audience with real appetite to subscribe. This led to the decision to launch a paywall, but also raised a bigger question: how to make the subscription additive to the experience, not just a gate on existing content. Our approach: bring the audience into the conversation. Give users the ability to rate, review, save, and organise music on the most trusted authority in music, turning subscription into something that deepens their relationship with Pitchfork, not just access.
 
 ### Role
 Led the strategy and design direction for the subscriber experience, developing the community features and how users discover them across the site.
 
 ### Outcome
-- Pace ahead of subscription goals since January Launch
-- Engagement reduces Churn, those using new features 50% less likely to cancel subscription
+- Pacing ahead of subscription goals since launch in January 2026
+- Subscribers using the new features are 50% less likely to cancel
 
 ### Annotations / project details
 **Reader Scores**
-Giving the Pitchfork subscriber community a chance to have their say on reviews from three decades and building mechanisms round the site to discover and surface those as an pathway to engage or subscribe themselves
+Giving subscribers a say on three decades of Pitchfork reviews, and surfacing their scores across the site as a reason for other readers to join in, or to subscribe.
 
-**XXXXX**
-We built the tools to allow subscribers to track, organise and collect their reviews, ratings, albums and tracks. A place to build loyalty and attachment too for our most engaged users
+**Collections**
+Tools for subscribers to rate, save and organise the albums and tracks they love, building loyalty and attachment among our most engaged readers.
+
+### Takeaways
+- Community is additive when cultivated correctly: participation, not just access, is what turns a subscription into a habit.
 
 **Open items:**
-- [ ] Page subtitle (currently XXX in pitchfork-subscription.mdx)
-- [ ] Title for the last caption (currently XXXXX)
+- [ ] Confirm the launch year (2026) in the first Outcome line
+- [ ] Confirm "Collections" as the heading for the last row
