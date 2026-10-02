@@ -1,0 +1,173 @@
+---
+// A full-viewport-width video that sits still while page content scrolls
+// away from it and back over it: row above uncovers it, a beat of
+// fullscreen hold, then the content below slides up and covers it.
+// Desktop gets a 16:9 cut, below the desktop breakpoint a 9:16 cut (two
+// <video>s, since <video> has no <picture>-style responsive source).
+//
+// Pure CSS, no scroll JS. Layout (all inside .reveal-wrapper):
+//
+//   cover        normal flow, opaque, z2   - slot (default)
+//   stage        pulled up 100vh over the cover's tail, z1
+//     video      position:sticky; top:0; height:100vh
+//   exit-cover   pulled up 100vh over the stage's tail, opaque, z2
+//                                          - slot="exit-cover"
+//
+// With C = cover height and H = hold, stage height = 300vh + H:
+//   - the stage top sits 100vh above the cover's bottom, so the video
+//     sticks at the exact moment the cover's bottom edge reaches the
+//     bottom of the viewport; from then on the cover scrolls up over a
+//     motionless video, uncovering it from the top down.
+//   - the video stays stuck for another H of scroll once the cover has
+//     cleared (fullscreen hold)...
+//   - ...then the exit-cover, whose top is pulled to the stage's last
+//     100vh, rises over it. The stage ends as the exit-cover's top
+//     reaches the viewport top, so the video un-sticks only once it is
+//     already hidden.
+//
+// overflow:clip on the wrapper (not hidden — that would create a scroll
+// container and silently break sticky) keeps the video visible ONLY inside
+// the wrapper's own box. That's what stops it showing above a cover or
+// below an exit-cover that is shorter than the viewport, and from painting
+// over neighbouring sections (a positioned element always stacks above
+// static content). isolation:isolate keeps the z-indexes local.
+//
+// Requires no ancestor with overflow other than visible/clip (true today:
+// html > body > main > .project-theme > article).
+//
+// Playback is driven by the site's shared autoplay-in-view script
+// (data-autoplay-in-view).
+interface Props {
+  src: string;
+  poster?: string;
+  mobileSrc: string;
+  mobilePoster?: string;
+  alt?: string;
+  holdVh?: number;
+}
+
+const {
+  src,
+  poster,
+  mobileSrc,
+  mobilePoster,
+  alt = "",
+  holdVh = 60,
+} = Astro.props;
+---
+
+<div class="reveal-wrapper" style={`--hold: ${holdVh}vh`}>
+	<div class="reveal-cover">
+		<slot />
+	</div>
+	<div class="reveal-stage">
+		<div class="pinned-video">
+			<div class="reveal-media">
+				<video
+					class="reveal-video reveal-video--desktop"
+					src={src}
+					poster={poster}
+					muted
+					loop
+					playsinline
+					preload="none"
+					aria-label={alt}
+					data-autoplay-in-view
+				/>
+				<video
+					class="reveal-video reveal-video--mobile"
+					src={mobileSrc}
+					poster={mobilePoster}
+					muted
+					loop
+					playsinline
+					preload="none"
+					aria-label={alt}
+					data-autoplay-in-view
+				/>
+			</div>
+		</div>
+	</div>
+	<div class="exit-cover">
+		<slot name="exit-cover" />
+	</div>
+</div>
+
+<style>
+	.reveal-wrapper {
+		position: relative;
+		isolation: isolate;
+		overflow: clip;
+		margin-block: var(--space-5);
+	}
+
+	/* Opaque, full width (bare div — no .grid class — so it spans the
+	   full-bleed page like any other block), above the video. The padding
+	   keeps first/last lines of content off the edge where the video is
+	   revealed / covered. */
+	.reveal-cover,
+	.exit-cover {
+		position: relative;
+		z-index: 2;
+		background: var(--color-bg);
+	}
+
+	.reveal-cover {
+		padding-bottom: var(--space-5);
+	}
+
+	.exit-cover {
+		margin-top: -100vh;
+		padding-top: var(--space-5);
+	}
+
+	.reveal-stage {
+		position: relative;
+		z-index: 1;
+		margin-top: -100vh;
+		height: calc(300vh + var(--hold));
+	}
+
+	.pinned-video {
+		position: sticky;
+		top: 0;
+		height: 100vh;
+		display: flex;
+		align-items: flex-end;
+		justify-content: center;
+		overflow: hidden;
+		background: var(--color-bg);
+	}
+
+	.reveal-media {
+		width: 100%;
+		aspect-ratio: 16 / 9;
+	}
+
+	@media (max-width: 1279px) {
+		.reveal-media {
+			aspect-ratio: 9 / 16;
+		}
+	}
+
+	.reveal-video {
+		display: none;
+		width: 100%;
+		height: 100%;
+		object-fit: cover;
+	}
+
+	.reveal-video--desktop {
+		display: block;
+	}
+
+	@media (max-width: 1279px) {
+		.reveal-video--desktop {
+			display: none;
+		}
+
+		.reveal-video--mobile {
+			display: block;
+		}
+	}
+</style>

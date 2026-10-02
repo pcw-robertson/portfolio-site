@@ -9,8 +9,9 @@ template: "custom"
 
 import AssetFloat from "../../components/AssetFloat.astro";
 import Marquee from "../../components/Marquee.astro";
+import FullBleedReveal from "../../components/FullBleedReveal.astro";
 
-<div class="grid">
+<div class="grid hero-stage">
   <div class="col-6">
     <h1>Pitchfork Subscription</h1>
     <p class="muted subtitle">TODO: one-line context — the subscription product and its goal</p>
@@ -20,48 +21,59 @@ import Marquee from "../../components/Marquee.astro";
     <h2>Role</h2>
     <p>TODO: what you led — scope, team, stakeholders across brands.</p>
   </div>
-  <div class="col-6">
+  <div class="col-6 hero-media">
     <AssetFloat
-      src="/images/placeholders/cover.svg"
-      type="image"
-      alt="Placeholder — app walkthrough asset not yet created"
-      maxWidth="410px"
-    />
-  </div>
-</div>
-
-<div class="grid">
-  <div class="col-12">
-    <Marquee
-      items={[
-        { src: "/images/pitchfork-subscription/pitchfork-article-1.jpg", alt: "Pitchfork article hero 1", aspectRatio: "720 / 1560" },
-        { src: "/images/pitchfork-subscription/pitchfork-article-2.jpg", alt: "Pitchfork article hero 2", aspectRatio: "720 / 1560" },
-        { src: "/images/pitchfork-subscription/pitchfork-article-3.jpg", alt: "Pitchfork article hero 3", aspectRatio: "720 / 1560" },
-        { src: "/images/pitchfork-subscription/pitchfork-article-4.jpg", alt: "Pitchfork article hero 4", aspectRatio: "720 / 1560" },
-        { src: "/images/pitchfork-subscription/pitchfork-article-5.jpg", alt: "Pitchfork article hero 5", aspectRatio: "720 / 1560" },
-        { src: "/images/pitchfork-subscription/pitchfork-article-6.jpg", alt: "Pitchfork article hero 6", aspectRatio: "720 / 1560" },
-      ]}
-    />
-    <p class="caption"><span class="caption-title">Article heroes</span><br />TODO: caption for the article hero treatment.</p>
-  </div>
-</div>
-
-<div class="grid">
-  <div class="col-6">
-    <p class="caption"><span class="caption-title">Posting a comment</span><br />TODO: caption for the commenting flow.</p>
-  </div>
-  <div class="col-6">
-    <AssetFloat
-      src="/videos/pitchfork-comment-flow.mp4"
+      src="/videos/pitchfork-hero.mp4"
       type="video"
-      poster="/videos/pitchfork-comment-flow-poster.jpg"
-      alt="Posting a comment on Pitchfork"
-      aspectRatio="720 / 1560"
-      maxHeight="var(--frame-height)"
-      rounded
+      poster="/videos/pitchfork-hero-poster.jpg"
+      alt="Pitchfork's review score counting up from 0.0 to 10 over album covers, looping"
+      maxWidth="100%"
+      aspectRatio="1 / 1"
+      eager
     />
   </div>
 </div>
+
+<FullBleedReveal
+  src="/videos/pitchfork-launch-reel-16x9.mp4"
+  poster="/videos/pitchfork-launch-reel-16x9-poster.jpg"
+  mobileSrc="/videos/pitchfork-launch-reel-9x16.mp4"
+  mobilePoster="/videos/pitchfork-launch-reel-9x16-poster.jpg"
+  alt="Pitchfork subscription launch reel"
+>
+  <div class="grid">
+    <div class="col-12">
+      <Marquee
+        items={[
+          { src: "/images/pitchfork-subscription/pitchfork-article-1.jpg", alt: "Pitchfork article hero 1", aspectRatio: "720 / 1560" },
+          { src: "/images/pitchfork-subscription/pitchfork-article-2.jpg", alt: "Pitchfork article hero 2", aspectRatio: "720 / 1560" },
+          { src: "/images/pitchfork-subscription/pitchfork-article-3.jpg", alt: "Pitchfork article hero 3", aspectRatio: "720 / 1560" },
+          { src: "/images/pitchfork-subscription/pitchfork-article-4.jpg", alt: "Pitchfork article hero 4", aspectRatio: "720 / 1560" },
+          { src: "/images/pitchfork-subscription/pitchfork-article-5.jpg", alt: "Pitchfork article hero 5", aspectRatio: "720 / 1560" },
+          { src: "/images/pitchfork-subscription/pitchfork-article-6.jpg", alt: "Pitchfork article hero 6", aspectRatio: "720 / 1560" },
+        ]}
+      />
+      <p class="caption"><span class="caption-title">Article heroes</span><br />TODO: caption for the article hero treatment.</p>
+    </div>
+  </div>
+
+  <div class="grid" slot="exit-cover">
+    <div class="col-6">
+      <p class="caption"><span class="caption-title">Posting a comment</span><br />TODO: caption for the commenting flow.</p>
+    </div>
+    <div class="col-6">
+      <AssetFloat
+        src="/videos/pitchfork-comment-flow.mp4"
+        type="video"
+        poster="/videos/pitchfork-comment-flow-poster.jpg"
+        alt="Posting a comment on Pitchfork"
+        aspectRatio="720 / 1560"
+        maxHeight="var(--frame-height)"
+        rounded
+      />
+    </div>
+  </div>
+</FullBleedReveal>
 
 <div class="grid">
   <div class="col-12">

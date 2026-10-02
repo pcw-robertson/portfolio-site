@@ -181,11 +181,38 @@ wide/tall full-page scroll capture — and an `eager` prop for the one video
 that should preload immediately (typically whatever's above the fold). For a
 single edge-to-edge phone screen capture (not part of a `<Marquee>` row),
 pass `maxHeight="var(--frame-height)"` so it matches the same shared frame
-size — see the real screen captures in `new-yorker-games.mdx`. The one
+size — see the real screen captures in `new-yorker-games.mdx`. Below the
+desktop breakpoint that same value also draws it at 88% of its column,
+left-aligned (`mobileScale`, same default as `<Marquee>`), so a solo frame is
+the same size as a carousel frame. The one
 deliberate exception is a hero/context shot that shows a device inside a
 wider frame rather than edge-to-edge (`wired-app.mdx`'s intro walkthrough
 video) — that keeps its own `maxWidth`, sized to taste, since it isn't
 trying to match the phone-frame family at all.
+
+- `<FullBleedReveal src mobileSrc [poster] [mobilePoster] [alt] [holdVh]>` — a
+  full-viewport-width video used as a pacing beat between sections. It sits
+  motionless while the content above scrolls away to uncover it, holds
+  fullscreen, then the content below slides up and covers it. Pure CSS (a
+  `position: sticky` video in a clipped stage), no scroll JS. `src` is the
+  16:9 cut for desktop, `mobileSrc` the 9:16 cut below 1280px; `holdVh`
+  (default 60) is how much extra scroll the video holds fullscreen once
+  uncovered. It owns two slots — pass the "before" content as normal
+  children and the "after" content with `slot="exit-cover"` (the first named
+  slot in the codebase):
+
+  ```mdx
+  <FullBleedReveal src="/videos/x-16x9.mp4" mobileSrc="/videos/x-9x16.mp4">
+    <div class="grid">…row the video is revealed from under…</div>
+    <div class="grid" slot="exit-cover">…row that covers it again…</div>
+  </FullBleedReveal>
+  ```
+
+  Both slots are wrapped in full-width, opaque panels, so any `.grid` content
+  inside can keep its normal width. Constraints: no ancestor of the component
+  may set `overflow` other than `visible`/`clip` (it silently breaks
+  `sticky`; true today for every project page), and `overflow: clip` needs
+  Safari 16+. Used in `pitchfork-subscription.mdx`.
 
 - `<ResultCardSwap base={...} cards={[...]} cardTop={...} cardLeft={...} cardWidth={...} cardHeight={...} />`
   — a fixed screen with one small region on it (a result card) that cycles
@@ -199,6 +226,17 @@ trying to match the phone-frame family at all.
   per state; only cycles while scrolled into view. Sized like a solo
   `AssetFloat` screen capture (`maxHeight`, default `var(--frame-height)`).
   Used for New Yorker Games' Catalogues results card.
+
+The top row of every custom-layout case study is a fixed-height "hero stage"
+so they all open with the same footprint whatever the media shape: put
+`hero-stage` on the `.grid` and `hero-media` on the column holding the
+media (see `grid.css`). At desktop the row is `--hero-height` (710px,
+roughly one screen — set by Wired's tall walkthrough) and the media sits
+vertically centered in it, so a square or a mascot panel gets the same
+footprint as a phone video and the first row of screens never peeks in
+beneath it. Size the media to its column (`maxWidth="100%"` for a square);
+below desktop the row just stacks. Used in `wired-app.mdx`,
+`new-yorker-games.mdx` and `pitchfork-subscription.mdx`.
 
 Items that fall back to stacked full-width below desktop (e.g. two `col-6`s)
 sit only the 16px column gutter apart by default; add `stack-gap` to the

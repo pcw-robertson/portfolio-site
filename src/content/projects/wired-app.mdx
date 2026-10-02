@@ -14,7 +14,7 @@ import { getCaseStudy, getAnnotation } from "../../lib/case-studies";
 export const wired = getCaseStudy("wired-app");
 export const annotation = (title) => getAnnotation(wired, title);
 
-<div class="grid">
+<div class="grid hero-stage">
   <div class="col-6">
     <h1>The Wired App</h1>
     <p class="muted subtitle">Product strategy &amp; design leadership — 0 to 1</p>
@@ -28,7 +28,7 @@ export const annotation = (title) => getAnnotation(wired, title);
       {wired.outcome.map((item) => <li>{item}</li>)}
     </ul>
   </div>
-  <div class="col-6 full-bleed-mobile">
+  <div class="col-6 full-bleed-mobile hero-media">
     <AssetFloat
       src="/videos/wired-intro-walkthrough.mp4"
       type="video"
