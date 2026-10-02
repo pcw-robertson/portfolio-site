@@ -123,9 +123,6 @@ Giving subscribers a say on three decades of Pitchfork reviews, and surfacing th
 **Collections**
 Tools for subscribers to rate, save and organise the albums and tracks they love, building loyalty and attachment among our most engaged readers.
 
-### Takeaways
-- Community is additive when cultivated correctly: participation, not just access, is what turns a subscription into a habit.
-
 **Open items:**
 - [ ] Confirm the launch year (2026) in the first Outcome line
 - [ ] Confirm "Collections" as the heading for the last row
