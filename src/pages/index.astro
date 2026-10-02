@@ -10,47 +10,62 @@ const projects = (await getCollection("projects")).sort(
 ---
 
 <BaseLayout title={`${site.name} — ${site.title}`}>
-	<section class="section wrap hero">
-		<p class="eyebrow">{site.title}</p>
-		<h1>{site.name}</h1>
-		<p class="positioning">{site.positioningStatement}</p>
-		<p class="muted summary">{site.summary}</p>
-	</section>
+	<h1 class="visually-hidden">{site.name}, {site.title}</h1>
 
-	<hr class="hr" />
+	<div class="grid home">
+		<div class="col-6 copy intro">
+			<p>{site.positioningStatement}</p>
+			<p>{site.summary}</p>
+		</div>
 
-	<section class="section">
-		<div class="wrap">
-			<h2>Selected work</h2>
+		<div class="col-12 work-head">
+			<hr class="rule" />
+			<h2 class="work-label">Selected Work</h2>
 		</div>
-		<div class="grid project-grid">
-			{
-				projects.map((project) => (
-					<div class="col-3">
-						<ProjectCard project={project} />
-					</div>
-				))
-			}
-		</div>
-	</section>
+
+		{
+			projects.map((project) => (
+				<div class="col-6 card-cell">
+					<ProjectCard project={project} />
+				</div>
+			))
+		}
+	</div>
 </BaseLayout>
 
 <style>
-	.hero {
-		max-width: 760px;
+	.home {
+		padding-top: var(--space-4);
 	}
 
-	.positioning {
-		font-size: 1.375rem;
+	@media (min-width: 1280px) {
+		.home {
+			/* Figma: copy starts 72px below the nav line. */
+			padding-top: 72px;
+			row-gap: 20px;
+		}
+	}
+
+	.intro {
+		margin-bottom: 10px;
+	}
+
+	.rule {
+		margin: 0;
+		border: 0;
+		border-top: 1px solid var(--color-ink);
+	}
+
+	.work-label {
+		margin: 23px 0 5px;
+		font-size: var(--text-l);
+		font-weight: 400;
+		line-height: var(--leading-l);
+		letter-spacing: normal;
 		color: var(--color-ink);
-		max-width: 40ch;
 	}
 
-	.summary {
-		white-space: pre-line;
-	}
-
-	.project-grid {
-		margin-top: var(--space-3);
+	.card-cell {
+		margin-bottom: 12px;
 	}
 </style>

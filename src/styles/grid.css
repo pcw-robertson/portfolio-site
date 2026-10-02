@@ -40,6 +40,16 @@ a safe default to extend from.
   }
 }
 
+/* The grid's own outer box (centered, capped, with the grid margins) without
+   its columns — for a row of content that should line up with the grid
+   edges, like the nav and footer. */
+.page-container {
+  width: 100%;
+  max-width: var(--grid-container);
+  margin-inline: auto;
+  padding-inline: var(--grid-margin);
+}
+
 .grid {
   display: grid;
   grid-template-columns: repeat(var(--grid-columns), 1fr);

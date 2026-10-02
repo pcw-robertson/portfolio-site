@@ -19,11 +19,12 @@ Every piece of copy on the site is a plain markdown file under
 the whole site from whatever's currently in these files, so there's no
 separate sync step.
 
-- `src/content/site/index.md` — name, title, positioning statement, summary,
-  email, LinkedIn, resume link (all in the frontmatter — no body). Edit this
-  first.
-- `src/content/about/index.md` — About/leadership page copy, as the markdown
-  body ("How I lead" / "Bio" sections).
+- `src/content/site/index.md` — name, title, the two home-page paragraphs
+  (`positioningStatement`, `summary`), email, and the footer's "Download CV"
+  target (`resumeUrl`, a PDF in `public/`) — all in the frontmatter, no body.
+  Edit this first.
+- `src/content/about/index.md` — the About page copy, as the markdown body
+  (a backslash at the end of a line is a line break within a paragraph).
 - `src/content/projects/*.md` — one file per project. Frontmatter holds card
   media + embed URL; the markdown body holds "The problem" / "Role" /
   "Outcome". Editing one of these is a self-contained session.
@@ -64,6 +65,14 @@ file needs to change.
 - Cover images: drop files in `public/images/<project-slug>/` and reference
   them from that project's frontmatter (`coverImage`). Until set, the
   homepage card shows a flat placeholder block instead of a broken image.
+- Homepage cards pour each project's hero (the same asset that opens the case
+  study) into a 530x390 box. Per project, in the frontmatter: `cardFit`
+  (`cover`, the default, fills the box and crops; `contain` shows all of the
+  asset centered), `cardBackground` (the box colour — set it to the asset's
+  own background so a `contain`ed video and its box read as one surface;
+  Wired is `contain` on black, New Yorker Games is `cover` on its yellow), and
+  `cardTitle` (the label under the card, when it differs from the case
+  study's own title).
 - Screen recording videos: see "Video pipeline" below — compress raw `.mov`
   files first, then point `coverVideo` (homepage card + project hero) at the
   compressed output in `public/videos/`.
@@ -242,9 +251,12 @@ Items that fall back to stacked full-width below desktop (e.g. two `col-6`s)
 sit only the 16px column gutter apart by default; add `stack-gap` to the
 `.grid` for 48px on mobile.
 
-Whichever template is used, `ProjectLayout` wraps the whole page (excluding
-Nav/Footer, which stay on the site-wide light theme) in a dark theme — see
-`.project-theme` in `ProjectLayout.astro` if that ever needs adjusting.
+The whole site is one theme — white type on true black (`:root` in
+`global.css`; black matches the video footage exactly). Nav and footer follow
+the Figma (24/28 nav, 18/28 footer, `--text-l`/`--text-s` in `global.css`), as
+do the home and about pages (the 530px `.copy` block and the 530x390 card
+grid). `.project-theme` in `ProjectLayout.astro` is just the hook for the
+case-study type rules and the full-bleed wrapper.
 
 Astro reserves `<style>` tags for scoped CSS in `.astro` files, but **not**
 in `.mdx` — a raw `<style>` block in an `.mdx` file will fail to build

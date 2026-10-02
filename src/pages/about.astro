@@ -8,18 +8,24 @@ const { Content } = await render(aboutEntry);
 ---
 
 <BaseLayout title={`About — ${site.name}`}>
-	<section class="section wrap about">
-		<h1>About</h1>
-		<Content />
-	</section>
+	<h1 class="visually-hidden">About</h1>
+
+	<div class="grid about">
+		<div class="col-6 copy">
+			<Content />
+		</div>
+	</div>
 </BaseLayout>
 
 <style>
 	.about {
-		max-width: var(--measure);
+		padding-top: var(--space-4);
 	}
 
-	.about h2 {
-		margin-top: var(--space-4);
+	@media (min-width: 1280px) {
+		.about {
+			/* Figma: copy starts 72px below the nav line. */
+			padding-top: 72px;
+		}
 	}
 </style>

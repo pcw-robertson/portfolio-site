@@ -1,10 +1,13 @@
 :root {
-  --color-ink: #17181a;
-  --color-body: #3a3d42;
-  --color-muted: #6b6f76;
-  --color-bg: #fdfdfc;
-  --color-line: #e6e5e1;
-  --color-accent: #17181a;
+  /* One theme for the whole site: white type on true black. Black matches
+     the captured video footage exactly (sampled as pure black), so there's
+     no visible seam around video edges. */
+  --color-ink: #ffffff;
+  --color-body: #bababa;
+  --color-muted: #bababa;
+  --color-bg: #000000;
+  --color-line: #2b2b29;
+  --color-accent: #ffffff;
 
   --font-sans: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
 
@@ -15,6 +18,23 @@
   --space-4: 3rem;
   --space-5: 5rem;
   --space-6: 8rem;
+
+  /* Type scale for the home and about pages (and nav/footer): the large
+     "L" size is copy, titles and nav; "S" is the quiet footer line. Desktop
+     values are the Figma sizes (24/28 and 18/28); smaller below. */
+  --text-l: 1.25rem;
+  --leading-l: 1.5rem;
+  --text-s: 1rem;
+  --leading-s: 1.5rem;
+}
+
+@media (min-width: 1280px) {
+  :root {
+    --text-l: 1.5rem;
+    --leading-l: 1.75rem;
+    --text-s: 1.125rem;
+    --leading-s: 1.75rem;
+  }
 }
 
 * {
@@ -22,7 +42,8 @@
 }
 
 html {
-  color-scheme: light;
+  color-scheme: dark;
+  background: var(--color-bg);
 }
 
 body {
@@ -70,6 +91,31 @@ h3 {
 p {
   margin: 0 0 var(--space-2);
   max-width: var(--measure);
+}
+
+/* Shared by home and about: the L-size copy block (paragraphs separated by
+   one blank line of leading, like the Figma). */
+.copy p {
+  font-size: var(--text-l);
+  line-height: var(--leading-l);
+  color: var(--color-ink);
+  margin: 0 0 var(--leading-l);
+}
+
+.copy p:last-child {
+  margin-bottom: 0;
+}
+
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
 }
 
 .wrap {

@@ -75,18 +75,9 @@ const isCustom = template === "custom";
 </BaseLayout>
 
 <style>
-	.project-theme {
-		/* True black — matches the captured video footage exactly (sampled as
-		   pure black), so there's no visible seam around video edges. */
-		--color-bg: #000000;
-		--color-ink: #ffffff;
-		--color-body: #bababa;
-		--color-muted: #bababa;
-		--color-line: #2b2b29;
-		--color-accent: #ffffff;
-		background: var(--color-bg);
-		color: var(--color-body);
-	}
+	/* (The black theme these pages were built on is now site-wide — see
+	   :root in global.css. .project-theme remains the hook for the type rules
+	   below and for the full-bleed wrapper.) */
 
 	/* One type size for all sub-heading + body copy on a project page —
 	   "The problem"/"Role"/"Outcome" prose (.body, default template) and a
