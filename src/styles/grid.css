@@ -165,6 +165,19 @@ a safe default to extend from.
     min-height: var(--hero-height);
   }
 
+  /* The text column sits vertically centered in the stage (the media column
+     keeps stretching to fill it, so a panel behind the media still reaches
+     the stage's edges). */
+  .grid.hero-stage > :not(.hero-media) {
+    align-self: center;
+  }
+
+  /* Without this the last paragraph's bottom margin counts as part of the
+     text and it sits half a margin above true center. */
+  .grid.hero-stage > :not(.hero-media) > :last-child {
+    margin-bottom: 0;
+  }
+
   .hero-media {
     display: flex;
     flex-direction: column;

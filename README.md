@@ -258,6 +258,14 @@ do the home and about pages (the 530px `.copy` block and the 530x390 card
 grid). `.project-theme` in `ProjectLayout.astro` is just the hook for the
 case-study type rules and the full-bleed wrapper.
 
+All type is Söhne Buch (Klim Type Foundry, licensed), self-hosted from
+`public/fonts/soehne-buch.woff2` via the `@font-face` in `global.css` and
+preloaded in `BaseLayout`. It's a single regular weight with no italic, so
+headings are set at 400 and `font-synthesis: none` stops the browser faking
+bold/italic. To add a weight, drop its `.woff2` next to it and add a second
+`@font-face` for it. The file is covered by Klim's licence agreement — check
+its terms before making the repository public or sharing the repo.
+
 Astro reserves `<style>` tags for scoped CSS in `.astro` files, but **not**
 in `.mdx` — a raw `<style>` block in an `.mdx` file will fail to build
 (MDX tries to parse its contents as JSX). Add project-specific CSS to
