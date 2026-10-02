@@ -5,6 +5,11 @@
 // Desktop gets a 16:9 cut, below the desktop breakpoint a 9:16 cut (two
 // <video>s, since <video> has no <picture>-style responsive source).
 //
+// Or pass `src` alone (no `mobileSrc`) for a single video used at every
+// width — e.g. a vertical film: it's fit (never cropped) inside the full-
+// viewport stage, so at desktop it runs the full height with bars at the
+// sides, coloured `barColor` (default: the page black).
+//
 // Pure CSS, no scroll JS. Layout (all inside .reveal-wrapper):
 //
 //   cover        normal flow, opaque, z2   - slot (default)
@@ -40,10 +45,13 @@
 interface Props {
   src: string;
   poster?: string;
-  mobileSrc: string;
+  // Omit for a single-source reveal (see top of file).
+  mobileSrc?: string;
   mobilePoster?: string;
   alt?: string;
   holdVh?: number;
+  // Colour of the bars around a fit video (single-source mode).
+  barColor?: string;
 }
 
 const {
@@ -53,10 +61,16 @@ const {
   mobilePoster,
   alt = "",
   holdVh = 60,
+  barColor,
 } = Astro.props;
+
+const single = !mobileSrc;
+const wrapperStyle = [`--hold: ${holdVh}vh`, barColor && `--reveal-bar: ${barColor}`]
+  .filter(Boolean)
+  .join("; ");
 ---
 
-<div class="reveal-wrapper" style={`--hold: ${holdVh}vh`}>
+<div class:list={["reveal-wrapper", { "reveal-single": single }]} style={wrapperStyle}>
 	<div class="reveal-cover">
 		<slot />
 	</div>
@@ -64,7 +78,7 @@ const {
 		<div class="pinned-video">
 			<div class="reveal-media">
 				<video
-					class="reveal-video reveal-video--desktop"
+					class:list={["reveal-video", single ? "reveal-video--single" : "reveal-video--desktop"]}
 					src={src}
 					poster={poster}
 					muted
@@ -74,17 +88,21 @@ const {
 					aria-label={alt}
 					data-autoplay-in-view
 				/>
-				<video
-					class="reveal-video reveal-video--mobile"
-					src={mobileSrc}
-					poster={mobilePoster}
-					muted
-					loop
-					playsinline
-					preload="none"
-					aria-label={alt}
-					data-autoplay-in-view
-				/>
+				{
+					mobileSrc && (
+						<video
+							class="reveal-video reveal-video--mobile"
+							src={mobileSrc}
+							poster={mobilePoster}
+							muted
+							loop
+							playsinline
+							preload="none"
+							aria-label={alt}
+							data-autoplay-in-view
+						/>
+					)
+				}
 			</div>
 		</div>
 	</div>
@@ -136,7 +154,7 @@ const {
 		align-items: flex-end;
 		justify-content: center;
 		overflow: hidden;
-		background: var(--color-bg);
+		background: var(--reveal-bar, var(--color-bg));
 	}
 
 	.reveal-media {
@@ -169,5 +187,17 @@ const {
 		.reveal-video--mobile {
 			display: block;
 		}
+	}
+
+	/* Single-source: one video at every width, fit inside the full stage
+	   (full height at desktop with bars at the sides) rather than cropped. */
+	.reveal-single .reveal-media {
+		aspect-ratio: auto;
+		height: 100%;
+	}
+
+	.reveal-single .reveal-video--single {
+		display: block;
+		object-fit: contain;
 	}
 </style>

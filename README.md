@@ -206,7 +206,10 @@ trying to match the phone-frame family at all.
   `position: sticky` video in a clipped stage), no scroll JS. `src` is the
   16:9 cut for desktop, `mobileSrc` the 9:16 cut below 1280px; `holdVh`
   (default 60) is how much extra scroll the video holds fullscreen once
-  uncovered. It owns two slots — pass the "before" content as normal
+  uncovered. Omit `mobileSrc` for a single video used at every width (e.g. a
+  vertical film): it's fit, never cropped, so at desktop it runs the full
+  viewport height with bars at the sides (`barColor`, default the page
+  black). It owns two slots — pass the "before" content as normal
   children and the "after" content with `slot="exit-cover"` (the first named
   slot in the codebase):
 
@@ -221,7 +224,8 @@ trying to match the phone-frame family at all.
   inside can keep its normal width. Constraints: no ancestor of the component
   may set `overflow` other than `visible`/`clip` (it silently breaks
   `sticky`; true today for every project page), and `overflow: clip` needs
-  Safari 16+. Used in `pitchfork-subscription.mdx`.
+  Safari 16+. Used in `pitchfork-subscription.mdx` (two cuts) and
+  `new-yorker-games.mdx` (one vertical film).
 
 - `<ResultCardSwap base={...} cards={[...]} cardTop={...} cardLeft={...} cardWidth={...} cardHeight={...} />`
   — a fixed screen with one small region on it (a result card) that cycles
