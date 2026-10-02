@@ -27,7 +27,7 @@ A native experience that goes beyond web.
 **Home & Discovery**
 Presents every story at its best, leveraging on Wired's art direction and editorial packaging. Clear distinction between content types and moments that shows the breadth of Wired.
 
-*"I never knew there was so much in Wired"* — Beta Test User Interview
+*"What a fabulous app! It’s easy to use, has a great vibe, and makes discovering new things so much fun. The experience is smooth, and you can tell a lot of thought went into creating it."* — app store review
 
 **Article & Reading**
 Focused, uninterrupted reading, with the tools to take each story the way that suits you and the option to join the discussion.
