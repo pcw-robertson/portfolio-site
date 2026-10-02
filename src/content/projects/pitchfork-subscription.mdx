@@ -1,5 +1,5 @@
 ---
-title: "Pitchfork Subscription"
+title: "Pitchfork Subscriber Experience"
 context: "TODO: one-line context — the subscription product and its goal"
 order: 3
 cardTitle: "Pitchfork Subscriber Experience"
@@ -11,16 +11,24 @@ template: "custom"
 import AssetFloat from "../../components/AssetFloat.astro";
 import Marquee from "../../components/Marquee.astro";
 import FullBleedReveal from "../../components/FullBleedReveal.astro";
+import { getCaseStudy, getAnnotation } from "../../lib/case-studies";
+
+export const pitchfork = getCaseStudy("pitchfork-subscription");
+export const annotation = (title) => getAnnotation(pitchfork, title);
 
 <div class="grid hero-stage">
   <div class="col-6">
-    <h1>Pitchfork Subscription</h1>
-    <p class="muted subtitle">TODO: one-line context — the subscription product and its goal</p>
+    <h1>Pitchfork Subscriber Experience</h1>
+    <p class="muted subtitle">XXX</p>
 
     <h2>The Opportunity</h2>
-    <p>TODO: frame the problem/opportunity in business terms — subscription growth, conversion, retention.</p>
+    <p>{pitchfork.opportunity}</p>
     <h2>Role</h2>
-    <p>TODO: what you led — scope, team, stakeholders across brands.</p>
+    <p>{pitchfork.role}</p>
+    <h2>Outcome</h2>
+    <ul class="outcome-list">
+      {pitchfork.outcome.map((item) => <li>{item}</li>)}
+    </ul>
   </div>
   <div class="col-6 hero-media">
     <AssetFloat
@@ -54,13 +62,12 @@ import FullBleedReveal from "../../components/FullBleedReveal.astro";
           { src: "/images/pitchfork-subscription/pitchfork-article-6.jpg", alt: "Pitchfork article hero 6", aspectRatio: "720 / 1560" },
         ]}
       />
-      <p class="caption"><span class="caption-title">Article heroes</span><br />TODO: caption for the article hero treatment.</p>
     </div>
   </div>
 
   <div class="grid" slot="exit-cover">
     <div class="col-6">
-      <p class="caption"><span class="caption-title">Posting a comment</span><br />TODO: caption for the commenting flow.</p>
+      <p class="caption"><span class="caption-title">Reader Scores</span><br />{annotation("Reader Scores").body}</p>
     </div>
     <div class="col-6">
       <AssetFloat
@@ -86,7 +93,6 @@ import FullBleedReveal from "../../components/FullBleedReveal.astro";
         { src: "/videos/pitchfork-discovery-homepage-swiper.mp4", poster: "/videos/pitchfork-discovery-homepage-swiper-poster.jpg", aspectRatio: "720 / 1560" },
       ]}
     />
-    <p class="caption"><span class="caption-title">Discovery &amp; ecosystem</span><br />TODO: caption for discovery and ecosystem.</p>
   </div>
 </div>
 
@@ -99,6 +105,6 @@ import FullBleedReveal from "../../components/FullBleedReveal.astro";
         { src: "/videos/pitchfork-account-lists-profile.mp4", poster: "/videos/pitchfork-account-lists-profile-poster.jpg", aspectRatio: "720 / 1560" },
       ]}
     />
-    <p class="caption"><span class="caption-title">Account</span><br />TODO: caption for the account experience.</p>
+    <p class="caption"><span class="caption-title">XXXXX</span><br />{annotation("XXXXX").body}</p>
   </div>
 </div>

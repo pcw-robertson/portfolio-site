@@ -1,7 +1,7 @@
 # Portfolio case studies — working drafts
 
 Structure per project: Opportunity → Role → Annotations/project details → Takeaways.
-Wired and New Yorker Games now lead with "Outcome" up front in place of Takeaways — consider doing the same for Bon Appétit and Pitchfork.
+Wired, New Yorker Games and Pitchfork now lead with "Outcome" up front in place of Takeaways — consider doing the same for Bon Appétit.
 Edit freely — this is a working doc, not final copy.
 
 ---
@@ -112,14 +112,17 @@ Pitchfork had one of the highest rates of direct and returning visitors across a
 ### Role
 Led the strategy and design direction for the subscriber experience, developing the community features and how users discover them across the site.
 
-### Annotations / project details
-**The feature set**
-Rating, reviewing, saving, and organizing music. *[placeholder: how discovery worked — surfaced contextually while reading reviews, through profile/onboarding, elsewhere?]*
+### Outcome
+- Pace ahead of subscription goals since January Launch
+- Engagement reduces Churn, those using new features 50% less likely to cancel subscription
 
-### Takeaways
-- **It worked** — subscriber numbers *[XYZ]*, with subscribers who engaged with the community features *[X]* more likely to retain than those who didn't
-- **Community is additive when cultivated correctly** — participation, not just access, is what turns a subscription into a habit
+### Annotations / project details
+**Reader Scores**
+Giving the Pitchfork subscriber community a chance to have their say on reviews from three decades and building mechanisms round the site to discover and surface those as an pathway to engage or subscribe themselves
+
+**XXXXX**
+We built the tools to allow subscribers to track, organise and collect their reviews, ratings, albums and tracks. A place to build loyalty and attachment too for our most engaged users
 
 **Open items:**
-- [ ] Fill in discovery placeholder above
-- [ ] Real subscriber numbers and retention lift figure
+- [ ] Page subtitle (currently XXX in pitchfork-subscription.mdx)
+- [ ] Title for the last caption (currently XXXXX)
