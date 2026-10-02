@@ -53,24 +53,24 @@ import FullBleedReveal from "../../components/FullBleedReveal.astro";
       <p class="caption"><span class="caption-title">Article heroes</span><br />TODO: caption for the article hero treatment.</p>
     </div>
   </div>
-</FullBleedReveal>
 
-<div class="grid">
-  <div class="col-6">
-    <p class="caption"><span class="caption-title">Posting a comment</span><br />TODO: caption for the commenting flow.</p>
+  <div class="grid" slot="exit-cover">
+    <div class="col-6">
+      <p class="caption"><span class="caption-title">Posting a comment</span><br />TODO: caption for the commenting flow.</p>
+    </div>
+    <div class="col-6">
+      <AssetFloat
+        src="/videos/pitchfork-comment-flow.mp4"
+        type="video"
+        poster="/videos/pitchfork-comment-flow-poster.jpg"
+        alt="Posting a comment on Pitchfork"
+        aspectRatio="720 / 1560"
+        maxHeight="var(--frame-height)"
+        rounded
+      />
+    </div>
   </div>
-  <div class="col-6">
-    <AssetFloat
-      src="/videos/pitchfork-comment-flow.mp4"
-      type="video"
-      poster="/videos/pitchfork-comment-flow-poster.jpg"
-      alt="Posting a comment on Pitchfork"
-      aspectRatio="720 / 1560"
-      maxHeight="var(--frame-height)"
-      rounded
-    />
-  </div>
-</div>
+</FullBleedReveal>
 
 <div class="grid">
   <div class="col-12">

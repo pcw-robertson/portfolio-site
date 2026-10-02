@@ -1,67 +1,42 @@
 ---
-// A full-viewport-width video reveal used as a dramatic pacing beat
-// between normal case-study sections. Desktop gets a 16:9 cut edge to
-// edge; below the desktop breakpoint it swaps to a vertical 9:16 cut
-// instead (two separate <video> elements, since <video> has no
-// <picture>-style responsive-source element).
+// A full-viewport-width video that sits still while page content scrolls
+// away from it and back over it: row above uncovers it, a beat of
+// fullscreen hold, then the content below slides up and covers it.
+// Desktop gets a 16:9 cut, below the desktop breakpoint a 9:16 cut (two
+// <video>s, since <video> has no <picture>-style responsive source).
 //
-// The mechanic is symmetric on both sides of the pin:
-//   - BEFORE: the video sits behind the cover (the children passed in —
-//     e.g. the row that should "give way" to the video), pinned
-//     fullscreen. The cover is opaque and normal-flow, so it fully hides
-//     the video until the cover scrolls up and off screen, uncovering it
-//     from the top down.
-//   - HOLD: once uncovered, the video holds fullscreen for `holdVh` of
-//     extra scroll.
-//   - AFTER: the video stays pinned — motionless — while the NEXT
-//     section in the page (whatever follows this component; found via
-//     nextElementSibling, since this component doesn't own that markup)
-//     scrolls up from below and covers it, exactly mirroring how the
-//     cover revealed it. Only once that next section's own top edge has
-//     reached the top of the viewport (fully covering the pinned video)
-//     does the video release back to normal scroll flow — by then it's
-//     invisible anyway, so the handoff is seamless.
+// Pure CSS, no scroll JS. Layout (all inside .reveal-wrapper):
 //
-// Both the cover and the next section need position+z-index to actually
-// paint over the pinned video: a plain static element never stacks above
-// a position:fixed, z-indexed one, regardless of document order. The
-// cover gets this via its own class; the next section gets it applied by
-// this component's script, since it's markup this component doesn't own.
+//   cover        normal flow, opaque, z2   - slot (default)
+//   stage        pulled up 100vh over the cover's tail, z1
+//     video      position:sticky; top:0; height:100vh
+//   exit-cover   pulled up 100vh over the stage's tail, opaque, z2
+//                                          - slot="exit-cover"
 //
-// The pin can only ENGAGE once the cover is tall enough to be fully
-// covering the viewport on its own — otherwise there's nothing to hide
-// the newly-pinned video behind, and it would paint over whatever's
-// still on screen from the PREVIOUS section instead. So the engage point
-// is the latest scroll position at which the cover still spans the full
-// viewport (cover.top <= 0 and cover.bottom >= viewport height) — this
-// requires the cover to be at least one viewport tall, true for a real
-// content row here.
+// With C = cover height and H = hold, stage height = 300vh + H:
+//   - the stage top sits 100vh above the cover's bottom, so the video
+//     sticks at the exact moment the cover's bottom edge reaches the
+//     bottom of the viewport; from then on the cover scrolls up over a
+//     motionless video, uncovering it from the top down.
+//   - the video stays stuck for another H of scroll once the cover has
+//     cleared (fullscreen hold)...
+//   - ...then the exit-cover, whose top is pulled to the stage's last
+//     100vh, rises over it. The stage ends as the exit-cover's top
+//     reaches the viewport top, so the video un-sticks only once it is
+//     already hidden.
 //
-// Why this needs JS rather than pure CSS: position:sticky only ever
-// constrains an element's OWN scroll trajectory (stops it passing a
-// threshold) — it can't make an element sit already-in-place, revealed by
-// something ELSE scrolling away on top of it. Tried three sticky-only
-// approaches first (negative margin on the video, negative margin on the
-// cover, CSS Grid overlap) — none engaged at all; verified each with
-// direct position sampling across a scroll range before ruling it out.
+// overflow:clip on the wrapper (not hidden — that would create a scroll
+// container and silently break sticky) keeps the video visible ONLY inside
+// the wrapper's own box. That's what stops it showing above a cover or
+// below an exit-cover that is shorter than the viewport, and from painting
+// over neighbouring sections (a positioned element always stacks above
+// static content). isolation:isolate keeps the z-indexes local.
 //
-// Three earlier versions of this got it wrong: one measured the
-// WRAPPER's bounding box for engage (its box includes all the extra
-// space budgeted for the hold distance, so its top edge sits well before
-// the cover even starts — the video popped fullscreen while the previous
-// section was still on screen). Another switched to a non-overlapping
-// adjacent-layout model to fix that, which removed the premature-pop bug
-// but also removed the occlusion effect entirely (nothing to reveal). A
-// third fixed the engage point but released the pin a full viewport
-// early — `holdVh` after the cover cleared, rather than after the next
-// section had actually arrived to cover it — so the video spent a full
-// viewport's worth of scroll just scrolling away on its own before
-// anything covered it, reading as "scrolls off" rather than "gets
-// covered". This version holds the pin all the way until the next
-// section is actually in position to hide it.
+// Requires no ancestor with overflow other than visible/clip (true today:
+// html > body > main > .project-theme > article).
 //
-// Video playback still only runs while in view, via the site's shared
-// autoplay-in-view script (data-autoplay-in-view).
+// Playback is driven by the site's shared autoplay-in-view script
+// (data-autoplay-in-view).
 interface Props {
   src: string;
   poster?: string;
@@ -81,98 +56,87 @@ const {
 } = Astro.props;
 ---
 
-<div class="reveal-wrapper" style={`--hold: ${holdVh}vh`} data-reveal-wrapper data-hold-vh={holdVh}>
+<div class="reveal-wrapper" style={`--hold: ${holdVh}vh`}>
 	<div class="reveal-cover">
 		<slot />
 	</div>
-	<div class="pinned-video" data-pinned-video>
-		<div class="reveal-media">
-			<video
-				class="reveal-video reveal-video--desktop"
-				src={src}
-				poster={poster}
-				muted
-				loop
-				playsinline
-				preload="none"
-				aria-label={alt}
-				data-autoplay-in-view
-			/>
-			<video
-				class="reveal-video reveal-video--mobile"
-				src={mobileSrc}
-				poster={mobilePoster}
-				muted
-				loop
-				playsinline
-				preload="none"
-				aria-label={alt}
-				data-autoplay-in-view
-			/>
+	<div class="reveal-stage">
+		<div class="pinned-video">
+			<div class="reveal-media">
+				<video
+					class="reveal-video reveal-video--desktop"
+					src={src}
+					poster={poster}
+					muted
+					loop
+					playsinline
+					preload="none"
+					aria-label={alt}
+					data-autoplay-in-view
+				/>
+				<video
+					class="reveal-video reveal-video--mobile"
+					src={mobileSrc}
+					poster={mobilePoster}
+					muted
+					loop
+					playsinline
+					preload="none"
+					aria-label={alt}
+					data-autoplay-in-view
+				/>
+			</div>
 		</div>
+	</div>
+	<div class="exit-cover">
+		<slot name="exit-cover" />
 	</div>
 </div>
 
 <style>
 	.reveal-wrapper {
 		position: relative;
+		isolation: isolate;
+		overflow: clip;
 		margin-block: var(--space-5);
-		/* Cover's own natural height plus the hold distance — this is
-		   where the wrapper's own box ends, which is exactly where the
-		   video's resting position starts (see .pinned-video's top:100%
-		   below) and where the next section in the page begins in normal
-		   flow. No extra viewport-height buffer needed here: the video's
-		   resting box extends a full viewport past the wrapper's own
-		   bottom on its own, overlapping the start of the next section —
-		   that overlap is what lets the pin hold until that section has
-		   actually scrolled up to cover it (see the script below). */
-		padding-bottom: var(--hold);
 	}
 
-	/* Opaque so it fully covers the pinned video underneath until this
-	   content scrolls away — matches the page's own background exactly,
-	   so there's no visible seam. padding-bottom keeps the last line of
-	   content (e.g. a caption) from crashing straight into the video as
-	   it's revealed — same breathing room as the gap between any two
-	   normal sections on the page. */
-	.reveal-cover {
+	/* Opaque, full width (bare div — no .grid class — so it spans the
+	   full-bleed page like any other block), above the video. The padding
+	   keeps first/last lines of content off the edge where the video is
+	   revealed / covered. */
+	.reveal-cover,
+	.exit-cover {
 		position: relative;
 		z-index: 2;
 		background: var(--color-bg);
+	}
+
+	.reveal-cover {
 		padding-bottom: var(--space-5);
 	}
 
-	.pinned-video {
-		/* left:50%+translateX(-50%) instead of left:0;right:0 — the latter
-		   would span only the wrapper's own (grid-constrained) width while
-		   position:absolute, and only the full viewport once switched to
-		   position:fixed, so the width would visibly jump at the handoff.
-		   This centering approach resolves to the same on-screen horizontal
-		   center either way, since the wrapper itself is centered in the
-		   viewport, so the width stays a consistent 100vw across both
-		   states. `top` is set directly by the script below rather than a
-		   static percentage here — it needs to rest exactly at the next
-		   section's own measured position, which can sit further down than
-		   the wrapper's own box by whatever margin/gap happens to fall
-		   between them (e.g. this wrapper's own margin-block), and a
-		   static CSS percentage can't account for that. */
-		position: absolute;
-		left: 50%;
-		transform: translateX(-50%);
-		width: 100vw;
+	.exit-cover {
+		margin-top: -100vh;
+		padding-top: var(--space-5);
+	}
+
+	.reveal-stage {
+		position: relative;
 		z-index: 1;
+		margin-top: -100vh;
+		height: calc(300vh + var(--hold));
+	}
+
+	.pinned-video {
+		position: sticky;
+		top: 0;
 		height: 100vh;
 		display: flex;
 		align-items: flex-end;
 		justify-content: center;
 		overflow: hidden;
 		background: var(--color-bg);
-	}
-
-	/* While JS has decided this should be pinned to the viewport instead
-	   of resting at its script-computed position. */
-	.pinned-video.is-fixed {
-		position: fixed;
 	}
 
 	.reveal-media {
@@ -207,98 +171,3 @@ const {
 		}
 	}
 </style>
-
-<script>
-	const wrappers = document.querySelectorAll<HTMLElement>("[data-reveal-wrapper]");
-
-	if (wrappers.length > 0) {
-		const pairs = Array.from(wrappers, (wrapper) => {
-			// Skip past this component's own injected <script>/<style> tags
-			// (Astro renders them as siblings right after the component's
-			// markup) to find the actual next content section on the page.
-			let nextSection = wrapper.nextElementSibling as HTMLElement | null;
-			while (nextSection && (nextSection.tagName === "SCRIPT" || nextSection.tagName === "STYLE")) {
-				nextSection = nextSection.nextElementSibling as HTMLElement | null;
-			}
-
-			// The next section needs to paint OVER the pinned video as it
-			// scrolls up to cover it — a plain static element never stacks
-			// above a position:fixed, z-indexed one regardless of document
-			// order, so without this it would render BEHIND the still-
-			// pinned video instead of covering it. This is markup the
-			// component doesn't own (whatever happens to follow it on the
-			// page), so it's applied here rather than left to that
-			// section's own styling.
-			if (nextSection) {
-				nextSection.style.position = "relative";
-				nextSection.style.zIndex = "2";
-				nextSection.style.background = "var(--color-bg)";
-			}
-
-			return {
-				wrapper,
-				cover: wrapper.querySelector<HTMLElement>(".reveal-cover")!,
-				video: wrapper.querySelector<HTMLElement>("[data-pinned-video]")!,
-				nextSection,
-				holdVh: Number(wrapper.dataset.holdVh) || 0,
-			};
-		});
-
-		function update() {
-			const vh = window.innerHeight;
-			const scrollY = window.scrollY;
-
-			for (const { wrapper, cover, video, nextSection, holdVh } of pairs) {
-				const wrapperTopDoc = wrapper.getBoundingClientRect().top + scrollY;
-				// Document-coordinate y where the cover's content ends — the
-				// one stable anchor everything else is measured against.
-				const coverBottomDoc = cover.getBoundingClientRect().bottom + scrollY;
-				const holdPx = (holdVh / 100) * vh;
-
-				// Engage at the latest scrollY where the cover (at least one
-				// viewport tall) still fully covers the screen on its own:
-				// cover.bottom(viewport) === coverBottomDoc - scrollY, and we
-				// want that to still be >= vh, so scrollY <= coverBottomDoc -
-				// vh. Pinning any later would show the newly-fixed video
-				// painting over whatever's still on screen from before this
-				// component, since a positioned/z-indexed element always
-				// stacks above plain static content regardless of document
-				// order.
-				const engageAt = coverBottomDoc - vh;
-
-				// Release once the cover has fully scrolled past, held for
-				// holdPx, AND the next section has scrolled up far enough
-				// that its own top edge has reached the top of the viewport
-				// (so it's now covering the pinned video from above, same as
-				// the cover did). Using the next section's own measured rect
-				// — rather than assuming it starts exactly at the wrapper's
-				// bottom — stays correct even if there's a gap between them
-				// (e.g. this wrapper's own margin-block). Falls back to the
-				// pure hold point if there's no next section (component is
-				// the last thing on the page).
-				const holdEndAt = coverBottomDoc + holdPx;
-				const nextCoversAt = nextSection
-					? nextSection.getBoundingClientRect().top + scrollY
-					: holdEndAt;
-				const restAt = Math.max(holdEndAt, nextCoversAt);
-
-				const isPinned = scrollY >= engageAt && scrollY < restAt;
-				video.classList.toggle("is-fixed", isPinned);
-
-				// The resting (non-fixed) position always targets restAt —
-				// wherever the video should already be fullscreen-equivalent
-				// by the time it's released — expressed relative to the
-				// wrapper since that's .pinned-video's positioned ancestor.
-				// Setting this unconditionally (not just while resting) keeps
-				// it correct for the instant release actually happens, since
-				// restAt depends on the next section's real position and
-				// can't be baked into a static CSS value.
-				video.style.top = isPinned ? "0" : `${restAt - wrapperTopDoc}px`;
-			}
-		}
-
-		update();
-		window.addEventListener("scroll", update, { passive: true });
-		window.addEventListener("resize", update);
-	}
-</script>
