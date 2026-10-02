@@ -37,6 +37,9 @@
   --leading-l: 1.5rem;
   --text-s: 1rem;
   --leading-s: 1.5rem;
+  /* Looser leading for running copy (home intro, about) than the L-size
+     nav/titles use — longer text needs more air. */
+  --leading-copy: 1.625rem;
 }
 
 @media (min-width: 1280px) {
@@ -45,6 +48,7 @@
     --leading-l: 1.75rem;
     --text-s: 1.125rem;
     --leading-s: 1.75rem;
+    --leading-copy: 1.875rem;
   }
 }
 
@@ -109,9 +113,9 @@ p {
    one blank line of leading, like the Figma). */
 .copy p {
   font-size: var(--text-l);
-  line-height: var(--leading-l);
+  line-height: var(--leading-copy);
   color: var(--color-ink);
-  margin: 0 0 var(--leading-l);
+  margin: 0 0 var(--leading-copy);
 }
 
 .copy p:last-child {

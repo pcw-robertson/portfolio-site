@@ -254,7 +254,7 @@ sit only the 16px column gutter apart by default; add `stack-gap` to the
 The whole site is one theme — white type on true black (`:root` in
 `global.css`; black matches the video footage exactly). Nav and footer follow
 the Figma (24/28 nav, 18/28 footer, `--text-l`/`--text-s` in `global.css`), as
-do the home and about pages (the 530px `.copy` block and the 530x390 card
+do the home and about pages (the 7-column `.copy` block at 30px leading and the 530x390 card
 grid). `.project-theme` in `ProjectLayout.astro` is just the hook for the
 case-study type rules and the full-bleed wrapper.
 

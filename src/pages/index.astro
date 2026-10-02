@@ -13,7 +13,7 @@ const projects = (await getCollection("projects")).sort(
 	<h1 class="visually-hidden">{site.name}, {site.title}</h1>
 
 	<div class="grid home">
-		<div class="col-6 copy intro">
+		<div class="col-7 copy intro">
 			<p>{site.positioningStatement}</p>
 			<p>{site.summary}</p>
 		</div>
@@ -46,8 +46,10 @@ const projects = (await getCollection("projects")).sort(
 		}
 	}
 
+	/* The large section gap from the case study pages (--space-5), less the
+	   grid's own row gap that already sits between these rows. */
 	.intro {
-		margin-bottom: 10px;
+		margin-bottom: calc(var(--space-5) - var(--grid-gutter));
 	}
 
 	.rule {
