@@ -208,8 +208,11 @@ trying to match the phone-frame family at all.
   (default 60) is how much extra scroll the video holds fullscreen once
   uncovered. Omit `mobileSrc` for a single video used at every width (e.g. a
   vertical film): it's fit, never cropped, so at desktop it runs the full
-  viewport height with bars at the sides (`barColor`, default the page
-  black). It owns two slots — pass the "before" content as normal
+  viewport height with bars at the sides (`background`, default the page
+  black). Add `device` for a full-phone screen recording shown as a device: it's
+  sized to a share of the stage width and hung from its bottom edge so the top
+  runs off the stage, with rounded bottom corners (30px mobile, 60px desktop),
+  and `background` (e.g. a gradient) fills the whole stage behind it. It owns two slots — pass the "before" content as normal
   children and the "after" content with `slot="exit-cover"` (the first named
   slot in the codebase):
 
@@ -225,7 +228,8 @@ trying to match the phone-frame family at all.
   may set `overflow` other than `visible`/`clip` (it silently breaks
   `sticky`; true today for every project page), and `overflow: clip` needs
   Safari 16+. Used in `pitchfork-subscription.mdx` (two cuts) and
-  `new-yorker-games.mdx` (one vertical film).
+  `new-yorker-games.mdx` (one vertical film) and `wired-app.mdx` (a phone
+  recording as a device).
 
 - `<ResultCardSwap base={...} cards={[...]} cardTop={...} cardLeft={...} cardWidth={...} cardHeight={...} />`
   — a fixed screen with one small region on it (a result card) that cycles

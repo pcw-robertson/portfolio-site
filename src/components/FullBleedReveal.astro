@@ -8,7 +8,14 @@
 // Or pass `src` alone (no `mobileSrc`) for a single video used at every
 // width — e.g. a vertical film: it's fit (never cropped) inside the full-
 // viewport stage, so at desktop it runs the full height with bars at the
-// sides, coloured `barColor` (default: the page black).
+// sides, coloured `background` (default: the page black).
+//
+// Or add `device` for a phone recording shown as a device: `src` is a
+// full-phone screen recording, sized to a share of the stage's width and
+// anchored by its BOTTOM edge, so its top runs off the top of the stage
+// (cropped, not a visible frame edge) and its bottom corners are rounded.
+// `background` is then a CSS background (e.g. a gradient) that fills the
+// whole stage edge to edge, including below the phone.
 //
 // Pure CSS, no scroll JS. Layout (all inside .reveal-wrapper):
 //
@@ -50,8 +57,13 @@ interface Props {
   mobilePoster?: string;
   alt?: string;
   holdVh?: number;
-  // Colour of the bars around a fit video (single-source mode).
-  barColor?: string;
+  // CSS background of the stage: the bars around a fit video (single-source
+  // mode) or the surface behind the phone (device mode). Any CSS background
+  // value works, e.g. a linear-gradient().
+  background?: string;
+  // A phone recording shown as a device (see top of file); implies single-
+  // source.
+  device?: boolean;
 }
 
 const {
@@ -61,16 +73,17 @@ const {
   mobilePoster,
   alt = "",
   holdVh = 60,
-  barColor,
+  background,
+  device = false,
 } = Astro.props;
 
-const single = !mobileSrc;
-const wrapperStyle = [`--hold: ${holdVh}vh`, barColor && `--reveal-bar: ${barColor}`]
+const single = device || !mobileSrc;
+const wrapperStyle = [`--hold: ${holdVh}vh`, background && `--reveal-bar: ${background}`]
   .filter(Boolean)
   .join("; ");
 ---
 
-<div class:list={["reveal-wrapper", { "reveal-single": single }]} style={wrapperStyle}>
+<div class:list={["reveal-wrapper", { "reveal-single": single, "reveal-device": device }]} style={wrapperStyle}>
 	<div class="reveal-cover">
 		<slot />
 	</div>
@@ -89,7 +102,7 @@ const wrapperStyle = [`--hold: ${holdVh}vh`, barColor && `--reveal-bar: ${barCol
 					data-autoplay-in-view
 				/>
 				{
-					mobileSrc && (
+					mobileSrc && !device && (
 						<video
 							class="reveal-video reveal-video--mobile"
 							src={mobileSrc}
@@ -199,5 +212,40 @@ const wrapperStyle = [`--hold: ${holdVh}vh`, barColor && `--reveal-bar: ${barCol
 	.reveal-single .reveal-video--single {
 		display: block;
 		object-fit: contain;
+	}
+
+	/* Device: a phone recording sized by width and hung from its bottom edge
+	   (top runs off the stage), bottom corners rounded. Desktop shows more
+	   of the gradient below the phone's bottom edge than mobile does; the
+	   radius is 30px on mobile (same as the carousel frames at that size) and
+	   60px at desktop, where the phone is ~5x larger than a carousel frame. */
+	.reveal-device {
+		--device-width: 81%;
+		--device-bottom: 34%;
+		--device-radius: 30px;
+	}
+
+	@media (min-width: 1280px) {
+		.reveal-device {
+			--device-width: min(70%, 1400px);
+			--device-bottom: 17%;
+			--device-radius: 60px;
+		}
+	}
+
+	.reveal-device .reveal-media {
+		position: absolute;
+		left: 50%;
+		bottom: var(--device-bottom);
+		transform: translateX(-50%);
+		width: var(--device-width);
+		height: auto;
+		border-radius: 0 0 var(--device-radius) var(--device-radius);
+		overflow: hidden;
+	}
+
+	.reveal-device .reveal-video--single {
+		height: auto;
+		object-fit: fill;
 	}
 </style>
