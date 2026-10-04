@@ -34,7 +34,7 @@ const heroes: Record<string, Record<string, string>> = {
 const placeholder = { mode: "none", background: "#2b2b29" };
 ---
 
-<BaseLayout title={`${site.name} — ${site.title}`} footerCover>
+<BaseLayout title={`${site.name} — ${site.title}`}>
 	<h1 class="visually-hidden">{site.name}, {site.title}</h1>
 
 	<div class="grid home">
@@ -43,14 +43,14 @@ const placeholder = { mode: "none", background: "#2b2b29" };
 			<p>{site.summary}</p>
 		</div>
 
-		<div class="col-12 work-head">
-			<hr class="rule" />
-			<h2 class="work-label">Selected Work</h2>
-		</div>
-
 	</div>
 
 	<div class="project-heroes">
+		<div class="heroes-label">
+			<div class="page-container">
+				<h2 class="work-label">Selected Work</h2>
+			</div>
+		</div>
 		{
 			projects.map((project) => (
 				<HomeProjectScreen
@@ -82,14 +82,20 @@ const placeholder = { mode: "none", background: "#2b2b29" };
 		margin-bottom: calc(var(--space-5) - var(--grid-gutter));
 	}
 
-	.rule {
-		margin: 0;
-		border: 0;
-		border-top: 1px solid var(--color-ink);
+	/* "Selected Work": a zero-height sticky strip at the start of the screens,
+	   so the label stays pinned at the top of the viewport (over whichever
+	   screen is showing) for the whole section, and scrolls in with the first
+	   screen. Its z-index lifts it above the screens, which are also sticky. */
+	.heroes-label {
+		position: sticky;
+		top: 0;
+		z-index: 10;
+		height: 0;
 	}
 
 	.work-label {
-		margin: 23px 0 5px;
+		margin: 0;
+		padding-top: 24px;
 		font-size: var(--text-l);
 		font-weight: 400;
 		line-height: var(--leading-l);
@@ -97,7 +103,12 @@ const placeholder = { mode: "none", background: "#2b2b29" };
 		color: var(--color-ink);
 	}
 
-	/* Space between the "Selected Work" label and the first screen. */
+	@media (min-width: 1280px) {
+		.work-label {
+			padding-top: 32px;
+		}
+	}
+
 	.project-heroes {
 		margin-top: var(--space-4);
 	}
@@ -106,9 +117,8 @@ const placeholder = { mode: "none", background: "#2b2b29" };
 	   this container. The earlier screens each carry a hold margin, so they
 	   would start sliding off just before the last screen finished covering
 	   them; and the last screen has no spare room to pin in at all. This
-	   spacer is that room: the last screen's hold, the pause before the
-	   footer rises over it. (The last screen drops its own margin so the
-	   hold isn't counted twice.) */
+	   spacer is that room: the last screen's hold. (The last screen drops its
+	   own margin so the hold isn't counted twice.) */
 	.project-heroes::after {
 		content: "";
 		display: block;

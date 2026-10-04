@@ -12,7 +12,9 @@
 // next one starts to arrive.
 //
 // Media modes:
-//   fill    (default) the video/image is cropped to cover the stage
+//   fill    (default) the video/image is cropped to cover the stage; pass
+//           `mobileSrc` for a separate (taller) cut below the desktop
+//           breakpoint, the same way FullBleedReveal does
 //   device  a phone recording hung from its bottom edge, top cropped, bottom
 //           corners rounded, on `background` (same look as the Wired reveal)
 //   none    no media, just `background` — a placeholder
@@ -25,11 +27,24 @@ interface Props {
   mode?: "fill" | "device" | "none";
   src?: string;
   poster?: string;
+  mobileSrc?: string;
+  mobilePoster?: string;
   background?: string;
   alt?: string;
 }
 
-const { href, title, mode = "fill", src, poster, background, alt = "" } = Astro.props;
+const {
+  href,
+  title,
+  mode = "fill",
+  src,
+  poster,
+  mobileSrc,
+  mobilePoster,
+  background,
+  alt = "",
+} = Astro.props;
+const twoCuts = mode === "fill" && !!src && !!mobileSrc;
 ---
 
 <a
@@ -41,6 +56,7 @@ const { href, title, mode = "fill", src, poster, background, alt = "" } = Astro.
 		mode !== "none" && src && (
 			<div class="hero-media">
 				<video
+					class:list={[twoCuts && "cut-desktop"]}
 					src={src}
 					poster={poster}
 					muted
@@ -50,6 +66,19 @@ const { href, title, mode = "fill", src, poster, background, alt = "" } = Astro.
 					aria-hidden="true"
 					data-autoplay-in-view
 				/>
+				{twoCuts && (
+					<video
+						class="cut-mobile"
+						src={mobileSrc}
+						poster={mobilePoster}
+						muted
+						loop
+						playsinline
+						preload="none"
+						aria-hidden="true"
+						data-autoplay-in-view
+					/>
+				)}
 			</div>
 		)
 	}
@@ -60,7 +89,8 @@ const { href, title, mode = "fill", src, poster, background, alt = "" } = Astro.
 			</div>
 		)
 	}
-	<div class="hero-scrim" aria-hidden="true"></div>
+	<div class="hero-scrim hero-scrim--top" aria-hidden="true"></div>
+	<div class="hero-scrim hero-scrim--bottom" aria-hidden="true"></div>
 	<div class="page-container hero-caption">
 		<h3 class="hero-title">{title}</h3>
 		<span class="hero-cta">View case study</span>
@@ -96,12 +126,27 @@ const { href, title, mode = "fill", src, poster, background, alt = "" } = Astro.
 		object-fit: cover;
 	}
 
+	/* Two cuts: desktop's until the desktop breakpoint, then the tall one. */
+	.cut-mobile {
+		display: none;
+	}
+
+	@media (max-width: 1279px) {
+		.cut-desktop {
+			display: none;
+		}
+
+		.cut-mobile {
+			display: block;
+		}
+	}
+
 	/* Device: the phone recording sized by width, hung from its bottom edge
 	   so its top runs off the stage, bottom corners rounded. Raised on this
 	   page so the caption sits below it on the gradient, not over it. */
 	.project-hero--device {
 		--device-width: 81%;
-		--device-bottom: calc(var(--footer-cover-h) + 110px);
+		--device-bottom: 150px;
 		--device-radius: 30px;
 	}
 
@@ -127,29 +172,46 @@ const { href, title, mode = "fill", src, poster, background, alt = "" } = Astro.
 		object-fit: fill;
 	}
 
-	/* The gradient that carries the title and, on the last screen, blends
-	   the picture into the black footer rising over it. */
+	/* The gradient that carries the title: black at the bottom edge, so each
+	   screen melts into the page (and the footer under the last one). */
 	.hero-scrim {
 		position: absolute;
-		inset: auto 0 0 0;
-		height: 55%;
-		background: linear-gradient(
-			to top,
-			rgba(0, 0, 0, 0.92) 0%,
-			rgba(0, 0, 0, 0.55) 45%,
-			rgba(0, 0, 0, 0) 100%
-		);
+		inset-inline: 0;
 		pointer-events: none;
 	}
 
-	/* Keep the title clear of the footer that ends up over the last screen,
-	   so it reads the same on every screen. */
+	.hero-scrim--bottom {
+		bottom: 0;
+		height: 55%;
+		background: linear-gradient(
+			to top,
+			rgba(0, 0, 0, 1) 0%,
+			rgba(0, 0, 0, 0.55) 40%,
+			rgba(0, 0, 0, 0) 100%
+		);
+	}
+
+	/* A light touch at the top so the pinned "Selected Work" label reads over
+	   bright pictures. */
+	.hero-scrim--top {
+		top: 0;
+		height: 160px;
+		background: linear-gradient(to bottom, rgba(0, 0, 0, 0.45), rgba(0, 0, 0, 0));
+	}
+
+	/* Anchored low and to the left margin. */
 	.hero-caption {
 		position: absolute;
-		inset: auto 0 calc(var(--footer-cover-h) + 32px) 0;
+		inset: auto 0 32px 0;
 		display: flex;
 		flex-direction: column;
 		gap: 4px;
+	}
+
+	@media (min-width: 1280px) {
+		.hero-caption {
+			bottom: 40px;
+		}
 	}
 
 	.hero-title {
@@ -164,7 +226,7 @@ const { href, title, mode = "fill", src, poster, background, alt = "" } = Astro.
 	.hero-cta {
 		font-size: var(--text-s);
 		line-height: var(--leading-s);
-		color: var(--color-muted);
+		color: var(--color-body);
 	}
 
 	.project-hero:hover .hero-cta,

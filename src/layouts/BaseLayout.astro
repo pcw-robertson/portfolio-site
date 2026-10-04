@@ -7,11 +7,9 @@ import "../styles/grid.css";
 interface Props {
   title: string;
   description?: string;
-  // Footer rises over the content above it instead of following it (home).
-  footerCover?: boolean;
 }
 
-const { title, description = "", footerCover = false } = Astro.props;
+const { title, description = "" } = Astro.props;
 ---
 
 <html lang="en">
@@ -36,6 +34,6 @@ const { title, description = "", footerCover = false } = Astro.props;
 		<main>
 			<slot />
 		</main>
-		<Footer cover={footerCover} />
+		<Footer />
 	</body>
 </html>

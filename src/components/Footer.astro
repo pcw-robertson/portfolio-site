@@ -2,14 +2,9 @@
 import { getEntry } from "astro:content";
 
 const site = (await getEntry("site", "index"))!.data;
-
-// `cover`: instead of following the content, the footer is pulled up over its
-// last --footer-cover-h pixels and painted above it. On the home page that
-// content is a pinned project screen, so the footer rises over the picture.
-const { cover = false } = Astro.props;
 ---
 
-<footer id="contact" class:list={["footer", { "footer--cover": cover }]}>
+<footer id="contact" class="footer">
 	<div class="page-container">
 		<div class="footer-row">
 			<a href={`mailto:${site.email}`}>{site.email}</a>
@@ -33,15 +28,6 @@ const { cover = false } = Astro.props;
 		border-top: 1px solid var(--color-ink);
 		font-size: var(--text-s);
 		line-height: var(--leading-s);
-	}
-
-	.footer--cover {
-		position: relative;
-		z-index: 5;
-		margin-top: calc(-1 * var(--footer-cover-h));
-		min-height: var(--footer-cover-h);
-		padding-bottom: 0;
-		background: var(--color-bg);
 	}
 
 	.footer a {
