@@ -1,0 +1,185 @@
+---
+// One full-viewport "screen" on the home page for a project: media filling
+// the stage, a black gradient rising from the bottom edge, and the project
+// title sitting on the gradient. The whole screen links to the case study.
+//
+// Screens are siblings inside `.project-heroes` (see index.astro). Each is
+// `position: sticky; top: 0`, so a screen pins at the top of the viewport
+// and the next one — later in the DOM, so painted above — rises over it.
+// That's the whole mechanic: pure CSS, no scroll JS, same idea as
+// FullBleedReveal (the media sits still while content moves over it).
+// `--hero-hold` is the extra scroll a screen holds fullscreen before the
+// next one starts to arrive.
+//
+// Media modes:
+//   fill    (default) the video/image is cropped to cover the stage
+//   device  a phone recording hung from its bottom edge, top cropped, bottom
+//           corners rounded, on `background` (same look as the Wired reveal)
+//   none    no media, just `background` — a placeholder
+//
+// Needs no ancestor with overflow other than visible/clip (html > body >
+// main > .project-heroes).
+interface Props {
+  href: string;
+  title: string;
+  mode?: "fill" | "device" | "none";
+  src?: string;
+  poster?: string;
+  background?: string;
+  alt?: string;
+}
+
+const { href, title, mode = "fill", src, poster, background, alt = "" } = Astro.props;
+---
+
+<a
+	class:list={["project-hero", `project-hero--${mode}`]}
+	href={href}
+	style={background ? `--hero-bg: ${background}` : undefined}
+>
+	{
+		mode !== "none" && src && (
+			<div class="hero-media">
+				<video
+					src={src}
+					poster={poster}
+					muted
+					loop
+					playsinline
+					preload="none"
+					aria-hidden="true"
+					data-autoplay-in-view
+				/>
+			</div>
+		)
+	}
+	{
+		mode !== "none" && !src && poster && (
+			<div class="hero-media">
+				<img src={poster} alt={alt} loading="lazy" />
+			</div>
+		)
+	}
+	<div class="hero-scrim" aria-hidden="true"></div>
+	<div class="page-container hero-caption">
+		<h3 class="hero-title">{title}</h3>
+		<span class="hero-cta">View case study</span>
+	</div>
+</a>
+
+<style>
+	.project-hero {
+		position: sticky;
+		top: 0;
+		display: block;
+		height: 100vh;
+		height: 100svh;
+		/* The hold: scroll distance with this screen fully showing before the
+		   next one starts to rise over it. */
+		margin-bottom: var(--hero-hold, 40vh);
+		overflow: hidden;
+		background: var(--hero-bg, var(--color-bg));
+		color: var(--color-ink);
+		text-decoration: none;
+	}
+
+	.hero-media {
+		position: absolute;
+		inset: 0;
+	}
+
+	.hero-media video,
+	.hero-media img {
+		display: block;
+		width: 100%;
+		height: 100%;
+		object-fit: cover;
+	}
+
+	/* Device: the phone recording sized by width, hung from its bottom edge
+	   so its top runs off the stage, bottom corners rounded. Raised on this
+	   page so the caption sits below it on the gradient, not over it. */
+	.project-hero--device {
+		--device-width: 81%;
+		--device-bottom: calc(var(--footer-cover-h) + 110px);
+		--device-radius: 30px;
+	}
+
+	@media (min-width: 1280px) {
+		.project-hero--device {
+			--device-width: min(52%, 1000px);
+			--device-radius: 60px;
+		}
+	}
+
+	.project-hero--device .hero-media {
+		inset: auto;
+		left: 50%;
+		bottom: var(--device-bottom);
+		transform: translateX(-50%);
+		width: var(--device-width);
+		border-radius: 0 0 var(--device-radius) var(--device-radius);
+		overflow: hidden;
+	}
+
+	.project-hero--device .hero-media video {
+		height: auto;
+		object-fit: fill;
+	}
+
+	/* The gradient that carries the title and, on the last screen, blends
+	   the picture into the black footer rising over it. */
+	.hero-scrim {
+		position: absolute;
+		inset: auto 0 0 0;
+		height: 55%;
+		background: linear-gradient(
+			to top,
+			rgba(0, 0, 0, 0.92) 0%,
+			rgba(0, 0, 0, 0.55) 45%,
+			rgba(0, 0, 0, 0) 100%
+		);
+		pointer-events: none;
+	}
+
+	/* Keep the title clear of the footer that ends up over the last screen,
+	   so it reads the same on every screen. */
+	.hero-caption {
+		position: absolute;
+		inset: auto 0 calc(var(--footer-cover-h) + 32px) 0;
+		display: flex;
+		flex-direction: column;
+		gap: 4px;
+	}
+
+	.hero-title {
+		margin: 0;
+		font-size: var(--text-l);
+		font-weight: 400;
+		line-height: var(--leading-l);
+		letter-spacing: normal;
+		color: var(--color-ink);
+	}
+
+	.hero-cta {
+		font-size: var(--text-s);
+		line-height: var(--leading-s);
+		color: var(--color-muted);
+	}
+
+	.project-hero:hover .hero-cta,
+	.project-hero:focus-visible .hero-cta {
+		color: var(--color-ink);
+	}
+
+	@media (prefers-reduced-motion: reduce) {
+		.project-hero {
+			position: relative;
+			margin-bottom: 0;
+		}
+	}
+</style>
+
+<script>
+	import "../scripts/autoplay-in-view";
+</script>

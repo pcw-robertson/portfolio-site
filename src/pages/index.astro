@@ -1,15 +1,40 @@
 ---
 import { getCollection, getEntry } from "astro:content";
 import BaseLayout from "../layouts/BaseLayout.astro";
-import ProjectCard from "../components/ProjectCard.astro";
+import HomeProjectScreen from "../components/HomeProjectScreen.astro";
 
 const site = (await getEntry("site", "index"))!.data;
 const projects = (await getCollection("projects")).sort(
   (a, b) => a.data.order - b.data.order,
 );
+
+// How each project's screen is shown on the home page. Wired uses the
+// device reveal from its case study; the others fill the frame with their
+// hero; anything not listed (Bon Appétit) is a placeholder.
+const wiredGradient = "linear-gradient(to bottom right, #2a1fff, #9a0bff)";
+const heroes: Record<string, Record<string, string>> = {
+  "wired-app": {
+    mode: "device",
+    src: "/videos/wired-nav-zoom.mp4",
+    poster: "/videos/wired-nav-zoom-poster.jpg",
+    background: wiredGradient,
+  },
+  "new-yorker-games": {
+    mode: "fill",
+    src: "/videos/new-yorker-games-hero.mp4",
+    poster: "/videos/new-yorker-games-hero-poster.jpg",
+    background: "#ffe27f",
+  },
+  "pitchfork-subscription": {
+    mode: "fill",
+    src: "/videos/pitchfork-hero.mp4",
+    poster: "/videos/pitchfork-hero-poster.jpg",
+  },
+};
+const placeholder = { mode: "none", background: "#2b2b29" };
 ---
 
-<BaseLayout title={`${site.name} — ${site.title}`}>
+<BaseLayout title={`${site.name} — ${site.title}`} footerCover>
 	<h1 class="visually-hidden">{site.name}, {site.title}</h1>
 
 	<div class="grid home">
@@ -23,11 +48,16 @@ const projects = (await getCollection("projects")).sort(
 			<h2 class="work-label">Selected Work</h2>
 		</div>
 
+	</div>
+
+	<div class="project-heroes">
 		{
 			projects.map((project) => (
-				<div class="col-6 card-cell">
-					<ProjectCard project={project} />
-				</div>
+				<HomeProjectScreen
+					href={`/projects/${project.id}`}
+					title={project.data.cardTitle ?? project.data.title}
+					{...(heroes[project.id] ?? placeholder)}
+				/>
 			))
 		}
 	</div>
@@ -67,7 +97,25 @@ const projects = (await getCollection("projects")).sort(
 		color: var(--color-ink);
 	}
 
-	.card-cell {
-		margin-bottom: 12px;
+	/* Space between the "Selected Work" label and the first screen. */
+	.project-heroes {
+		margin-top: var(--space-4);
+	}
+
+	/* A sticky screen stays pinned only while its whole margin box fits in
+	   this container. The earlier screens each carry a hold margin, so they
+	   would start sliding off just before the last screen finished covering
+	   them; and the last screen has no spare room to pin in at all. This
+	   spacer is that room: the last screen's hold, the pause before the
+	   footer rises over it. (The last screen drops its own margin so the
+	   hold isn't counted twice.) */
+	.project-heroes::after {
+		content: "";
+		display: block;
+		height: var(--hero-hold, 40vh);
+	}
+
+	.project-heroes > :global(.project-hero:last-child) {
+		margin-bottom: 0;
 	}
 </style>

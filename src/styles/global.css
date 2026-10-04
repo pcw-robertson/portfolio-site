@@ -30,6 +30,10 @@
   --space-5: 5rem;
   --space-6: 8rem;
 
+  /* Height of the footer when it rises over the last project screen on the
+     home page (see Footer's `cover` mode and HomeProjectScreen). */
+  --footer-cover-h: 112px;
+
   /* Type scale for the home and about pages (and nav/footer): the large
      "L" size is copy, titles and nav; "S" is the quiet footer line. Desktop
      values are the Figma sizes (24/28 and 18/28); smaller below. */
