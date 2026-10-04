@@ -146,13 +146,15 @@ const twoCuts = mode === "fill" && !!src && !!mobileSrc;
 	   page so the caption sits below it on the gradient, not over it. */
 	.project-hero--device {
 		--device-width: 81%;
-		--device-bottom: 150px;
+		/* Higher on a phone screen so more of the recording's top is cropped. */
+		--device-bottom: 220px;
 		--device-radius: 30px;
 	}
 
 	@media (min-width: 1280px) {
 		.project-hero--device {
 			--device-width: min(52%, 1000px);
+			--device-bottom: 150px;
 			--device-radius: 60px;
 		}
 	}
@@ -191,12 +193,18 @@ const twoCuts = mode === "fill" && !!src && !!mobileSrc;
 		);
 	}
 
-	/* A light touch at the top so the pinned "Selected Work" label reads over
-	   bright pictures. */
+	/* Behind the pinned "Selected Work" label: strong enough to keep white
+	   type legible over the brightest pictures (the yellow of New Yorker
+	   Games, Pitchfork's light frames), fading out well clear of the label. */
 	.hero-scrim--top {
 		top: 0;
-		height: 160px;
-		background: linear-gradient(to bottom, rgba(0, 0, 0, 0.45), rgba(0, 0, 0, 0));
+		height: 220px;
+		background: linear-gradient(
+			to bottom,
+			rgba(0, 0, 0, 0.75) 0%,
+			rgba(0, 0, 0, 0.45) 50%,
+			rgba(0, 0, 0, 0) 100%
+		);
 	}
 
 	/* Anchored low and to the left margin. */
