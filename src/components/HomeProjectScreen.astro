@@ -1,0 +1,255 @@
+---
+// One full-viewport "screen" on the home page for a project: media filling
+// the stage, a black gradient rising from the bottom edge, and the project
+// title sitting on the gradient. The whole screen links to the case study.
+//
+// Screens are siblings inside `.project-heroes` (see index.astro). Each is
+// `position: sticky; top: 0`, so a screen pins at the top of the viewport
+// and the next one — later in the DOM, so painted above — rises over it.
+// That's the whole mechanic: pure CSS, no scroll JS, same idea as
+// FullBleedReveal (the media sits still while content moves over it).
+// `--hero-hold` is the extra scroll a screen holds fullscreen before the
+// next one starts to arrive.
+//
+// Media modes:
+//   fill    (default) the video/image is cropped to cover the stage; pass
+//           `mobileSrc` for a separate (taller) cut below the desktop
+//           breakpoint, the same way FullBleedReveal does
+//   device  a phone recording hung from its bottom edge, top cropped, bottom
+//           corners rounded, on `background` (same look as the Wired reveal)
+//   none    no media, just `background` — a placeholder
+//
+// Needs no ancestor with overflow other than visible/clip (html > body >
+// main > .project-heroes).
+interface Props {
+  href: string;
+  title: string;
+  mode?: "fill" | "device" | "none";
+  src?: string;
+  poster?: string;
+  mobileSrc?: string;
+  mobilePoster?: string;
+  background?: string;
+  alt?: string;
+}
+
+const {
+  href,
+  title,
+  mode = "fill",
+  src,
+  poster,
+  mobileSrc,
+  mobilePoster,
+  background,
+  alt = "",
+} = Astro.props;
+const twoCuts = mode === "fill" && !!src && !!mobileSrc;
+---
+
+<a
+	class:list={["project-hero", `project-hero--${mode}`]}
+	href={href}
+	style={background ? `--hero-bg: ${background}` : undefined}
+>
+	{
+		mode !== "none" && src && (
+			<div class="hero-media">
+				<video
+					class:list={[twoCuts && "cut-desktop"]}
+					src={src}
+					poster={poster}
+					muted
+					loop
+					playsinline
+					preload="none"
+					aria-hidden="true"
+					data-autoplay-in-view
+				/>
+				{twoCuts && (
+					<video
+						class="cut-mobile"
+						src={mobileSrc}
+						poster={mobilePoster}
+						muted
+						loop
+						playsinline
+						preload="none"
+						aria-hidden="true"
+						data-autoplay-in-view
+					/>
+				)}
+			</div>
+		)
+	}
+	{
+		mode !== "none" && !src && poster && (
+			<div class="hero-media">
+				<img src={poster} alt={alt} loading="lazy" />
+			</div>
+		)
+	}
+	<div class="hero-scrim hero-scrim--top" aria-hidden="true"></div>
+	<div class="hero-scrim hero-scrim--bottom" aria-hidden="true"></div>
+	<div class="page-container hero-caption">
+		<h3 class="hero-title">{title}</h3>
+		<span class="hero-cta">View case study</span>
+	</div>
+</a>
+
+<style>
+	.project-hero {
+		position: sticky;
+		top: 0;
+		display: block;
+		height: 100vh;
+		height: 100svh;
+		/* The hold: scroll distance with this screen fully showing before the
+		   next one starts to rise over it. */
+		margin-bottom: var(--hero-hold, 40vh);
+		overflow: hidden;
+		background: var(--hero-bg, var(--color-bg));
+		color: var(--color-ink);
+		text-decoration: none;
+	}
+
+	.hero-media {
+		position: absolute;
+		inset: 0;
+	}
+
+	.hero-media video,
+	.hero-media img {
+		display: block;
+		width: 100%;
+		height: 100%;
+		object-fit: cover;
+	}
+
+	/* Two cuts: desktop's until the desktop breakpoint, then the tall one. */
+	.cut-mobile {
+		display: none;
+	}
+
+	@media (max-width: 1279px) {
+		.cut-desktop {
+			display: none;
+		}
+
+		.cut-mobile {
+			display: block;
+		}
+	}
+
+	/* Device: the phone recording sized by width, hung from its bottom edge
+	   so its top runs off the stage, bottom corners rounded. Raised on this
+	   page so the caption sits below it on the gradient, not over it. */
+	.project-hero--device {
+		--device-width: 81%;
+		/* Higher on a phone screen so more of the recording's top is cropped. */
+		--device-bottom: 220px;
+		--device-radius: 30px;
+	}
+
+	@media (min-width: 1280px) {
+		.project-hero--device {
+			--device-width: min(52%, 1000px);
+			--device-bottom: 150px;
+			--device-radius: 60px;
+		}
+	}
+
+	.project-hero--device .hero-media {
+		inset: auto;
+		left: 50%;
+		bottom: var(--device-bottom);
+		transform: translateX(-50%);
+		width: var(--device-width);
+		border-radius: 0 0 var(--device-radius) var(--device-radius);
+		overflow: hidden;
+	}
+
+	.project-hero--device .hero-media video {
+		height: auto;
+		object-fit: fill;
+	}
+
+	/* The gradient that carries the title: black at the bottom edge, so each
+	   screen melts into the page (and the footer under the last one). */
+	.hero-scrim {
+		position: absolute;
+		inset-inline: 0;
+		pointer-events: none;
+	}
+
+	.hero-scrim--bottom {
+		bottom: 0;
+		height: 55%;
+		background: linear-gradient(
+			to top,
+			rgba(0, 0, 0, 1) 0%,
+			rgba(0, 0, 0, 0.55) 40%,
+			rgba(0, 0, 0, 0) 100%
+		);
+	}
+
+	/* Behind the pinned "Selected Work" label: strong enough to keep white
+	   type legible over the brightest pictures (the yellow of New Yorker
+	   Games, Pitchfork's light frames), fading out well clear of the label. */
+	.hero-scrim--top {
+		top: 0;
+		height: 220px;
+		background: linear-gradient(
+			to bottom,
+			rgba(0, 0, 0, 0.75) 0%,
+			rgba(0, 0, 0, 0.45) 50%,
+			rgba(0, 0, 0, 0) 100%
+		);
+	}
+
+	/* Anchored low and to the left margin. */
+	.hero-caption {
+		position: absolute;
+		inset: auto 0 32px 0;
+		display: flex;
+		flex-direction: column;
+		gap: 4px;
+	}
+
+	@media (min-width: 1280px) {
+		.hero-caption {
+			bottom: 40px;
+		}
+	}
+
+	.hero-title {
+		margin: 0;
+		font-size: var(--text-l);
+		font-weight: 400;
+		line-height: var(--leading-l);
+		letter-spacing: normal;
+		color: var(--color-ink);
+	}
+
+	.hero-cta {
+		font-size: var(--text-s);
+		line-height: var(--leading-s);
+		color: var(--color-body);
+	}
+
+	.project-hero:hover .hero-cta,
+	.project-hero:focus-visible .hero-cta {
+		color: var(--color-ink);
+	}
+
+	@media (prefers-reduced-motion: reduce) {
+		.project-hero {
+			position: relative;
+			margin-bottom: 0;
+		}
+	}
+</style>
+
+<script>
+	import "../scripts/autoplay-in-view";
+</script>
