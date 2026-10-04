@@ -1,7 +1,7 @@
 # Portfolio case studies — working drafts
 
 Structure per project: Opportunity → Role → Annotations/project details → Takeaways.
-Wired and New Yorker Games now lead with "Outcome" up front in place of Takeaways — consider doing the same for Bon Appétit and Pitchfork.
+Wired, New Yorker Games and Pitchfork now lead with "Outcome" up front in place of Takeaways — consider doing the same for Bon Appétit.
 Edit freely — this is a working doc, not final copy.
 
 ---
@@ -27,7 +27,7 @@ A native experience that goes beyond web.
 **Home & Discovery**
 Presents every story at its best, leveraging on Wired's art direction and editorial packaging. Clear distinction between content types and moments that shows the breadth of Wired.
 
-*"I never knew there was so much in Wired"* — Beta Test User Interview
+*"What a fabulous app! It’s easy to use, has a great vibe, and makes discovering new things so much fun. The experience is smooth, and you can tell a lot of thought went into creating it."* — App Store Review
 
 **Article & Reading**
 Focused, uninterrupted reading, with the tools to take each story the way that suits you and the option to join the discussion.
@@ -107,19 +107,22 @@ Led design and strategy for Bon Appétit's repositioning across web and app, ali
 *Subscriber experience*
 
 ### Opportunity
-Pitchfork had one of the highest rates of direct and returning visitors across all our sites, pointing to a loyal audience with real appetite to subscribe. This led to the decision to launch a paywall, but also raised a bigger question: how to make the subscription additive to the experience, not just a gate on existing content. Our approach: bring the audience into the conversation. Give users the ability to rate, review, save, and organize music on the most trusted authority in music, turning subscription into something that deepens their relationship with Pitchfork, not just access.
+Pitchfork had one of the highest rates of direct and returning visitors across all our sites, pointing to a loyal audience with real appetite to subscribe. This led to the decision to launch a paywall, but also raised a bigger question: how to make the subscription additive to the experience, not just a gate on existing content. Our approach: bring the audience into the conversation. Give users the ability to rate, review, save, and organise music on the most trusted authority in music, turning subscription into something that deepens their relationship with Pitchfork, not just access.
 
 ### Role
 Led the strategy and design direction for the subscriber experience, developing the community features and how users discover them across the site.
 
-### Annotations / project details
-**The feature set**
-Rating, reviewing, saving, and organizing music. *[placeholder: how discovery worked — surfaced contextually while reading reviews, through profile/onboarding, elsewhere?]*
+### Outcome
+- Pacing ahead of subscription goals since launch in January 2026
+- Subscribers using the new features are 50% less likely to cancel
 
-### Takeaways
-- **It worked** — subscriber numbers *[XYZ]*, with subscribers who engaged with the community features *[X]* more likely to retain than those who didn't
-- **Community is additive when cultivated correctly** — participation, not just access, is what turns a subscription into a habit
+### Annotations / project details
+**Reader Scores**
+Giving subscribers a say on three decades of Pitchfork reviews, and surfacing their scores across the site as a reason for other readers to join in, or to subscribe.
+
+**Collections**
+Tools for subscribers to rate, save and organise the albums and tracks they love, building loyalty and attachment among our most engaged readers.
 
 **Open items:**
-- [ ] Fill in discovery placeholder above
-- [ ] Real subscriber numbers and retention lift figure
+- [ ] Confirm the launch year (2026) in the first Outcome line
+- [ ] Confirm "Collections" as the heading for the last row

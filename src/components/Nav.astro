@@ -2,49 +2,46 @@
 import { getEntry } from "astro:content";
 
 const site = (await getEntry("site", "index"))!.data;
+const onAbout = Astro.url.pathname.replace(/\/$/, "") === "/about";
 ---
 
 <header class="nav">
-	<div class="wrap nav-inner">
+	<div class="page-container nav-inner">
 		<a href="/" class="nav-name">{site.name}</a>
-		<nav class="nav-links">
-			<a href="/about">About</a>
-			<a href="/#contact">Contact</a>
-		</nav>
+		<a href="/about" class:list={["nav-about", { active: onAbout }]} aria-current={onAbout ? "page" : undefined}>About</a>
 	</div>
 </header>
 
 <style>
-	.nav {
-		border-bottom: 1px solid var(--color-line);
-	}
-
 	.nav-inner {
 		display: flex;
-		align-items: center;
 		justify-content: space-between;
-		padding-top: var(--space-2);
-		padding-bottom: var(--space-2);
+		align-items: baseline;
+		padding-top: var(--space-3);
+		font-size: var(--text-l);
+		line-height: var(--leading-l);
 	}
 
-	.nav-name {
-		font-weight: 600;
+	@media (min-width: 1280px) {
+		.nav-inner {
+			padding-top: 65px;
+		}
+	}
+
+	.nav a {
 		text-decoration: none;
+	}
+
+	.nav-name,
+	.nav-about.active {
 		color: var(--color-ink);
 	}
 
-	.nav-links {
-		display: flex;
-		gap: var(--space-3);
+	.nav-about {
+		color: var(--color-muted);
 	}
 
-	.nav-links a {
-		text-decoration: none;
-		color: var(--color-body);
-		font-size: 0.95rem;
-	}
-
-	.nav-links a:hover {
+	.nav-about:hover {
 		color: var(--color-ink);
 	}
 </style>

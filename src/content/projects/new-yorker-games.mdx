@@ -2,6 +2,9 @@
 title: "New Yorker Games"
 context: "TODO: one-line context — Shuffalo & Catalogues"
 order: 2
+cardTitle: "New Yorker Games"
+cardFit: "contain"
+cardBackground: "#ffe27f"
 coverImage: "/videos/new-yorker-games-hero-poster.jpg"
 coverVideo: "/videos/new-yorker-games-hero.mp4"
 template: "custom"
@@ -10,6 +13,7 @@ template: "custom"
 import AssetFloat from "../../components/AssetFloat.astro";
 import Marquee from "../../components/Marquee.astro";
 import ResultCardSwap from "../../components/ResultCardSwap.astro";
+import FullBleedReveal from "../../components/FullBleedReveal.astro";
 import { getCaseStudy, getAnnotation } from "../../lib/case-studies";
 
 export const nyg = getCaseStudy("new-yorker-games");
@@ -34,7 +38,7 @@ export const paragraphs = (text) => text.split("\n\n");
     </ul>
   </div>
   <div class="col-6 hero-media">
-    <div style="background: #FFE07E; flex: 1; min-height: 410px; display: flex; align-items: center; justify-content: center;">
+    <div style="background: #ffe27f; flex: 1; min-height: 410px; display: flex; align-items: center; justify-content: center;">
       <AssetFloat
         src="/videos/new-yorker-games-hero.mp4"
         type="video"
@@ -72,41 +76,47 @@ export const paragraphs = (text) => text.split("\n\n");
   </div>
 </div>
 
-<div class="grid">
-  <div class="col-12">
-    <Marquee
-      items={[
-        { src: "/videos/pg-cat-row1-1.mp4", poster: "/videos/pg-cat-row1-1-poster.jpg", aspectRatio: "1180 / 2556" },
-        { src: "/videos/pg-cat-row1-2.mp4", poster: "/videos/pg-cat-row1-2-poster.jpg", aspectRatio: "1180 / 2556" },
-        { src: "/videos/pg-cat-row1-3.mp4", poster: "/videos/pg-cat-row1-3-poster.jpg", aspectRatio: "1180 / 2556" },
-        { src: "/videos/pg-cat-row1-5.mp4", poster: "/videos/pg-cat-row1-5-poster.jpg", aspectRatio: "1180 / 2556" },
-      ]}
-    />
+<FullBleedReveal
+  src="/videos/new-yorker-catalogues-reel.mp4"
+  poster="/videos/new-yorker-catalogues-reel-poster.jpg"
+  alt="Catalogues film"
+>
+  <div class="grid">
+    <div class="col-12">
+      <Marquee
+        items={[
+          { src: "/videos/pg-cat-row1-1.mp4", poster: "/videos/pg-cat-row1-1-poster.jpg", aspectRatio: "1180 / 2556" },
+          { src: "/videos/pg-cat-row1-2.mp4", poster: "/videos/pg-cat-row1-2-poster.jpg", aspectRatio: "1180 / 2556" },
+          { src: "/videos/pg-cat-row1-3.mp4", poster: "/videos/pg-cat-row1-3-poster.jpg", aspectRatio: "1180 / 2556" },
+          { src: "/videos/pg-cat-row1-5.mp4", poster: "/videos/pg-cat-row1-5-poster.jpg", aspectRatio: "1180 / 2556" },
+        ]}
+      />
+    </div>
   </div>
-</div>
 
-<div class="grid">
-  <div class="col-6">
-    <p class="caption">
-      <span class="caption-title">Introducing Catalogues</span><br />
-      {paragraphs(annotation("Catalogues intro").body).map((para, i) => <>{i > 0 && <><br /><br /></>}{para}</>)}
-    </p>
+  <div class="grid" slot="exit-cover">
+    <div class="col-6">
+      <p class="caption">
+        <span class="caption-title">Introducing Catalogues</span><br />
+        {paragraphs(annotation("Catalogues intro").body).map((para, i) => <>{i > 0 && <><br /><br /></>}{para}</>)}
+      </p>
+    </div>
+    <div class="col-6">
+      <ResultCardSwap
+        base="/images/new-yorker-games/pg-cat-results-base.png"
+        baseAlt="Catalogues results screen"
+        baseAspectRatio="750 / 1624"
+        cardTop="12.685%"
+        cardLeft="5.067%"
+        cardWidth="89.867%"
+        cardHeight="15.764%"
+        cards={[
+          { src: "/images/new-yorker-games/pg-cat-results-card-1.png", alt: "Result: Impeccable" },
+          { src: "/images/new-yorker-games/pg-cat-results-card-2.png", alt: "Result: In Good Order" },
+          { src: "/images/new-yorker-games/pg-cat-results-card-3.png", alt: "Result: By a Whisker" },
+          { src: "/images/new-yorker-games/pg-cat-results-card-4.png", alt: "Result: A Little Astray" },
+        ]}
+      />
+    </div>
   </div>
-  <div class="col-6">
-    <ResultCardSwap
-      base="/images/new-yorker-games/pg-cat-results-base.png"
-      baseAlt="Catalogues results screen"
-      baseAspectRatio="750 / 1624"
-      cardTop="12.685%"
-      cardLeft="5.067%"
-      cardWidth="89.867%"
-      cardHeight="15.764%"
-      cards={[
-        { src: "/images/new-yorker-games/pg-cat-results-card-1.png", alt: "Result: Impeccable" },
-        { src: "/images/new-yorker-games/pg-cat-results-card-2.png", alt: "Result: In Good Order" },
-        { src: "/images/new-yorker-games/pg-cat-results-card-3.png", alt: "Result: By a Whisker" },
-        { src: "/images/new-yorker-games/pg-cat-results-card-4.png", alt: "Result: A Little Astray" },
-      ]}
-    />
-  </div>
-</div>
+</FullBleedReveal>

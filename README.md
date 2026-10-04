@@ -19,11 +19,12 @@ Every piece of copy on the site is a plain markdown file under
 the whole site from whatever's currently in these files, so there's no
 separate sync step.
 
-- `src/content/site/index.md` — name, title, positioning statement, summary,
-  email, LinkedIn, resume link (all in the frontmatter — no body). Edit this
-  first.
-- `src/content/about/index.md` — About/leadership page copy, as the markdown
-  body ("How I lead" / "Bio" sections).
+- `src/content/site/index.md` — name, title, the two home-page paragraphs
+  (`positioningStatement`, `summary`), email, and the footer's "Download CV"
+  target (`resumeUrl`, a PDF in `public/`) — all in the frontmatter, no body.
+  Edit this first.
+- `src/content/about/index.md` — the About page copy, as the markdown body
+  (a backslash at the end of a line is a line break within a paragraph).
 - `src/content/projects/*.md` — one file per project. Frontmatter holds card
   media + embed URL; the markdown body holds "The problem" / "Role" /
   "Outcome". Editing one of these is a self-contained session.
@@ -64,6 +65,14 @@ file needs to change.
 - Cover images: drop files in `public/images/<project-slug>/` and reference
   them from that project's frontmatter (`coverImage`). Until set, the
   homepage card shows a flat placeholder block instead of a broken image.
+- Homepage cards pour each project's hero (the same asset that opens the case
+  study) into a 530x390 box. Per project, in the frontmatter: `cardFit`
+  (`cover`, the default, fills the box and crops; `contain` shows all of the
+  asset centered), `cardBackground` (the box colour — set it to the asset's
+  own background so a `contain`ed video and its box read as one surface;
+  Wired is `contain` on black, New Yorker Games is `cover` on its yellow), and
+  `cardTitle` (the label under the card, when it differs from the case
+  study's own title).
 - Screen recording videos: see "Video pipeline" below — compress raw `.mov`
   files first, then point `coverVideo` (homepage card + project hero) at the
   compressed output in `public/videos/`.
@@ -197,7 +206,13 @@ trying to match the phone-frame family at all.
   `position: sticky` video in a clipped stage), no scroll JS. `src` is the
   16:9 cut for desktop, `mobileSrc` the 9:16 cut below 1280px; `holdVh`
   (default 60) is how much extra scroll the video holds fullscreen once
-  uncovered. It owns two slots — pass the "before" content as normal
+  uncovered. Omit `mobileSrc` for a single video used at every width (e.g. a
+  vertical film): it's fit, never cropped, so at desktop it runs the full
+  viewport height with bars at the sides (`background`, default the page
+  black). Add `device` for a full-phone screen recording shown as a device: it's
+  sized to a share of the stage width and hung from its bottom edge so the top
+  runs off the stage, with rounded bottom corners (30px mobile, 60px desktop),
+  and `background` (e.g. a gradient) fills the whole stage behind it. It owns two slots — pass the "before" content as normal
   children and the "after" content with `slot="exit-cover"` (the first named
   slot in the codebase):
 
@@ -212,7 +227,9 @@ trying to match the phone-frame family at all.
   inside can keep its normal width. Constraints: no ancestor of the component
   may set `overflow` other than `visible`/`clip` (it silently breaks
   `sticky`; true today for every project page), and `overflow: clip` needs
-  Safari 16+. Used in `pitchfork-subscription.mdx`.
+  Safari 16+. Used in `pitchfork-subscription.mdx` (two cuts) and
+  `new-yorker-games.mdx` (one vertical film) and `wired-app.mdx` (a phone
+  recording as a device).
 
 - `<ResultCardSwap base={...} cards={[...]} cardTop={...} cardLeft={...} cardWidth={...} cardHeight={...} />`
   — a fixed screen with one small region on it (a result card) that cycles
@@ -242,9 +259,20 @@ Items that fall back to stacked full-width below desktop (e.g. two `col-6`s)
 sit only the 16px column gutter apart by default; add `stack-gap` to the
 `.grid` for 48px on mobile.
 
-Whichever template is used, `ProjectLayout` wraps the whole page (excluding
-Nav/Footer, which stay on the site-wide light theme) in a dark theme — see
-`.project-theme` in `ProjectLayout.astro` if that ever needs adjusting.
+The whole site is one theme — white type on true black (`:root` in
+`global.css`; black matches the video footage exactly). Nav and footer follow
+the Figma (24/28 nav, 18/28 footer, `--text-l`/`--text-s` in `global.css`), as
+do the home and about pages (the 7-column `.copy` block at 30px leading and the 530x390 card
+grid). `.project-theme` in `ProjectLayout.astro` is just the hook for the
+case-study type rules and the full-bleed wrapper.
+
+All type is Söhne Buch (Klim Type Foundry, licensed), self-hosted from
+`public/fonts/soehne-buch.woff2` via the `@font-face` in `global.css` and
+preloaded in `BaseLayout`. It's a single regular weight with no italic, so
+headings are set at 400 and `font-synthesis: none` stops the browser faking
+bold/italic. To add a weight, drop its `.woff2` next to it and add a second
+`@font-face` for it. The file is covered by Klim's licence agreement — check
+its terms before making the repository public or sharing the repo.
 
 Astro reserves `<style>` tags for scoped CSS in `.astro` files, but **not**
 in `.mdx` — a raw `<style>` block in an `.mdx` file will fail to build

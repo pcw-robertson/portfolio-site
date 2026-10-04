@@ -40,6 +40,16 @@ a safe default to extend from.
   }
 }
 
+/* The grid's own outer box (centered, capped, with the grid margins) without
+   its columns — for a row of content that should line up with the grid
+   edges, like the nav and footer. */
+.page-container {
+  width: 100%;
+  max-width: var(--grid-container);
+  margin-inline: auto;
+  padding-inline: var(--grid-margin);
+}
+
 .grid {
   display: grid;
   grid-template-columns: repeat(var(--grid-columns), 1fr);
@@ -153,6 +163,19 @@ a safe default to extend from.
 @media (min-width: 1280px) {
   .grid.hero-stage {
     min-height: var(--hero-height);
+  }
+
+  /* The text column sits vertically centered in the stage (the media column
+     keeps stretching to fill it, so a panel behind the media still reaches
+     the stage's edges). */
+  .grid.hero-stage > :not(.hero-media) {
+    align-self: center;
+  }
+
+  /* Without this the last paragraph's bottom margin counts as part of the
+     text and it sits half a margin above true center. */
+  .grid.hero-stage > :not(.hero-media) > :last-child {
+    margin-bottom: 0;
   }
 
   .hero-media {

@@ -2,6 +2,9 @@
 title: "Wired App"
 context: "Product strategy & design leadership — 0 to 1"
 order: 1
+cardTitle: "The Wired App"
+cardFit: "contain"
+cardBackground: "#000000"
 coverImage: "/videos/wired-intro-walkthrough-poster.jpg"
 coverVideo: "/videos/wired-intro-walkthrough.mp4"
 template: "custom"
@@ -9,6 +12,7 @@ template: "custom"
 
 import AssetFloat from "../../components/AssetFloat.astro";
 import Marquee from "../../components/Marquee.astro";
+import FullBleedReveal from "../../components/FullBleedReveal.astro";
 import { getCaseStudy, getAnnotation } from "../../lib/case-studies";
 
 export const wired = getCaseStudy("wired-app");
@@ -48,60 +52,72 @@ export const annotation = (title) => getAnnotation(wired, title);
   </div>
 </div>
 
-{/* height 628px = the full-screen phone in the intro video (521x1103 within its
-    720-wide frame) at the intro's 410px desktop display width, so the frames
-    here match the scale of the phones in that video. */}
-
-<div class="grid">
-  <div class="col-12">
-    <Marquee
-      height="628px"
-      mobileCarousel
-      autoplay
-      items={[
-        { src: "/videos/wired-home-swipe.mp4", poster: "/videos/wired-home-swipe-poster.jpg", aspectRatio: "720 / 1560" },
-        { src: "/videos/wired-big-story-swiper.mp4", poster: "/videos/wired-big-story-swiper-poster.jpg", aspectRatio: "720 / 1560" },
-        { src: "/images/wired-app/file.jpg", alt: "Wired app home file", aspectRatio: "1179 / 2556" },
-        { src: "/videos/wired-home-video.mp4", poster: "/videos/wired-home-video-poster.jpg", aspectRatio: "720 / 1560" },
-        { src: "/videos/wired-home-newsletters.mp4", poster: "/videos/wired-home-newsletters-poster.jpg", aspectRatio: "720 / 1560" },
-        { src: "/videos/wired-home-special-editions.mp4", poster: "/videos/wired-home-special-editions-poster.jpg", aspectRatio: "720 / 1560" },
-      ]}
-    />
-    <p class="caption"><span class="caption-title">Home &amp; Discovery</span><br />{annotation("Home & Discovery").body}</p>
-    <blockquote class="caption-quote">
-      <p>&ldquo;{annotation("Home & Discovery").quote.text}&rdquo;</p>
-      <cite>{annotation("Home & Discovery").quote.citation}</cite>
-    </blockquote>
-    <Marquee
-      reverse
-      height="628px"
-      mobileCarousel
-      autoplay
-      items={[
-        { src: "/videos/wired-article-snake-loop.mp4", poster: "/videos/wired-article-snake-loop-poster.jpg", aspectRatio: "720 / 1514" },
-        { src: "/videos/wired-article-scroll.mp4", poster: "/videos/wired-article-scroll-poster.jpg", aspectRatio: "720 / 1560" },
-        { src: "/videos/wired-article-audio.mp4", poster: "/videos/wired-article-audio-poster.jpg", aspectRatio: "720 / 1560" },
-        { src: "/images/wired-app/article-header.jpg", alt: "Wired app article header", aspectRatio: "786 / 1668" },
-        { src: "/videos/wired-article-animated-loop.mp4", poster: "/videos/wired-article-animated-loop-poster.jpg", aspectRatio: "720 / 1514" },
-        { src: "/videos/wired-article-commenting.mp4", poster: "/videos/wired-article-commenting-poster.jpg", aspectRatio: "720 / 1560" },
-      ]}
-    />
-    <p class="caption"><span class="caption-title">Article &amp; Reading</span><br />{annotation("Article & Reading").body}</p>
-    <Marquee
-      height="628px"
-      shrinkToFit
-      mobileCarousel
-      autoplay
-      items={[
-        { src: "/videos/wired-audio-hero.mp4", poster: "/videos/wired-audio-hero-poster.jpg", aspectRatio: "720 / 1560" },
-        { src: "/videos/wired-audio-scroll.mp4", poster: "/videos/wired-audio-scroll-poster.jpg", aspectRatio: "720 / 1560" },
-        { src: "/images/wired-app/file-2.jpg", alt: "Wired app audio file", aspectRatio: "1179 / 2556" },
-        { src: "/videos/wired-audio-playlists.mp4", poster: "/videos/wired-audio-playlists-poster.jpg", aspectRatio: "720 / 1560" },
-      ]}
-    />
-    <p class="caption"><span class="caption-title">Listen &amp; Playlists</span><br />{annotation("Listen & Playlists").body}</p>
+<FullBleedReveal
+  device
+  src="/videos/wired-nav-zoom.mp4"
+  poster="/videos/wired-nav-zoom-poster.jpg"
+  background="linear-gradient(to bottom right, #2a1fff, #9a0bff)"
+  alt="Tapping through the Wired app's Home, Listen, Watch and For You tabs, then switching to dark mode"
+>
+  <div class="grid">
+    {/* height 628px = the full-screen phone in the intro video (521x1103 within its
+        720-wide frame) at the intro's 410px desktop display width, so the frames
+        here match the scale of the phones in that video. */}
+    <div class="col-12">
+      <Marquee
+        height="628px"
+        mobileCarousel
+        autoplay
+        items={[
+          { src: "/videos/wired-home-swipe.mp4", poster: "/videos/wired-home-swipe-poster.jpg", aspectRatio: "720 / 1560" },
+          { src: "/videos/wired-big-story-swiper.mp4", poster: "/videos/wired-big-story-swiper-poster.jpg", aspectRatio: "720 / 1560" },
+          { src: "/images/wired-app/file.jpg", alt: "Wired app home file", aspectRatio: "1179 / 2556" },
+          { src: "/videos/wired-home-video.mp4", poster: "/videos/wired-home-video-poster.jpg", aspectRatio: "720 / 1560" },
+          { src: "/videos/wired-home-newsletters.mp4", poster: "/videos/wired-home-newsletters-poster.jpg", aspectRatio: "720 / 1560" },
+          { src: "/videos/wired-home-special-editions.mp4", poster: "/videos/wired-home-special-editions-poster.jpg", aspectRatio: "720 / 1560" },
+        ]}
+      />
+      <p class="caption"><span class="caption-title">Home &amp; Discovery</span><br />{annotation("Home & Discovery").body}</p>
+      <blockquote class="caption-quote">
+        <p>&ldquo;{annotation("Home & Discovery").quote.text}&rdquo;</p>
+        <cite>{annotation("Home & Discovery").quote.citation}</cite>
+      </blockquote>
+    </div>
   </div>
-</div>
+
+  <div class="grid" slot="exit-cover">
+    <div class="col-12">
+      <Marquee
+        reverse
+        height="628px"
+        mobileCarousel
+        autoplay
+        items={[
+          { src: "/videos/wired-article-snake-loop.mp4", poster: "/videos/wired-article-snake-loop-poster.jpg", aspectRatio: "720 / 1514" },
+          { src: "/videos/wired-article-scroll.mp4", poster: "/videos/wired-article-scroll-poster.jpg", aspectRatio: "720 / 1560" },
+          { src: "/videos/wired-article-audio.mp4", poster: "/videos/wired-article-audio-poster.jpg", aspectRatio: "720 / 1560" },
+          { src: "/images/wired-app/article-header.jpg", alt: "Wired app article header", aspectRatio: "786 / 1668" },
+          { src: "/videos/wired-article-animated-loop.mp4", poster: "/videos/wired-article-animated-loop-poster.jpg", aspectRatio: "720 / 1514" },
+          { src: "/videos/wired-article-commenting.mp4", poster: "/videos/wired-article-commenting-poster.jpg", aspectRatio: "720 / 1560" },
+        ]}
+      />
+      <p class="caption"><span class="caption-title">Article &amp; Reading</span><br />{annotation("Article & Reading").body}</p>
+      <Marquee
+        height="628px"
+        shrinkToFit
+        mobileCarousel
+        autoplay
+        items={[
+          { src: "/videos/wired-audio-hero.mp4", poster: "/videos/wired-audio-hero-poster.jpg", aspectRatio: "720 / 1560" },
+          { src: "/videos/wired-audio-scroll.mp4", poster: "/videos/wired-audio-scroll-poster.jpg", aspectRatio: "720 / 1560" },
+          { src: "/images/wired-app/file-2.jpg", alt: "Wired app audio file", aspectRatio: "1179 / 2556" },
+          { src: "/videos/wired-audio-playlists.mp4", poster: "/videos/wired-audio-playlists-poster.jpg", aspectRatio: "720 / 1560" },
+        ]}
+      />
+      <p class="caption"><span class="caption-title">Listen &amp; Playlists</span><br />{annotation("Listen & Playlists").body}</p>
+    </div>
+  </div>
+</FullBleedReveal>
 
 <div class="grid">
   <div class="col-12">

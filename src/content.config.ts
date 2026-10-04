@@ -9,10 +9,19 @@ const projects = defineCollection({
     context: z.string(),
     // Controls homepage grid order (1 = first).
     order: z.number(),
-    // Homepage card media: a short muted looping preview, falling back to a still,
-    // falling back to a flat placeholder block if neither is set yet.
+    // Homepage card media: a short muted looping preview (use the same hero
+    // that opens the case study), falling back to a still, falling back to a
+    // flat placeholder block if neither is set yet. coverImage doubles as the
+    // video's poster.
     coverImage: z.string().optional(),
     coverVideo: z.string().optional(),
+    // Homepage card label, when it differs from the case study's own title.
+    cardTitle: z.string().optional(),
+    // How the media sits in the card's 530x390 box: "cover" fills it and
+    // crops, "contain" shows all of it centered (use cardBackground to match
+    // the asset's own background so box and media read as one surface).
+    cardFit: z.enum(["cover", "contain"]).default("cover"),
+    cardBackground: z.string().optional(),
     // Unlisted YouTube/Vimeo embed URL for the project page, added once recorded.
     embedUrl: z.string().optional(),
     screenshots: z.array(z.string()).default([]),
@@ -43,7 +52,8 @@ const site = defineCollection({
     // Scope + specialty + what's next. A few sentences, not a full bio.
     summary: z.string(),
     email: z.string(),
-    linkedinUrl: z.string(),
+    linkedinUrl: z.string().optional(),
+    // Target of the footer's "Download CV" link (drop the PDF in public/).
     resumeUrl: z.string(),
   }),
 });

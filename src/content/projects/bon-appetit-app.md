@@ -1,7 +1,8 @@
 ---
 title: "Bon Appétit App"
 context: "TODO: one-line context — what the app is and why it matters"
-order: 3
+order: 4
+cardTitle: "The Bon Appetit App"
 coverImage: "/images/placeholders/cover.svg"
 coverVideo: ""
 embedUrl: ""
