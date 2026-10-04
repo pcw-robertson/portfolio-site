@@ -45,6 +45,13 @@ export const annotation = (title) => getAnnotation(wired, title);
   </div>
 </div>
 
+<div class="grid">
+  <div class="col-6">
+    <h2>The best place to experience Wired</h2>
+    <p>{annotation("The best place to experience Wired").body}</p>
+  </div>
+</div>
+
 <FullBleedReveal
   device
   src="/videos/wired-nav-zoom.mp4"
@@ -53,13 +60,6 @@ export const annotation = (title) => getAnnotation(wired, title);
   alt="Tapping through the Wired app's Home, Listen, Watch and For You tabs, then switching to dark mode"
 >
   <div class="grid">
-    <div class="col-6">
-      <h2>The best place to experience Wired</h2>
-      <p>{annotation("The best place to experience Wired").body}</p>
-    </div>
-  </div>
-
-  <div class="grid" slot="exit-cover">
     {/* height 628px = the full-screen phone in the intro video (521x1103 within its
         720-wide frame) at the intro's 410px desktop display width, so the frames
         here match the scale of the phones in that video. */}
@@ -82,6 +82,11 @@ export const annotation = (title) => getAnnotation(wired, title);
         <p>&ldquo;{annotation("Home & Discovery").quote.text}&rdquo;</p>
         <cite>{annotation("Home & Discovery").quote.citation}</cite>
       </blockquote>
+    </div>
+  </div>
+
+  <div class="grid" slot="exit-cover">
+    <div class="col-12">
       <Marquee
         reverse
         height="628px"

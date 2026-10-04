@@ -181,7 +181,8 @@ p {
    with an asset, like Results) is half-width already and shouldn't be
    narrowed again. */
 @media (min-width: 1280px) {
-  .col-12 > .caption {
+  .col-12 > .caption,
+  .col-12 > .caption-quote {
     max-width: calc((100% - var(--grid-gutter)) / 2);
   }
 }
