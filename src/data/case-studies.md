@@ -107,7 +107,7 @@ Led design and strategy for Bon Appétit's repositioning across web and app, ali
 *Subscriber experience*
 
 ### Opportunity
-Pitchfork had one of the highest rates of direct and returning visitors across all our sites, pointing to a loyal audience with real appetite to subscribe. This led to the decision to launch a paywall, but also raised a bigger question: how to make the subscription additive to the experience, not just a gate on existing content. Our approach: bring the audience into the conversation. Give users the ability to rate, review, save, and organise music on the most trusted authority in music, turning subscription into something that deepens their relationship with Pitchfork, not just access.
+Pitchfork has one of the most loyal, direct audiences across our sites, which pointed to a real appetite to subscribe. That led to the decision to launch a paywall, but we saw a chance to make it more than a gate: a participatory experience that deepens readers' relationship with Pitchfork.
 
 ### Role
 Led the strategy and design direction for the subscriber experience, developing the community features and how users discover them across the site.
