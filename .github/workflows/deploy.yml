@@ -46,7 +46,10 @@ jobs:
           # (seen during manual setup too) — retry a few times with backoff
           # rather than failing the whole deploy on a transient reset.
           for attempt in 1 2 3 4 5; do
-            if rsync -avz --delete \
+            # /resume.pdf is uploaded by hand (it carries the site password,
+            # so it must not live in this public repo); excluding it also
+            # stops --delete from removing it.
+            if rsync -avz --delete --exclude='/resume.pdf' \
               -e "ssh -p ${{ secrets.BLUEHOST_PORT }}" \
               dist/ \
               "${{ secrets.BLUEHOST_USERNAME }}@${{ secrets.BLUEHOST_HOST }}:${{ vars.BLUEHOST_DEPLOY_PATH }}/"; then

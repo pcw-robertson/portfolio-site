@@ -23,6 +23,24 @@ ErrorDocument 404 /404.html
 # </IfModule>
 
 # ---------------------------------------------------------------------------
+# PASSWORD GATE (must stay AFTER the redirect above: the gate's catch-all
+# rule ends rewriting. See public/gate.php for how it works; delete this block to
+# take the gate off). Pages and the CV go through gate.php, which checks the
+# visitor's cookie and serves the file or shows a password form.
+# These stay ungated: the gate itself, the Search Console file, robots.txt,
+# icons, the share image, the SSL-validation folder (AutoSSL needs it), and
+# the asset folders (so the gate page can load its font; the pages are what's
+# being kept private).
+# ---------------------------------------------------------------------------
+<IfModule mod_rewrite.c>
+  RewriteEngine On
+  RewriteRule ^(gate\.php|robots\.txt|favicon\.ico|favicon\.svg|og-image\.jpg|googlebd6dcb4c146e09e2\.html)$ - [L]
+  RewriteRule ^\.well-known/ - [L]
+  RewriteRule ^(_astro|fonts|images|videos)/ - [L]
+  RewriteRule ^ /gate.php [L]
+</IfModule>
+
+# ---------------------------------------------------------------------------
 # Compression
 # ---------------------------------------------------------------------------
 <IfModule mod_deflate.c>
