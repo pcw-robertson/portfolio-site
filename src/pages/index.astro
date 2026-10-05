@@ -10,7 +10,7 @@ const projects = (await getCollection("projects")).sort(
 
 // How each project's screen is shown on the home page. Wired uses the
 // device reveal from its case study; the others fill the frame with their
-// hero; anything not listed (Bon Appétit) is a placeholder.
+// hero; anything not listed becomes a flat placeholder screen.
 const wiredGradient = "linear-gradient(to bottom right, #2a1fff, #9a0bff)";
 const heroes: Record<string, Record<string, string>> = {
   "wired-app": {
@@ -24,6 +24,12 @@ const heroes: Record<string, Record<string, string>> = {
     src: "/videos/new-yorker-games-hero.mp4",
     poster: "/videos/new-yorker-games-hero-poster.jpg",
     background: "#ffe27f",
+  },
+  "bon-appetit-app": {
+    mode: "fill",
+    src: "/videos/ba-hero.mp4",
+    poster: "/videos/ba-hero-poster.jpg",
+    background: "#000000",
   },
   "pitchfork-subscription": {
     mode: "fill",

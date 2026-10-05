@@ -3,8 +3,8 @@ title: "Bon Appétit App"
 context: "Brand & product strategy"
 order: 4
 cardTitle: "The Bon Appetit App"
-coverImage: "/images/placeholders/cover.svg"
-coverVideo: ""
+coverImage: "/videos/ba-hero-poster.jpg"
+coverVideo: "/videos/ba-hero.mp4"
 template: "custom"
 ---
 
@@ -31,13 +31,13 @@ export const annotation = (title) => getAnnotation(ba, title);
     <p>{ba.role}</p>
   </div>
   <div class="col-6 hero-media">
-    {/* PLACEHOLDER: swap for the hero asset when it's ready. */}
     <AssetFloat
-      src="/images/placeholders/cover.svg"
-      type="image"
-      alt="Placeholder for the Bon Appétit app hero"
-      maxHeight="710px"
-      aspectRatio="9 / 16"
+      src="/videos/ba-hero.mp4"
+      type="video"
+      poster="/videos/ba-hero-poster.jpg"
+      alt="The words bon appétit repeating and animating across a black screen, looping"
+      maxWidth="100%"
+      aspectRatio="1848 / 1080"
       eager
     />
   </div>
