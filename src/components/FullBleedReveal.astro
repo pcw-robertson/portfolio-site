@@ -17,6 +17,14 @@
 // `background` is then a CSS background (e.g. a gradient) that fills the
 // whole stage edge to edge, including below the phone.
 //
+// At desktop a device can instead be cropped to an exact window of the
+// recording (`cropTop` / `cropBottom`, fractions of the recording's height):
+// the phone is scaled so that window fills the stage's height exactly, so the
+// same part of the screen shows at every desktop size, cut straight off at
+// the top and bottom (no rounded corners — the phone runs off the stage).
+// Takes its numbers from a design reference: the y of the first and last
+// visible row of the recording, divided by its height. Mobile is unchanged.
+//
 // Pure CSS, no scroll JS. Layout (all inside .reveal-wrapper):
 //
 //   cover        normal flow, opaque, z2   - slot (default)
@@ -64,6 +72,10 @@ interface Props {
   // A phone recording shown as a device (see top of file); implies single-
   // source.
   device?: boolean;
+  // Desktop-only exact crop of a device recording (see top of file): the
+  // fractions of its height cut off the top and the bottom.
+  cropTop?: number;
+  cropBottom?: number;
 }
 
 const {
@@ -75,15 +87,23 @@ const {
   holdVh = 60,
   background,
   device = false,
+  cropTop,
+  cropBottom,
 } = Astro.props;
 
 const single = device || !mobileSrc;
-const wrapperStyle = [`--hold: ${holdVh}vh`, background && `--reveal-bar: ${background}`]
+const cropped = device && cropTop !== undefined && cropBottom !== undefined;
+const wrapperStyle = [
+  `--hold: ${holdVh}vh`,
+  background && `--reveal-bar: ${background}`,
+  cropped && `--crop-top: ${cropTop}`,
+  cropped && `--crop-bottom: ${cropBottom}`,
+]
   .filter(Boolean)
   .join("; ");
 ---
 
-<div class:list={["reveal-wrapper", { "reveal-single": single, "reveal-device": device }]} style={wrapperStyle}>
+<div class:list={["reveal-wrapper", { "reveal-single": single, "reveal-device": device, "reveal-device--crop": cropped }]} style={wrapperStyle}>
 	<div class="reveal-cover">
 		<slot />
 	</div>
@@ -247,5 +267,31 @@ const wrapperStyle = [`--hold: ${holdVh}vh`, background && `--reveal-bar: ${back
 	.reveal-device .reveal-video--single {
 		height: auto;
 		object-fit: fill;
+	}
+
+	/* Exact crop (desktop): scale the phone so the window between the two
+	   crop fractions is exactly the stage's height, and hang it so that
+	   window starts at the stage's top edge. Width follows from the video's
+	   own aspect ratio. Straight edges, so no rounding. */
+	@media (min-width: 1280px) {
+		.reveal-device--crop {
+			--phone-h: calc(100vh / (1 - var(--crop-top) - var(--crop-bottom)));
+		}
+
+		.reveal-device--crop .reveal-media {
+			bottom: auto;
+			top: calc(-1 * var(--crop-top) * var(--phone-h));
+			/* max-content: an absolutely positioned box otherwise can't be
+			   wider than the space to the right of its left:50%. */
+			width: max-content;
+			height: var(--phone-h);
+			border-radius: 0;
+		}
+
+		.reveal-device--crop .reveal-video--single {
+			width: auto;
+			height: 100%;
+			object-fit: contain;
+		}
 	}
 </style>
