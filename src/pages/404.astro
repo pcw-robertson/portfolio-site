@@ -1,0 +1,25 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+---
+
+<BaseLayout title="Page not found — Peter Robertson">
+	<div class="grid not-found">
+		<div class="col-7 copy">
+			<h1>Page not found</h1>
+			<p>That page doesn't exist. <a href="/">Back to the work</a>.</p>
+		</div>
+	</div>
+</BaseLayout>
+
+<style>
+	.not-found {
+		padding-top: var(--space-4);
+		min-height: 60vh;
+	}
+
+	@media (min-width: 1280px) {
+		.not-found {
+			padding-top: 72px;
+		}
+	}
+</style>

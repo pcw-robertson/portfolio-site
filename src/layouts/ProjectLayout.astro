@@ -3,6 +3,7 @@ import type { CollectionEntry } from "astro:content";
 import BaseLayout from "./BaseLayout.astro";
 import ProjectHero from "../components/ProjectHero.astro";
 import ProjectWalkthrough from "../components/ProjectWalkthrough.astro";
+import { getCaseStudy } from "../lib/case-studies";
 
 interface Props {
   project: CollectionEntry<"projects">;
@@ -16,9 +17,19 @@ const { title, context, embedUrl, coverImage, coverVideo, screenshots, template 
 // counts are skipped for now rather than falling back to a different layout.
 const showWalkthrough = screenshots.length === 2 || screenshots.length === 3;
 const isCustom = template === "custom";
+
+// Meta description: the first sentence of the case study's Opportunity (the
+// shared copy file), falling back to the one-line context.
+let description = context;
+try {
+  const first = getCaseStudy(project.id).opportunity.split(/(?<=[.!?])\s/)[0];
+  if (first) description = first;
+} catch {
+  // No entry in the copy file for this project — keep the context line.
+}
 ---
 
-<BaseLayout title={`${title} — Project`} description={context}>
+<BaseLayout title={`${title} — Peter Robertson`} description={description}>
 	<div class="project-theme full-bleed">
 		{
 			isCustom ? (
