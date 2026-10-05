@@ -18,7 +18,7 @@ Led strategy and execution end to end, from the initial product thesis through d
 ### Outcome
 - Beta in two months
 - Launch in five months
-- Early signs: 8x the time spent in the app vs web
+- Early signs: 8 times the time spent in the app vs web
 
 ### Annotations / screens
 **The best place to experience Wired**
@@ -47,7 +47,7 @@ An immersive, tailored package of stories: finite and completable, with a reward
 **Open items:**
 - [ ] Decide whether to add an ancillary screens group
 - [ ] Check the Article line doesn't oversell audio (currently not mentioned)
-- [ ] Confirm "time spent" is the right metric wording, and that the 8x figure can be published
+- [ ] Confirm "time spent" is the right metric wording, and that the 8 times figure can be published
 - [ ] Update the early-signs figure as more data comes in
 
 ---
