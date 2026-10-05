@@ -184,3 +184,21 @@ a safe default to extend from.
     justify-content: center;
   }
 }
+
+/* A case study's opening text block, with no hero media beside it: just the
+   copy at the top of the page, then the visuals. Top spacing matches the home
+   page's intro (--space-4, 72px at desktop, the Figma value). */
+.grid.case-intro {
+  padding-top: var(--space-4);
+}
+
+@media (min-width: 1280px) {
+  .grid.case-intro {
+    padding-top: 72px;
+    /* Fill the first screen (viewport less the nav, 93px, and the space
+       above the grid, --space-5) so the page opens on the text alone and the
+       visuals start below the fold: you scroll into them. Desktop only — on
+       mobile the copy already takes most of the screen. */
+    min-height: calc(100svh - 93px - var(--space-5));
+  }
+}
