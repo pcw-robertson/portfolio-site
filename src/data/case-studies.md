@@ -88,14 +88,16 @@ Catalogues is a daily logic puzzle. It is designed to be the simplest and most i
 ---
 
 ## Bon Appétit App
-*(launching Q4 2026)*
-*Brand & product strategy*
+*Brand & Product Strategy*
 
 ### Opportunity
-The opportunity: align Condé Nast around a single food brand, focused on recipes as the clearest path to habit and retention, brought to life consistently across web and app with a refreshed visual direction. It began as a business ask to cosmetically rebrand the Epicurious app, Bon Appétit's sister brand. Seeing the chance to push a bigger idea, I used that ask as the catalyst to consolidate the business around Bon Appétit and rebuild the product around its core customer need, recipes.
+Align Condé Nast around a single food brand, built on recipes as the clearest path to habit and retention, and refresh its look across web, app and social. It began as a request to cosmetically rebrand the Epicurious app, Bon Appétit's sister brand. I used that as the catalyst for a bigger idea: consolidate the business around Bon Appétit and rebuild the product around recipes.
 
 ### Role
-Led design and strategy for Bon Appétit's repositioning across web and app, aligning the business around the overall vision and roadmap to deliver it. Led the small team delivering the work, partnering closely with marketing and revenue to ensure clarity of message and purpose end to end.
+Led design and strategy for Bon Appétit's repositioning across web and app, setting the vision and roadmap and aligning the business behind it. Directed the small team delivering the work, partnering closely with marketing and revenue so the message stayed clear end to end, and with Bon Appétit's creative team to keep social aligned.
+
+### Outcome
+- Launching November 2026
 
 ### Annotations / project details
 **Home**

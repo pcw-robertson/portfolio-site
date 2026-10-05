@@ -1,8 +1,8 @@
 ---
 title: "Bon Appétit App"
-context: "Brand & product strategy"
+context: "Brand & Product Strategy"
 order: 4
-cardTitle: "The Bon Appetit App"
+cardTitle: "The Bon Appétit App"
 coverImage: "/videos/ba-hero-poster.jpg"
 coverVideo: "/videos/ba-hero.mp4"
 template: "custom"
@@ -21,13 +21,17 @@ export const annotation = (title) => getAnnotation(ba, title);
 
 <div class="grid case-intro">
   <div class="col-6">
-    <h1>Bon Appétit App</h1>
-    <p class="muted subtitle">Brand &amp; product strategy</p>
+    <h1>The Bon Appétit App</h1>
+    <p class="muted subtitle">Brand &amp; Product Strategy</p>
 
     <h2>The Opportunity</h2>
     <p>{ba.opportunity}</p>
     <h2>Role</h2>
     <p>{ba.role}</p>
+    <h2>Outcome</h2>
+    <ul class="outcome-list">
+      {ba.outcome.map((item) => <li>{item}</li>)}
+    </ul>
   </div>
 </div>
 
