@@ -99,22 +99,6 @@ Led design and strategy for Bon Appétit's repositioning across web and app, set
 ### Outcome
 - Launching November 2026
 
-### Annotations / project details
-**Home**
-[Caption to come]
-
-**Recipe headers**
-[Caption to come]
-
-**Recipe**
-[Caption to come]
-
-**Search**
-[Caption to come]
-
-**Saved**
-[Caption to come]
-
 ### Takeaways
 *[to draft]*
 
@@ -135,9 +119,7 @@ Led the strategy and design direction for the subscriber experience, developing 
 **Reader Scores**
 Giving subscribers a say on three decades of Pitchfork reviews, and surfacing their scores across the site as a reason for other readers to join in, or to subscribe.
 
-**Collections**
+**Going Deeper**
 Tools for subscribers to rate, save and organise the albums and tracks they love, building loyalty and attachment among our most engaged readers.
 
 **Open items:**
-- [ ] Confirm the launch year (2026) in the first Outcome line
-- [ ] Confirm "Collections" as the heading for the last row

@@ -10,10 +10,9 @@ template: "custom"
 
 import Marquee from "../../components/Marquee.astro";
 import FullBleedReveal from "../../components/FullBleedReveal.astro";
-import { getCaseStudy, getAnnotation } from "../../lib/case-studies";
+import { getCaseStudy } from "../../lib/case-studies";
 
 export const ba = getCaseStudy("bon-appetit-app");
-export const annotation = (title) => getAnnotation(ba, title);
 
 {/* Row order and direction: Home (scrolls left), Recipe headers (reverse), the
     dark-mode reveal, Recipe (left), Search (reverse), Saved (left; only 4 items,
@@ -58,7 +57,7 @@ export const annotation = (title) => getAnnotation(ba, title);
           { src: "/videos/ba-home-8-onboarding.mp4", poster: "/videos/ba-home-8-onboarding-poster.jpg", aspectRatio: "720 / 1564" },
         ]}
       />
-      <p class="caption"><span class="caption-title">Home</span><br />{annotation("Home").body}</p>
+      <p class="caption"><span class="caption-title">Home</span></p>
             <Marquee
         reverse
         items={[
@@ -71,7 +70,6 @@ export const annotation = (title) => getAnnotation(ba, title);
           { src: "/images/bon-appetit-app/header-7.jpg", alt: "Bon Appétit app, Recipe header screen 7", aspectRatio: "720 / 1560" },
         ]}
       />
-      <p class="caption"><span class="caption-title">Recipe headers</span><br />{annotation("Recipe headers").body}</p>
     </div>
   </div>
 
@@ -86,7 +84,7 @@ export const annotation = (title) => getAnnotation(ba, title);
           { src: "/images/bon-appetit-app/recipe-5-notes-modal.jpg", alt: "Bon Appétit app, Recipe screen 5", aspectRatio: "720 / 1564" },
         ]}
       />
-      <p class="caption"><span class="caption-title">Recipe</span><br />{annotation("Recipe").body}</p>
+      <p class="caption"><span class="caption-title">Recipes</span></p>
     </div>
   </div>
 </FullBleedReveal>
@@ -102,7 +100,7 @@ export const annotation = (title) => getAnnotation(ba, title);
         { src: "/images/bon-appetit-app/search-4.jpg", alt: "Bon Appétit app, Search screen 4", aspectRatio: "720 / 1564" },
       ]}
     />
-    <p class="caption"><span class="caption-title">Search</span><br />{annotation("Search").body}</p>
+    <p class="caption"><span class="caption-title">Search</span></p>
   </div>
 </div>
 
@@ -115,6 +113,6 @@ export const annotation = (title) => getAnnotation(ba, title);
         { src: "/images/bon-appetit-app/saved-3-collection.jpg", alt: "Bon Appétit app, Saved screen 3", aspectRatio: "720 / 1564" },
       ]}
     />
-    <p class="caption"><span class="caption-title">Saved</span><br />{annotation("Saved").body}</p>
+    <p class="caption"><span class="caption-title">Save</span></p>
   </div>
 </div>
