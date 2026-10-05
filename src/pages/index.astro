@@ -40,7 +40,7 @@ const heroes: Record<string, Record<string, string>> = {
 const placeholder = { mode: "none", background: "#2b2b29" };
 ---
 
-<BaseLayout title={`${site.name} — ${site.title}`}>
+<BaseLayout title={`${site.name} — ${site.title}`} description={site.positioningStatement}>
 	<h1 class="visually-hidden">{site.name}, {site.title}</h1>
 
 	<div class="grid home">

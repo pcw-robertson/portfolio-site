@@ -1,0 +1,64 @@
+# Served by Apache on Bluehost. Ships with every deploy (public/ -> dist/ ->
+# public_html). Don't edit the copy on the server: the next deploy replaces it.
+
+# ---------------------------------------------------------------------------
+# 404 page (built from src/pages/404.astro)
+# ---------------------------------------------------------------------------
+ErrorDocument 404 /404.html
+
+# ---------------------------------------------------------------------------
+# One address for the site: https://peter-robertson.co.uk
+#
+# PHASE 2 — leave commented out until AutoSSL has issued a certificate for
+# peter-robertson.co.uk AND www (cPanel -> SSL/TLS Status). Switching this on
+# before then sends every visitor to a browser certificate warning. Once
+# https://peter-robertson.co.uk loads without a warning, uncomment and redeploy.
+# ---------------------------------------------------------------------------
+# <IfModule mod_rewrite.c>
+#   RewriteEngine On
+#   # http -> https, and www -> bare domain, in a single hop.
+#   RewriteCond %{HTTPS} off [OR]
+#   RewriteCond %{HTTP_HOST} ^www\. [NC]
+#   RewriteRule ^ https://peter-robertson.co.uk%{REQUEST_URI} [L,R=301]
+# </IfModule>
+
+# ---------------------------------------------------------------------------
+# Compression
+# ---------------------------------------------------------------------------
+<IfModule mod_deflate.c>
+  AddOutputFilterByType DEFLATE text/html text/css application/javascript image/svg+xml application/json
+</IfModule>
+
+# ---------------------------------------------------------------------------
+# Caching
+#  - /_astro/ files have a content hash in their name, so they never change
+#    under the same URL: cache for a year.
+#  - Fonts, images and videos: a month (they change rarely, and not by hash).
+#  - HTML: always revalidate, so a new deploy shows straight away.
+# ---------------------------------------------------------------------------
+<IfModule mod_expires.c>
+  ExpiresActive On
+  ExpiresDefault "access plus 0 seconds"
+  ExpiresByType text/html "access plus 0 seconds"
+  ExpiresByType font/woff2 "access plus 1 month"
+  ExpiresByType image/jpeg "access plus 1 month"
+  ExpiresByType image/png "access plus 1 month"
+  ExpiresByType image/svg+xml "access plus 1 month"
+  ExpiresByType image/x-icon "access plus 1 month"
+  ExpiresByType video/mp4 "access plus 1 month"
+  ExpiresByType text/css "access plus 1 month"
+  ExpiresByType application/javascript "access plus 1 month"
+</IfModule>
+
+<IfModule mod_headers.c>
+  <FilesMatch "\.html$">
+    Header set Cache-Control "no-cache"
+  </FilesMatch>
+  <If "%{REQUEST_URI} =~ m#^/_astro/#">
+    Header set Cache-Control "public, max-age=31536000, immutable"
+  </If>
+</IfModule>
+
+# Videos are played from the start in-page; let browsers seek/range-request.
+AddType video/mp4 .mp4
+AddType font/woff2 .woff2

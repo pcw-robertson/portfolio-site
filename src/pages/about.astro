@@ -7,7 +7,7 @@ const aboutEntry = (await getEntry("about", "index"))!;
 const { Content } = await render(aboutEntry);
 ---
 
-<BaseLayout title={`About — ${site.name}`}>
+<BaseLayout title={`About — ${site.name}`} description={site.summary.split(/(?<=[.!?])\s/)[0]}>
 	<h1 class="visually-hidden">About</h1>
 
 	<div class="grid about">
