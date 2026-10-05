@@ -1,0 +1,129 @@
+---
+title: "Bon Appétit App"
+context: "Brand & product strategy"
+order: 4
+cardTitle: "The Bon Appetit App"
+coverImage: "/images/placeholders/cover.svg"
+coverVideo: ""
+template: "custom"
+---
+
+import AssetFloat from "../../components/AssetFloat.astro";
+import Marquee from "../../components/Marquee.astro";
+import FullBleedReveal from "../../components/FullBleedReveal.astro";
+import { getCaseStudy, getAnnotation } from "../../lib/case-studies";
+
+export const ba = getCaseStudy("bon-appetit-app");
+export const annotation = (title) => getAnnotation(ba, title);
+
+{/* Row order and direction: Home (scrolls left), Recipe headers (reverse), the
+    dark-mode reveal, Recipe (left), Search (reverse), Saved (left; only 4 items,
+    so it sits still at desktop). Alternating directions, per the site rule. */}
+
+<div class="grid hero-stage">
+  <div class="col-6">
+    <h1>Bon Appétit App</h1>
+    <p class="muted subtitle">Brand &amp; product strategy</p>
+
+    <h2>The Opportunity</h2>
+    <p>{ba.opportunity}</p>
+    <h2>Role</h2>
+    <p>{ba.role}</p>
+  </div>
+  <div class="col-6 hero-media">
+    {/* PLACEHOLDER: swap for the hero asset when it's ready. */}
+    <AssetFloat
+      src="/images/placeholders/cover.svg"
+      type="image"
+      alt="Placeholder for the Bon Appétit app hero"
+      maxHeight="710px"
+      aspectRatio="9 / 16"
+      eager
+    />
+  </div>
+</div>
+
+<FullBleedReveal
+  device
+  src="/videos/ba-dark-mode-switch.mp4"
+  poster="/videos/ba-dark-mode-switch-poster.jpg"
+  background="linear-gradient(to bottom right, #e0ed46, #8de946)"
+  alt="A Bon Appétit recipe page switching from light mode to dark mode"
+>
+  <div class="grid">
+    <div class="col-12">
+      <Marquee
+        items={[
+          { src: "/images/bon-appetit-app/home-1-header.jpg", alt: "Bon Appétit app, Home screen 1", aspectRatio: "720 / 1564" },
+          { src: "/videos/ba-home-2-carousel-swipe.mp4", poster: "/videos/ba-home-2-carousel-swipe-poster.jpg", aspectRatio: "720 / 1564" },
+          { src: "/images/bon-appetit-app/home-3-collections.jpg", alt: "Bon Appétit app, Home screen 3", aspectRatio: "720 / 1564" },
+          { src: "/videos/ba-home-4-video-discovery.mp4", poster: "/videos/ba-home-4-video-discovery-poster.jpg", aspectRatio: "720 / 1564" },
+          { src: "/images/bon-appetit-app/home-5-featured.jpg", alt: "Bon Appétit app, Home screen 5", aspectRatio: "720 / 1564" },
+          { src: "/videos/ba-home-6-in-season.mp4", poster: "/videos/ba-home-6-in-season-poster.jpg", aspectRatio: "720 / 1564" },
+          { src: "/videos/ba-home-7-recipe-video.mp4", poster: "/videos/ba-home-7-recipe-video-poster.jpg", aspectRatio: "720 / 1564" },
+          { src: "/videos/ba-home-8-onboarding.mp4", poster: "/videos/ba-home-8-onboarding-poster.jpg", aspectRatio: "720 / 1564" },
+        ]}
+      />
+      <p class="caption"><span class="caption-title">Home</span><br />{annotation("Home").body}</p>
+            <Marquee
+        reverse
+        items={[
+          { src: "/images/bon-appetit-app/header-1.jpg", alt: "Bon Appétit app, Recipe header screen 1", aspectRatio: "720 / 1560" },
+          { src: "/images/bon-appetit-app/header-2.jpg", alt: "Bon Appétit app, Recipe header screen 2", aspectRatio: "720 / 1560" },
+          { src: "/images/bon-appetit-app/header-3.jpg", alt: "Bon Appétit app, Recipe header screen 3", aspectRatio: "720 / 1560" },
+          { src: "/images/bon-appetit-app/header-4.jpg", alt: "Bon Appétit app, Recipe header screen 4", aspectRatio: "720 / 1560" },
+          { src: "/images/bon-appetit-app/header-5.jpg", alt: "Bon Appétit app, Recipe header screen 5", aspectRatio: "720 / 1560" },
+          { src: "/images/bon-appetit-app/header-6.jpg", alt: "Bon Appétit app, Recipe header screen 6", aspectRatio: "720 / 1560" },
+          { src: "/images/bon-appetit-app/header-7.jpg", alt: "Bon Appétit app, Recipe header screen 7", aspectRatio: "720 / 1560" },
+        ]}
+      />
+      <p class="caption"><span class="caption-title">Recipe headers</span><br />{annotation("Recipe headers").body}</p>
+    </div>
+  </div>
+
+  <div class="grid" slot="exit-cover">
+    <div class="col-12">
+      <Marquee
+        items={[
+          { src: "/images/bon-appetit-app/recipe-1-header.jpg", alt: "Bon Appétit app, Recipe screen 1", aspectRatio: "720 / 1564" },
+          { src: "/videos/ba-recipe-2-ingredients.mp4", poster: "/videos/ba-recipe-2-ingredients-poster.jpg", aspectRatio: "720 / 1560" },
+          { src: "/images/bon-appetit-app/recipe-3-steps.jpg", alt: "Bon Appétit app, Recipe screen 3", aspectRatio: "720 / 1564" },
+          { src: "/images/bon-appetit-app/recipe-4-notes.jpg", alt: "Bon Appétit app, Recipe screen 4", aspectRatio: "720 / 1564" },
+          { src: "/images/bon-appetit-app/recipe-5-notes-modal.jpg", alt: "Bon Appétit app, Recipe screen 5", aspectRatio: "720 / 1564" },
+        ]}
+      />
+      <p class="caption"><span class="caption-title">Recipe</span><br />{annotation("Recipe").body}</p>
+    </div>
+  </div>
+</FullBleedReveal>
+
+<div class="grid">
+  <div class="col-12">
+    <Marquee
+      reverse
+      items={[
+        { src: "/images/bon-appetit-app/search-1.jpg", alt: "Bon Appétit app, Search screen 1", aspectRatio: "720 / 1564" },
+        { src: "/images/bon-appetit-app/search-2.jpg", alt: "Bon Appétit app, Search screen 2", aspectRatio: "720 / 1564" },
+        { src: "/images/bon-appetit-app/search-3.jpg", alt: "Bon Appétit app, Search screen 3", aspectRatio: "720 / 1564" },
+        { src: "/images/bon-appetit-app/search-4.jpg", alt: "Bon Appétit app, Search screen 4", aspectRatio: "720 / 1564" },
+        { src: "/images/bon-appetit-app/search-5.jpg", alt: "Bon Appétit app, Search screen 5", aspectRatio: "720 / 1564" },
+        { src: "/images/bon-appetit-app/search-6.jpg", alt: "Bon Appétit app, Search screen 6", aspectRatio: "720 / 1564" },
+      ]}
+    />
+    <p class="caption"><span class="caption-title">Search</span><br />{annotation("Search").body}</p>
+  </div>
+</div>
+
+<div class="grid">
+  <div class="col-12">
+    <Marquee
+      items={[
+        { src: "/images/bon-appetit-app/saved-1-home.jpg", alt: "Bon Appétit app, Saved screen 1", aspectRatio: "720 / 1564" },
+        { src: "/images/bon-appetit-app/saved-2-collection.jpg", alt: "Bon Appétit app, Saved screen 2", aspectRatio: "720 / 1564" },
+        { src: "/images/bon-appetit-app/saved-3-save-modal.jpg", alt: "Bon Appétit app, Saved screen 3", aspectRatio: "720 / 1564" },
+        { src: "/images/bon-appetit-app/saved-4-new-folder.jpg", alt: "Bon Appétit app, Saved screen 4", aspectRatio: "720 / 1564" },
+      ]}
+    />
+    <p class="caption"><span class="caption-title">Saved</span><br />{annotation("Saved").body}</p>
+  </div>
+</div>

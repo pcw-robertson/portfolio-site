@@ -98,7 +98,20 @@ The opportunity: align Condé Nast around a single food brand, focused on recipe
 Led design and strategy for Bon Appétit's repositioning across web and app, aligning the business around the overall vision and roadmap to deliver it. Led the small team delivering the work, partnering closely with marketing and revenue to ensure clarity of message and purpose end to end.
 
 ### Annotations / project details
-*[to draft — recipe-first repositioning, web/app through-line, new visual direction, in-progress Q4 launch]*
+**Home**
+[Caption to come]
+
+**Recipe headers**
+[Caption to come]
+
+**Recipe**
+[Caption to come]
+
+**Search**
+[Caption to come]
+
+**Saved**
+[Caption to come]
 
 ### Takeaways
 *[to draft]*
