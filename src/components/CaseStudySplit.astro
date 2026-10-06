@@ -66,13 +66,13 @@ const { src, poster, alt = "" } = Astro.props;
 
 	@media (min-width: 1280px) {
 		/* The split is a full screen, from the very top of the page: it is
-		   pulled up behind the nav (93px, plus the --space-5 of padding the
+		   pulled up behind the nav (--nav-h, plus the --space-5 of padding the
 		   article has above it), and the nav (z-index in Nav.astro) sits on
 		   top of it. */
 		.split {
 			display: grid;
 			grid-template-columns: 1fr 1fr;
-			margin-top: calc(-1 * (93px + var(--space-5)));
+			margin-top: calc(-1 * (var(--nav-h) + var(--space-5)));
 			margin-bottom: var(--space-5);
 			min-height: max(100svh, 653px);
 		}
@@ -81,8 +81,8 @@ const { src, poster, alt = "" } = Astro.props;
 		   (72px, same as the home intro), never centred, so every case study's
 		   text starts in the same place. */
 		.split-text {
-			/* 93px of nav + 72px, so the text starts where it always did. */
-			padding: calc(93px + 72px) 60px 0
+			/* The nav + 72px, so the text starts where it always did. */
+			padding: calc(var(--nav-h) + 72px) 60px 0
 				max(var(--grid-margin), calc((100vw - var(--grid-container)) / 2 + var(--grid-margin)));
 			margin-bottom: 0;
 			align-self: start;

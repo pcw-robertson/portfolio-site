@@ -59,7 +59,7 @@ An immersive, tailored package of stories: finite and completable, with a reward
 Give subscribers more reasons to return to The New Yorker every day, by expanding the games portfolio beyond crosswords and trivia into daily puzzle-based play, and building habits that live outside the news cycle.
 
 ### Role
-Led the design of both games, directing the team and partnering with The New Yorker's games team to bring them to launch. Starting from broad concepts, we turned them into experiences that feel distinctly New Yorker.
+Led the design of both games, directing the team and partnering with The New Yorker's games team to bring them to launch.
 
 ### Outcome
 - Impact – 20 million plays since the games launched, over 500,000 engaged hours

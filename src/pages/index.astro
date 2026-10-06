@@ -21,8 +21,15 @@ const site = (await getEntry("site", "index"))!.data;
 </BaseLayout>
 
 <style>
+	/* The intro fills the first screen, less a fixed strip (--home-peek) of
+	   the first project, anchored to the bottom of the viewport: the nav, this
+	   block and the gap before the stack add up to 100svh - peek, so the same
+	   amount of the project shows whatever the screen height. (If the text is
+	   taller than that, the block just grows.) */
 	.home {
 		padding-top: var(--space-4);
+		align-content: start;
+		min-height: calc(100svh - var(--home-peek) - var(--nav-h) - var(--space-4));
 	}
 
 	@media (min-width: 1280px) {

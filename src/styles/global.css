@@ -30,6 +30,12 @@
   --space-5: 5rem;
   --space-6: 8rem;
 
+  /* Height of the nav bar (padding + one line), and how much of the first
+     project screen shows under the home page's intro. Larger values at
+     desktop, set below. */
+  --nav-h: 52px;
+  --home-peek: 100px;
+
   /* Type scale for the home and about pages (and nav/footer): the large
      "L" size is copy, titles and nav; "S" is the quiet footer line. Desktop
      values are the Figma sizes (24/28 and 18/28); smaller below. */
@@ -49,6 +55,8 @@
     --text-s: 1.125rem;
     --leading-s: 1.75rem;
     --leading-copy: 1.875rem;
+    --nav-h: 93px;
+    --home-peek: 140px;
   }
 }
 
