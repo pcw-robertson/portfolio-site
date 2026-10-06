@@ -54,6 +54,11 @@ const projects = (await getCollection("projects"))
 		top: 0;
 		z-index: 10;
 		height: 0;
+		/* The label's box spans the whole width above the project it sits on;
+		   taps on its empty part must fall through to that project (and its
+		   scroll-on-tap), not die on the invisible band. Only the text link
+		   itself takes taps. */
+		pointer-events: none;
 	}
 
 	.work-label {
@@ -71,6 +76,7 @@ const projects = (await getCollection("projects"))
 		color: inherit;
 		text-decoration: none;
 		cursor: pointer;
+		pointer-events: auto;
 	}
 
 	.project-heroes {
