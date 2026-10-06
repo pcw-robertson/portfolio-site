@@ -15,6 +15,11 @@ const site = (await getEntry("site", "index"))!.data;
 			<p>{site.summary}</p>
 		</div>
 
+		<a class="scroll-cue" href="#work" data-scroll-to="work" aria-label="Scroll to selected work">
+			<svg width="28" height="28" viewBox="0 0 28 28" fill="none" aria-hidden="true">
+				<path d="M14 4v19M5.5 14.5 14 23l8.5-8.5" stroke="currentColor" stroke-width="1.5" />
+			</svg>
+		</a>
 	</div>
 
 	<ProjectStack label="Selected Work" />
@@ -40,9 +45,29 @@ const site = (await getEntry("site", "index"))!.data;
 		}
 	}
 
-	/* The large section gap from the case study pages (--space-5), less the
-	   grid's own row gap that already sits between these rows. */
-	.intro {
-		margin-bottom: calc(var(--space-5) - var(--grid-gutter));
+	/* A quiet down arrow under the intro: says "keep scrolling" (the area
+	   below reads like a button otherwise) and scrolls to the work when tapped. */
+	.scroll-cue {
+		grid-column: 1 / -1;
+		justify-self: start;
+		margin-top: calc(var(--space-4) - var(--grid-gutter));
+		color: var(--color-muted);
+		line-height: 0;
+		animation: cue-bob 2.4s ease-in-out infinite;
+	}
+
+	.scroll-cue:hover {
+		color: var(--color-ink);
+	}
+
+	@keyframes cue-bob {
+		0%, 100% { transform: translateY(0); }
+		50% { transform: translateY(6px); }
+	}
+
+	@media (prefers-reduced-motion: reduce) {
+		.scroll-cue {
+			animation: none;
+		}
 	}
 </style>

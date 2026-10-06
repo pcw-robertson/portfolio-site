@@ -17,18 +17,21 @@ interface Props {
   label: string;
   // Project id to leave out (the case study you're reading).
   exclude?: string;
+  // Id of the stack, so links (the label itself, the home page's scroll cue)
+  // can scroll it to the top of the screen.
+  id?: string;
 }
 
-const { label, exclude } = Astro.props;
+const { label, exclude, id = "work" } = Astro.props;
 const projects = (await getCollection("projects"))
   .filter((p) => p.id !== exclude)
   .sort((a, b) => a.data.order - b.data.order);
 ---
 
-<div class="project-heroes">
+<div class="project-heroes" id={id}>
 	<div class="heroes-label">
 		<div class="page-container">
-			<h2 class="work-label">{label}</h2>
+			<h2 class="work-label"><a href={`#${id}`} data-scroll-to={id}>{label}</a></h2>
 		</div>
 	</div>
 	{
@@ -64,6 +67,12 @@ const projects = (await getCollection("projects"))
 		text-shadow: 0 0 14px rgba(0, 0, 0, 0.6);
 	}
 
+	.work-label a {
+		color: inherit;
+		text-decoration: none;
+		cursor: pointer;
+	}
+
 	.project-heroes {
 		margin-top: var(--space-4);
 	}
@@ -84,3 +93,21 @@ const projects = (await getCollection("projects"))
 		margin-bottom: 0;
 	}
 </style>
+
+<script>
+	// Any link marked data-scroll-to="<id>" smooth-scrolls so that element's top
+	// meets the top of the screen (the stack's pinned label then sits at the
+	// top). Once the stack has already reached the top it does nothing, rather
+	// than jumping back up. Without JS the plain #id link still jumps there.
+	document.addEventListener("click", (event) => {
+		const link = (event.target as Element).closest<HTMLElement>("[data-scroll-to]");
+		if (!link) return;
+		const target = document.getElementById(link.dataset.scrollTo ?? "");
+		if (!target) return;
+		event.preventDefault();
+		const top = target.getBoundingClientRect().top;
+		if (top <= 1) return;
+		const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+		window.scrollTo({ top: window.scrollY + top, behavior: reduce ? "auto" : "smooth" });
+	});
+</script>
