@@ -8,19 +8,19 @@ ErrorDocument 404 /404.html
 
 # ---------------------------------------------------------------------------
 # One address for the site: https://peter-robertson.co.uk
-#
-# PHASE 2 — leave commented out until AutoSSL has issued a certificate for
-# peter-robertson.co.uk AND www (cPanel -> SSL/TLS Status). Switching this on
-# before then sends every visitor to a browser certificate warning. Once
-# https://peter-robertson.co.uk loads without a warning, uncomment and redeploy.
+# http -> https, and www -> the bare domain, in a single hop. Switched on 6 Oct
+# 2026, once AutoSSL had issued a certificate covering both names. (If the
+# certificate ever lapses, this makes the whole site show a browser warning.)
 # ---------------------------------------------------------------------------
-# <IfModule mod_rewrite.c>
-#   RewriteEngine On
-#   # http -> https, and www -> bare domain, in a single hop.
-#   RewriteCond %{HTTPS} off [OR]
-#   RewriteCond %{HTTP_HOST} ^www\. [NC]
-#   RewriteRule ^ https://peter-robertson.co.uk%{REQUEST_URI} [L,R=301]
-# </IfModule>
+<IfModule mod_rewrite.c>
+  RewriteEngine On
+  # The certificate-validation folder is left alone, so AutoSSL renewals can
+  # always reach it over plain http.
+  RewriteCond %{REQUEST_URI} !^/\.well-known/
+  RewriteCond %{HTTPS} off [OR]
+  RewriteCond %{HTTP_HOST} ^www\. [NC]
+  RewriteRule ^ https://peter-robertson.co.uk%{REQUEST_URI} [L,R=301]
+</IfModule>
 
 # ---------------------------------------------------------------------------
 # PASSWORD GATE (must stay AFTER the redirect above: the gate's catch-all
