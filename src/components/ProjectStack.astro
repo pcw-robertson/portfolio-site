@@ -101,15 +101,21 @@ const projects = (await getCollection("projects"))
 </style>
 
 <script>
-	// Smooth-scroll the stack so its top meets the top of the screen (the
-	// pinned label then sits at the top, with the first project filling the
-	// screen). Once the stack has already reached the top this does nothing,
-	// rather than jumping back up. Without JS the plain #id links still jump.
+	// The label (and the home page's arrow) is a two-way control. From above
+	// the stack, it smooth-scrolls the stack so its top meets the top of the
+	// screen (the pinned label then sits at the top, with the first project
+	// filling the screen). Once you're inside the stack, tapping the label
+	// again takes you back to the top of the page. Without JS the plain #id
+	// links still jump to the stack.
 	function scrollStackToTop(stack: HTMLElement) {
-		const top = stack.getBoundingClientRect().top;
-		if (top <= 1) return;
 		const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-		window.scrollTo({ top: window.scrollY + top, behavior: reduce ? "auto" : "smooth" });
+		const behavior: ScrollBehavior = reduce ? "auto" : "smooth";
+		const top = stack.getBoundingClientRect().top;
+		if (top > 1) {
+			window.scrollTo({ top: window.scrollY + top, behavior });
+		} else {
+			window.scrollTo({ top: 0, behavior });
+		}
 	}
 
 	document.addEventListener(
