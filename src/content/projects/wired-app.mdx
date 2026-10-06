@@ -12,26 +12,29 @@ template: "custom"
 
 import Marquee from "../../components/Marquee.astro";
 import FullBleedReveal from "../../components/FullBleedReveal.astro";
+import CaseStudySplit from "../../components/CaseStudySplit.astro";
 import { getCaseStudy, getAnnotation } from "../../lib/case-studies";
 
 export const wired = getCaseStudy("wired-app");
 export const annotation = (title) => getAnnotation(wired, title);
 
-<div class="grid case-intro">
-  <div class="col-6">
-    <h1>The Wired App</h1>
-    <p class="muted subtitle">Product Strategy &amp; Design Leadership — 0 to 1</p>
+<CaseStudySplit
+  src="/videos/wired-intro-walkthrough.mp4"
+  poster="/videos/wired-intro-walkthrough-poster.jpg"
+  alt="Walkthrough of the Wired app"
+>
+  <h1>The Wired App</h1>
+  <p class="muted subtitle">Product Strategy &amp; Design Leadership — 0 to 1</p>
 
-    <h2>The Opportunity</h2>
-    <p>{wired.opportunity}</p>
-    <h2>Role</h2>
-    <p>{wired.role}</p>
-    <h2>Outcome</h2>
-    <ul class="outcome-list">
-      {wired.outcome.map((item) => <li>{item}</li>)}
-    </ul>
-  </div>
-</div>
+  <h2>The Opportunity</h2>
+  <p>{wired.opportunity}</p>
+  <h2>Role</h2>
+  <p>{wired.role}</p>
+  <h2>Outcome</h2>
+  <ul class="outcome-list">
+    {wired.outcome.map((item) => <li>{item}</li>)}
+  </ul>
+</CaseStudySplit>
 
 <div class="grid">
   <div class="col-6">

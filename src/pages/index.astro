@@ -1,43 +1,9 @@
 ---
-import { getCollection, getEntry } from "astro:content";
+import { getEntry } from "astro:content";
 import BaseLayout from "../layouts/BaseLayout.astro";
-import HomeProjectScreen from "../components/HomeProjectScreen.astro";
+import ProjectStack from "../components/ProjectStack.astro";
 
 const site = (await getEntry("site", "index"))!.data;
-const projects = (await getCollection("projects")).sort(
-  (a, b) => a.data.order - b.data.order,
-);
-
-// How each project's screen is shown on the home page. Wired uses the
-// device reveal from its case study; the others fill the frame with their
-// hero; anything not listed becomes a flat placeholder screen.
-const wiredGradient = "linear-gradient(to bottom right, #2a1fff, #9a0bff)";
-const heroes: Record<string, Record<string, string>> = {
-  "wired-app": {
-    mode: "device",
-    src: "/videos/wired-nav-zoom.mp4",
-    poster: "/videos/wired-nav-zoom-poster.jpg",
-    background: wiredGradient,
-  },
-  "new-yorker-games": {
-    mode: "fill",
-    src: "/videos/new-yorker-games-hero-large.mp4",
-    poster: "/videos/new-yorker-games-hero-large-poster.jpg",
-    background: "#ffe27f",
-  },
-  "bon-appetit-app": {
-    mode: "fill",
-    src: "/videos/ba-hero.mp4",
-    poster: "/videos/ba-hero-poster.jpg",
-    background: "#000000",
-  },
-  "pitchfork-subscription": {
-    mode: "fill",
-    src: "/videos/pitchfork-hero-large.mp4",
-    poster: "/videos/pitchfork-hero-large-poster.jpg",
-  },
-};
-const placeholder = { mode: "none", background: "#2b2b29" };
 ---
 
 <BaseLayout title={`${site.name} — ${site.title}`} description={site.positioningStatement}>
@@ -51,22 +17,7 @@ const placeholder = { mode: "none", background: "#2b2b29" };
 
 	</div>
 
-	<div class="project-heroes">
-		<div class="heroes-label">
-			<div class="page-container">
-				<h2 class="work-label">Selected Work</h2>
-			</div>
-		</div>
-		{
-			projects.map((project) => (
-				<HomeProjectScreen
-					href={`/projects/${project.id}`}
-					title={project.data.cardTitle ?? project.data.title}
-					{...(heroes[project.id] ?? placeholder)}
-				/>
-			))
-		}
-	</div>
+	<ProjectStack label="Selected Work" />
 </BaseLayout>
 
 <style>
@@ -86,53 +37,5 @@ const placeholder = { mode: "none", background: "#2b2b29" };
 	   grid's own row gap that already sits between these rows. */
 	.intro {
 		margin-bottom: calc(var(--space-5) - var(--grid-gutter));
-	}
-
-	/* "Selected Work": a zero-height sticky strip at the start of the screens,
-	   so the label stays pinned at the top of the viewport (over whichever
-	   screen is showing) for the whole section, and scrolls in with the first
-	   screen. Its z-index lifts it above the screens, which are also sticky. */
-	.heroes-label {
-		position: sticky;
-		top: 0;
-		z-index: 10;
-		height: 0;
-	}
-
-	.work-label {
-		margin: 0;
-		padding-top: 24px;
-		font-size: var(--text-l);
-		font-weight: 400;
-		line-height: var(--leading-l);
-		letter-spacing: normal;
-		color: var(--color-ink);
-		text-shadow: 0 0 14px rgba(0, 0, 0, 0.6);
-	}
-
-	@media (min-width: 1280px) {
-		.work-label {
-			padding-top: 32px;
-		}
-	}
-
-	.project-heroes {
-		margin-top: var(--space-4);
-	}
-
-	/* A sticky screen stays pinned only while its whole margin box fits in
-	   this container. The earlier screens each carry a hold margin, so they
-	   would start sliding off just before the last screen finished covering
-	   them; and the last screen has no spare room to pin in at all. This
-	   spacer is that room: the last screen's hold. (The last screen drops its
-	   own margin so the hold isn't counted twice.) */
-	.project-heroes::after {
-		content: "";
-		display: block;
-		height: var(--hero-hold, 40vh);
-	}
-
-	.project-heroes > :global(.project-hero:last-child) {
-		margin-bottom: 0;
 	}
 </style>

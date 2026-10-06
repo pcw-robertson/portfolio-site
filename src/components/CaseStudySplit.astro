@@ -1,0 +1,109 @@
+---
+// The opening of a case study at desktop: the screen is split in two. The
+// left half holds the title and summary text, anchored at a fixed distance
+// from the top (same on every case study); the right half is a hero video that
+// fills that half edge to edge, top to bottom, cropped to cover, with its
+// centre always at the centre of the half. Together they fill the first screen
+// (viewport less the nav), so the page always opens "full screen".
+//
+// Below the desktop breakpoint there is no hero: just the text.
+interface Props {
+  src: string;
+  poster?: string;
+  alt?: string;
+}
+
+const { src, poster, alt = "" } = Astro.props;
+---
+
+<section class="split">
+	<div class="split-text">
+		<slot />
+	</div>
+	<div class="split-media">
+		<video
+			src={src}
+			poster={poster}
+			muted
+			loop
+			playsinline
+			preload="auto"
+			aria-label={alt}
+			data-autoplay-in-view
+		></video>
+	</div>
+</section>
+
+<style>
+	/* Mobile: just the text, spaced like the other case-study intros. */
+	.split-text {
+		padding: var(--space-4) var(--grid-margin) 0;
+		margin-bottom: var(--space-5);
+	}
+
+	.split-media {
+		display: none;
+	}
+
+	.split-text :global(h1) {
+		font-size: 1.5rem;
+		font-weight: 400;
+		margin-bottom: 0;
+	}
+
+	.split-text :global(h2) {
+		font-size: 1rem;
+		font-weight: 400;
+		line-height: 1.5;
+		margin-bottom: 0;
+	}
+
+	.split-text :global(p) {
+		font-size: 1rem;
+		line-height: 1.5;
+	}
+
+	@media (min-width: 1280px) {
+		/* The article above has --space-5 of padding on top; cancel it so the
+		   video starts right under the nav. 93px is the nav's height. */
+		.split {
+			display: grid;
+			grid-template-columns: 1fr 1fr;
+			margin-top: calc(-1 * var(--space-5));
+			margin-bottom: var(--space-5);
+			height: calc(100svh - 93px);
+			min-height: 560px;
+		}
+
+		/* Left half: aligned to the site's grid margin, anchored at the top
+		   (72px, same as the home intro), never centred, so every case study's
+		   text starts in the same place. */
+		.split-text {
+			padding: 72px 60px 0
+				max(var(--grid-margin), calc((100vw - var(--grid-container)) / 2 + var(--grid-margin)));
+			margin-bottom: 0;
+			align-self: start;
+		}
+
+		.split-media {
+			display: block;
+			position: relative;
+			overflow: hidden;
+			background: var(--color-bg);
+		}
+
+		/* Cover: fill the half both ways; crop evenly around the centre. */
+		.split-media video {
+			position: absolute;
+			inset: 0;
+			width: 100%;
+			height: 100%;
+			object-fit: cover;
+			object-position: 50% 50%;
+		}
+	}
+</style>
+
+<script>
+	import "../scripts/autoplay-in-view";
+</script>

@@ -3,6 +3,7 @@ import type { CollectionEntry } from "astro:content";
 import BaseLayout from "./BaseLayout.astro";
 import ProjectHero from "../components/ProjectHero.astro";
 import ProjectWalkthrough from "../components/ProjectWalkthrough.astro";
+import ProjectStack from "../components/ProjectStack.astro";
 import { getCaseStudy } from "../lib/case-studies";
 
 interface Props {
@@ -83,9 +84,15 @@ try {
 			)
 		}
 
-		<div class="wrap">
-			<p class="back"><a href="/">&larr; Back to all work</a></p>
-		</div>
+		{
+			isCustom ? (
+				<ProjectStack label="More Work" exclude={project.id} />
+			) : (
+				<div class="wrap">
+					<p class="back"><a href="/">&larr; Back to all work</a></p>
+				</div>
+			)
+		}
 	</div>
 </BaseLayout>
 

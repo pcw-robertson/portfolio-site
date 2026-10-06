@@ -1,0 +1,92 @@
+---
+// The stacked, full-screen project list: each project is a screen that pins
+// at the top of the viewport while the next one rises over it (see
+// HomeProjectScreen for the mechanic). Used on the home page (all projects,
+// "Selected Work") and at the end of each case study (every project except
+// the current one, "More Work"), so you scroll straight on into more work.
+//
+// A zero-height sticky strip at the start carries the section label, which
+// stays pinned at the top of the viewport over whichever screen is showing.
+//
+// Needs no ancestor with overflow other than visible/clip, same as the screens.
+import { getCollection } from "astro:content";
+import HomeProjectScreen from "./HomeProjectScreen.astro";
+import { screenFor } from "../lib/home-screens";
+
+interface Props {
+  label: string;
+  // Project id to leave out (the case study you're reading).
+  exclude?: string;
+}
+
+const { label, exclude } = Astro.props;
+const projects = (await getCollection("projects"))
+  .filter((p) => p.id !== exclude)
+  .sort((a, b) => a.data.order - b.data.order);
+---
+
+<div class="project-heroes">
+	<div class="heroes-label">
+		<div class="page-container">
+			<h2 class="work-label">{label}</h2>
+		</div>
+	</div>
+	{
+		projects.map((project) => (
+			<HomeProjectScreen
+				href={`/projects/${project.id}`}
+				title={project.data.cardTitle ?? project.data.title}
+				{...screenFor(project.id)}
+			/>
+		))
+	}
+</div>
+
+<style>
+	/* The label strip: pinned at the top of the viewport for the whole section
+	   and scrolls in with the first screen. Its z-index lifts it above the
+	   screens, which are also sticky. */
+	.heroes-label {
+		position: sticky;
+		top: 0;
+		z-index: 10;
+		height: 0;
+	}
+
+	.work-label {
+		margin: 0;
+		padding-top: 24px;
+		font-size: var(--text-l);
+		font-weight: 400;
+		line-height: var(--leading-l);
+		letter-spacing: normal;
+		color: var(--color-ink);
+		text-shadow: 0 0 14px rgba(0, 0, 0, 0.6);
+	}
+
+	@media (min-width: 1280px) {
+		.work-label {
+			padding-top: 32px;
+		}
+	}
+
+	.project-heroes {
+		margin-top: var(--space-4);
+	}
+
+	/* A sticky screen stays pinned only while its whole margin box fits in
+	   this container. The earlier screens each carry a hold margin, so they
+	   would start sliding off just before the last screen finished covering
+	   them; and the last screen has no spare room to pin in at all. This
+	   spacer is that room: the last screen's hold. (The last screen drops its
+	   own margin so the hold isn't counted twice.) */
+	.project-heroes::after {
+		content: "";
+		display: block;
+		height: var(--hero-hold, 40vh);
+	}
+
+	.project-heroes > :global(.project-hero:last-child) {
+		margin-bottom: 0;
+	}
+</style>
