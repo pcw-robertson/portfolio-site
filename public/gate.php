@@ -79,6 +79,9 @@ if (!$authed) {
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="robots" content="noindex, nofollow">
 <meta name="theme-color" content="#000000">
+<link rel="icon" href="/favicon.ico" sizes="48x48">
+<link rel="icon" type="image/png" href="/favicon.png" sizes="40x40">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
 <title>Peter Robertson</title>
 <style>
 @font-face { font-family: "Söhne"; src: url("/fonts/soehne-buch.woff2") format("woff2"); font-weight: 400; font-display: swap; }
