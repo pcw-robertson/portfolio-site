@@ -74,8 +74,7 @@ const { src, poster, alt = "" } = Astro.props;
 			grid-template-columns: 1fr 1fr;
 			margin-top: calc(-1 * (93px + var(--space-5)));
 			margin-bottom: var(--space-5);
-			height: 100svh;
-			min-height: 653px;
+			min-height: max(100svh, 653px);
 		}
 
 		/* Left half: aligned to the site's grid margin, anchored at the top

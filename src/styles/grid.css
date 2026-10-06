@@ -185,6 +185,13 @@ a safe default to extend from.
   }
 }
 
+/* A short text block that introduces the media row directly below it (e.g.
+   Wired's "The best place to experience Wired"): no trailing paragraph margin,
+   so the gap to the media is set by the media block alone. */
+.grid.lead-in > * > :last-child {
+  margin-bottom: 0;
+}
+
 /* A case study's opening text block, with no hero media beside it: just the
    copy at the top of the page, then the visuals. Top spacing matches the home
    page's intro (--space-4, 72px at desktop, the Figma value). */

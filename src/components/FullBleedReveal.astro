@@ -76,6 +76,9 @@ interface Props {
   // fractions of its height cut off the top and the bottom.
   cropTop?: number;
   cropBottom?: number;
+  // Sit close under the text block above (the same 1.5rem gap a caption has
+  // to its media) instead of the full section gap.
+  tight?: boolean;
 }
 
 const {
@@ -89,6 +92,7 @@ const {
   device = false,
   cropTop,
   cropBottom,
+  tight = false,
 } = Astro.props;
 
 const single = device || !mobileSrc;
@@ -103,7 +107,7 @@ const wrapperStyle = [
   .join("; ");
 ---
 
-<div class:list={["reveal-wrapper", { "reveal-single": single, "reveal-device": device, "reveal-device--crop": cropped }]} style={wrapperStyle}>
+<div class:list={["reveal-wrapper", { "reveal-single": single, "reveal-device": device, "reveal-device--crop": cropped, "reveal-tight": tight }]} style={wrapperStyle}>
 	<div class="reveal-cover">
 		<slot />
 	</div>
@@ -150,6 +154,10 @@ const wrapperStyle = [
 		isolation: isolate;
 		overflow: clip;
 		margin-block: var(--space-5);
+	}
+
+	.reveal-wrapper.reveal-tight {
+		margin-top: 1.5rem;
 	}
 
 	/* Opaque, full width (bare div — no .grid class — so it spans the

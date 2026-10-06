@@ -19,9 +19,9 @@ export const wired = getCaseStudy("wired-app");
 export const annotation = (title) => getAnnotation(wired, title);
 
 <CaseStudySplit
-  src="/videos/wired-intro-walkthrough.mp4"
-  poster="/videos/wired-intro-walkthrough-poster.jpg"
-  alt="Walkthrough of the Wired app"
+  src="/videos/wired-case-hero.mp4"
+  poster="/videos/wired-case-hero-poster.jpg"
+  alt="The Wired app, looping"
 >
   <h1>The Wired App</h1>
   <p class="muted subtitle">Product Strategy &amp; Design Leadership — 0 to 1</p>
@@ -36,7 +36,7 @@ export const annotation = (title) => getAnnotation(wired, title);
   </ul>
 </CaseStudySplit>
 
-<div class="grid">
+<div class="grid lead-in">
   <div class="col-6">
     <h2>The best place to experience Wired</h2>
     <p>{annotation("The best place to experience Wired").body}</p>
@@ -44,6 +44,7 @@ export const annotation = (title) => getAnnotation(wired, title);
 </div>
 
 <FullBleedReveal
+  tight
   device
   src="/videos/wired-nav-zoom.mp4"
   poster="/videos/wired-nav-zoom-poster.jpg"

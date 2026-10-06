@@ -11,26 +11,29 @@ template: "custom"
 import AssetFloat from "../../components/AssetFloat.astro";
 import Marquee from "../../components/Marquee.astro";
 import FullBleedReveal from "../../components/FullBleedReveal.astro";
+import CaseStudySplit from "../../components/CaseStudySplit.astro";
 import { getCaseStudy, getAnnotation } from "../../lib/case-studies";
 
 export const pitchfork = getCaseStudy("pitchfork-subscription");
 export const annotation = (title) => getAnnotation(pitchfork, title);
 
-<div class="grid case-intro">
-  <div class="col-6">
-    <h1>Pitchfork Subscriber Experience</h1>
-    <p class="muted subtitle">Product Strategy &amp; Design Leadership</p>
+<CaseStudySplit
+  src="/videos/pitchfork-case-hero.mp4"
+  poster="/videos/pitchfork-case-hero-poster.jpg"
+  alt="Pitchfork's review score counting up over album covers, looping"
+>
+  <h1>Pitchfork Subscriber Experience</h1>
+  <p class="muted subtitle">Product Strategy &amp; Design Leadership</p>
 
-    <h2>The Opportunity</h2>
-    <p>{pitchfork.opportunity}</p>
-    <h2>Role</h2>
-    <p>{pitchfork.role}</p>
-    <h2>Outcome</h2>
-    <ul class="outcome-list">
-      {pitchfork.outcome.map((item) => <li>{item}</li>)}
-    </ul>
-  </div>
-</div>
+  <h2>The Opportunity</h2>
+  <p>{pitchfork.opportunity}</p>
+  <h2>Role</h2>
+  <p>{pitchfork.role}</p>
+  <h2>Outcome</h2>
+  <ul class="outcome-list">
+    {pitchfork.outcome.map((item) => <li>{item}</li>)}
+  </ul>
+</CaseStudySplit>
 
 <FullBleedReveal
   src="/videos/pitchfork-launch-reel-16x9.mp4"

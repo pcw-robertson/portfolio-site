@@ -13,30 +13,33 @@ template: "custom"
 import Marquee from "../../components/Marquee.astro";
 import ResultCardSwap from "../../components/ResultCardSwap.astro";
 import FullBleedReveal from "../../components/FullBleedReveal.astro";
+import CaseStudySplit from "../../components/CaseStudySplit.astro";
 import { getCaseStudy, getAnnotation } from "../../lib/case-studies";
 
 export const nyg = getCaseStudy("new-yorker-games");
 export const annotation = (title) => getAnnotation(nyg, title);
 export const paragraphs = (text) => text.split("\n\n");
 
-<div class="grid case-intro">
-  <div class="col-6">
-    <h1>New Yorker Games</h1>
-    <p class="muted subtitle">Product &amp; Design Leadership</p>
+<CaseStudySplit
+  src="/videos/new-yorker-games-case-hero.mp4"
+  poster="/videos/new-yorker-games-case-hero-poster.jpg"
+  alt="The Catalogues mascot animating, looping"
+>
+  <h1>New Yorker Games</h1>
+  <p class="muted subtitle">Product &amp; Design Leadership</p>
 
-    <h2>The Opportunity</h2>
-    <p>{nyg.opportunity}</p>
-    <h2>Role</h2>
-    <p>{nyg.role}</p>
-    <h2>Outcome</h2>
-    <ul class="outcome-list outcome-list--spaced">
-      {nyg.outcome.map((item) => {
-        const [label, ...rest] = item.split(" – ");
-        return rest.length ? <li><span class="outcome-label">{label}</span> – {rest.join(" – ")}</li> : <li>{item}</li>;
-      })}
-    </ul>
-  </div>
-</div>
+  <h2>The Opportunity</h2>
+  <p>{nyg.opportunity}</p>
+  <h2>Role</h2>
+  <p>{nyg.role}</p>
+  <h2>Outcome</h2>
+  <ul class="outcome-list outcome-list--spaced">
+    {nyg.outcome.map((item) => {
+      const [label, ...rest] = item.split(" – ");
+      return rest.length ? <li><span class="outcome-label">{label}</span> – {rest.join(" – ")}</li> : <li>{item}</li>;
+    })}
+  </ul>
+</CaseStudySplit>
 
 <div class="grid">
   <div class="col-12">

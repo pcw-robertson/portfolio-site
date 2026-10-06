@@ -10,6 +10,7 @@ template: "custom"
 
 import Marquee from "../../components/Marquee.astro";
 import FullBleedReveal from "../../components/FullBleedReveal.astro";
+import CaseStudySplit from "../../components/CaseStudySplit.astro";
 import { getCaseStudy } from "../../lib/case-studies";
 
 export const ba = getCaseStudy("bon-appetit-app");
@@ -18,21 +19,23 @@ export const ba = getCaseStudy("bon-appetit-app");
     dark-mode reveal, Recipe (left), Search (reverse), Saved (left; only 4 items,
     so it sits still at desktop). Alternating directions, per the site rule. */}
 
-<div class="grid case-intro">
-  <div class="col-6">
-    <h1>The Bon Appétit App</h1>
-    <p class="muted subtitle">Brand &amp; Product Strategy</p>
+<CaseStudySplit
+  src="/videos/ba-hero.mp4"
+  poster="/videos/ba-hero-poster.jpg"
+  alt="The words bon appétit repeating and animating across a black screen, looping"
+>
+  <h1>The Bon Appétit App</h1>
+  <p class="muted subtitle">Brand &amp; Product Strategy</p>
 
-    <h2>The Opportunity</h2>
-    <p>{ba.opportunity}</p>
-    <h2>Role</h2>
-    <p>{ba.role}</p>
-    <h2>Outcome</h2>
-    <ul class="outcome-list">
-      {ba.outcome.map((item) => <li>{item}</li>)}
-    </ul>
-  </div>
-</div>
+  <h2>The Opportunity</h2>
+  <p>{ba.opportunity}</p>
+  <h2>Role</h2>
+  <p>{ba.role}</p>
+  <h2>Outcome</h2>
+  <ul class="outcome-list">
+    {ba.outcome.map((item) => <li>{item}</li>)}
+  </ul>
+</CaseStudySplit>
 
 <FullBleedReveal
   device
