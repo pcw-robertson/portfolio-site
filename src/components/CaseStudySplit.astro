@@ -2,9 +2,10 @@
 // The opening of a case study at desktop: the screen is split in two. The
 // left half holds the title and summary text, anchored at a fixed distance
 // from the top (same on every case study); the right half is a hero video that
-// fills that half edge to edge, top to bottom, cropped to cover, with its
+// fills that half edge to edge, top to bottom (right up to the top of the page,
+// behind the nav, with a fade so "About" stays readable), cropped to cover, with its
 // centre always at the centre of the half. Together they fill the first screen
-// (viewport less the nav), so the page always opens "full screen".
+// (the whole viewport), so the page always opens "full screen".
 //
 // Below the desktop breakpoint there is no hero: just the text.
 interface Props {
@@ -64,22 +65,25 @@ const { src, poster, alt = "" } = Astro.props;
 	}
 
 	@media (min-width: 1280px) {
-		/* The article above has --space-5 of padding on top; cancel it so the
-		   video starts right under the nav. 93px is the nav's height. */
+		/* The split is a full screen, from the very top of the page: it is
+		   pulled up behind the nav (93px, plus the --space-5 of padding the
+		   article has above it), and the nav (z-index in Nav.astro) sits on
+		   top of it. */
 		.split {
 			display: grid;
 			grid-template-columns: 1fr 1fr;
-			margin-top: calc(-1 * var(--space-5));
+			margin-top: calc(-1 * (93px + var(--space-5)));
 			margin-bottom: var(--space-5);
-			height: calc(100svh - 93px);
-			min-height: 560px;
+			height: 100svh;
+			min-height: 653px;
 		}
 
 		/* Left half: aligned to the site's grid margin, anchored at the top
 		   (72px, same as the home intro), never centred, so every case study's
 		   text starts in the same place. */
 		.split-text {
-			padding: 72px 60px 0
+			/* 93px of nav + 72px, so the text starts where it always did. */
+			padding: calc(93px + 72px) 60px 0
 				max(var(--grid-margin), calc((100vw - var(--grid-container)) / 2 + var(--grid-margin)));
 			margin-bottom: 0;
 			align-self: start;
@@ -90,6 +94,22 @@ const { src, poster, alt = "" } = Astro.props;
 			position: relative;
 			overflow: hidden;
 			background: var(--color-bg);
+		}
+
+		/* A dark fade at the top, so the nav's "About" stays readable where it
+		   sits over the video. */
+		.split-media::after {
+			content: "";
+			position: absolute;
+			inset: 0 0 auto 0;
+			height: 200px;
+			background: linear-gradient(
+				to bottom,
+				rgba(0, 0, 0, 0.75) 0%,
+				rgba(0, 0, 0, 0.4) 50%,
+				rgba(0, 0, 0, 0) 100%
+			);
+			pointer-events: none;
 		}
 
 		/* Cover: fill the half both ways; crop evenly around the centre. */
