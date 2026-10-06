@@ -85,8 +85,10 @@ if (!$authed) {
 * { box-sizing: border-box; }
 html { color-scheme: dark; }
 body { margin: 0; min-height: 100vh; background: #000; color: #fff; font-family: "Söhne", -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif; font-size: 1.25rem; line-height: 1.5rem; display: flex; flex-direction: column; }
-main { flex: 1; display: flex; flex-direction: column; justify-content: center; padding: 16px; max-width: 480px; width: 100%; margin: 0 auto; }
-@media (min-width: 1280px) { main { max-width: 1080px; padding: 0 100px; } form { max-width: 380px; } }
+main { flex: 1; display: flex; flex-direction: column; justify-content: center; padding: 16px; width: 100%; }
+form { width: 100%; max-width: 380px; }
+/* Same left edge as the site's grid (1280 container, 100px margins), so the form lines up with the name above it. */
+@media (min-width: 1280px) { main { max-width: 1280px; padding: 0 100px; margin: 0 auto; } }
 p { margin: 0 0 24px; }
 .name { position: absolute; top: 28px; left: 16px; }
 @media (min-width: 1280px) { .name { top: 65px; left: max(100px, calc(50% - 540px)); } }
