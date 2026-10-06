@@ -30,11 +30,14 @@
   --space-5: 5rem;
   --space-6: 8rem;
 
-  /* Height of the nav bar (padding + one line), and how much of the first
-     project screen shows under the home page's intro. Larger values at
+  /* Height of the nav bar (padding + one line), the space above the
+     "Selected Work" / "More Work" label, and how much of the first project
+     screen shows under the home page's intro: just the label with the same
+     space below it as above (label space x2 + one line). Larger values at
      desktop, set below. */
   --nav-h: 52px;
-  --home-peek: 100px;
+  --label-pad: 24px;
+  --home-peek: calc(2 * var(--label-pad) + var(--leading-l));
 
   /* Type scale for the home and about pages (and nav/footer): the large
      "L" size is copy, titles and nav; "S" is the quiet footer line. Desktop
@@ -56,7 +59,7 @@
     --leading-s: 1.75rem;
     --leading-copy: 1.875rem;
     --nav-h: 93px;
-    --home-peek: 140px;
+    --label-pad: 32px;
   }
 }
 

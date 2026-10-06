@@ -55,19 +55,13 @@ const projects = (await getCollection("projects"))
 
 	.work-label {
 		margin: 0;
-		padding-top: 24px;
+		padding-top: var(--label-pad);
 		font-size: var(--text-l);
 		font-weight: 400;
 		line-height: var(--leading-l);
 		letter-spacing: normal;
 		color: var(--color-ink);
 		text-shadow: 0 0 14px rgba(0, 0, 0, 0.6);
-	}
-
-	@media (min-width: 1280px) {
-		.work-label {
-			padding-top: 32px;
-		}
 	}
 
 	.project-heroes {
