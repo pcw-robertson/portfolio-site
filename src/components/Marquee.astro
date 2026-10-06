@@ -90,6 +90,14 @@ const shrinkToFit = shrinkToFitProp ?? items.length <= 4;
 
 const kindOf = (item: MarqueeItem) =>
   item.type ?? (/\.(mp4|webm|mov)$/i.test(item.src) ? "video" : "image");
+
+// A video slide's inline style: its aspect ratio, and its poster as a CSS
+// variable so the slide itself can paint the poster behind the <video> (see
+// .marquee-item below) — otherwise the slide is an empty dark card from the
+// moment the video starts to play until its first frame arrives.
+const itemStyle = (item: MarqueeItem) =>
+  `--item-ratio: ${item.aspectRatio ?? "720 / 1560"}` +
+  (kindOf(item) === "video" && item.poster ? `; --poster: url("${item.poster}")` : "");
 ---
 
 <div
@@ -107,7 +115,7 @@ const kindOf = (item: MarqueeItem) =>
 			{items.map((item) => (
 				<div
 					class="marquee-item"
-					style={`--item-ratio: ${item.aspectRatio ?? "720 / 1560"}`}
+					style={itemStyle(item)}
 				>
 					{kindOf(item) === "video" ? (
 						<video
@@ -132,7 +140,7 @@ const kindOf = (item: MarqueeItem) =>
 					<div
 						class="marquee-item"
 						data-loop-clone
-						style={`--item-ratio: ${items[0].aspectRatio ?? "720 / 1560"}`}
+						style={itemStyle(items[0])}
 					>
 						{kindOf(items[0]) === "video" ? (
 							<video
@@ -155,7 +163,7 @@ const kindOf = (item: MarqueeItem) =>
 			{items.map((item) => (
 				<div
 					class="marquee-item"
-					style={`--item-ratio: ${item.aspectRatio ?? "720 / 1560"}`}
+					style={itemStyle(item)}
 				>
 					{kindOf(item) === "video" ? (
 						<video
@@ -254,6 +262,14 @@ const kindOf = (item: MarqueeItem) =>
 		border-radius: var(--marquee-radius);
 		overflow: hidden;
 		background: var(--color-line);
+		/* The poster behind a video slide. Safari clears a <video>'s own poster
+		   as soon as play() is called and shows nothing until the first frame
+		   has downloaded, which on a phone is a visible flash of the dark
+		   card. Painting the same image here keeps the slide filled until the
+		   video's own frame covers it. */
+		background-image: var(--poster, none);
+		background-size: cover;
+		background-position: center;
 	}
 
 	.marquee-item :is(img, video) {
@@ -524,7 +540,9 @@ const kindOf = (item: MarqueeItem) =>
 
 		const autoplay = marquee.hasAttribute("data-autoplay");
 		const autoplayMs = parseFloat(marquee.style.getPropertyValue("--autoplay-ms")) || 4000;
-		let inView = true;
+		// False until the observer below reports the row on screen, so a row
+		// that is never reached doesn't start buffering its videos at page load.
+		let inView = false;
 
 		new IntersectionObserver(([entry]) => {
 			marquee.toggleAttribute("data-paused", !entry.isIntersecting);
@@ -619,6 +637,29 @@ const kindOf = (item: MarqueeItem) =>
 				return null;
 			}
 
+			// Videos don't preload (there are many, and most are never reached),
+			// so a slide only started downloading when it was swiped into view.
+			// Buffer the slides either side of the current one ahead of time, so
+			// the next swipe lands on a video that already has frames. (Looping
+			// wraps: the one after the last is the first, the one before the
+			// first is the last.)
+			function bufferVideo(item: HTMLElement | undefined) {
+				const video = item?.querySelector("video");
+				if (video && video.readyState === 0 && video.preload !== "auto") {
+					video.preload = "auto";
+					video.load();
+				}
+			}
+
+			function bufferNeighbours(index: number) {
+				const n = realItems.length;
+				bufferVideo(realItems[index]);
+				bufferVideo(realItems[(index + 1) % n]);
+				bufferVideo(realItems[(index - 1 + n) % n]);
+				// From the last slide the next swipe lands on the loop clone.
+				if (index === n - 1) bufferVideo(slides[n]);
+			}
+
 			let activeIndex = -1;
 
 			// The single point where a slide becomes "current": sets the dot
@@ -629,6 +670,7 @@ const kindOf = (item: MarqueeItem) =>
 				if (!mobileQuery.matches) return;
 				const index = closestSlideIndex() % realItems.length;
 				activeIndex = index;
+				if (inView) bufferNeighbours(index);
 				const knownMs = videoDurationMs(index);
 				const ms = knownMs ?? autoplayMs;
 				dots.forEach((dot, i) => {
